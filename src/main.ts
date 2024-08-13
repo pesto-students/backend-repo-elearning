@@ -25,11 +25,11 @@ console.log("env: ", port)
 
   // app.use(cookieParser()) // node module
   app.enableVersioning();
-  app.use(
-    // compression({
-    //   threshold: 1000,
-    // }), // node module
-  );
+  // app.use(
+  //   compression({
+  //     threshold: 1000,
+  //   }), // node module
+  // );
 
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(app.get(Reflector)),
