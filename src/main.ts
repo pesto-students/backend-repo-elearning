@@ -10,7 +10,7 @@ async function bootstrap() {
   const NODE_ENV = process.env.NODE_ENV;
   const port = parseInt(process.env.PORT) || 4000;
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
+console.log("env: ", port)
   app.setGlobalPrefix('api', {
     exclude: [{ path: '/', method: RequestMethod.GET }],
   });
