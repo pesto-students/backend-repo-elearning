@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Res } from "@nestjs/common";
 import { LocationService } from "./location.service";
 import { LocationActionDto } from "./dto/action/location-action.dto";
  
@@ -10,4 +10,6 @@ export class LocationController{
     async storeInDb(@Body() locationActionDto: LocationActionDto, @Res() res: Response ){
         return this.locationService.storeInDb(locationActionDto);
     }
-}
+ 
+
+ }

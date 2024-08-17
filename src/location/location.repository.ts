@@ -6,13 +6,14 @@ import { CountryDto } from "./dto/country.dto";
 import { StateDto } from "./dto/state.dto";
 import { State } from "src/core/schemas/state.schema";
 import { City } from "src/core/schemas/city.schema";
+import { OrganizationType } from "src/core/schemas/organization-type.schema";
 
 @Injectable()
 export class LocationRepository{
     constructor(
         @InjectModel(Country.name) private countryModel: Model<Country>,
         @InjectModel(State.name) private stateModel: Model<State>,
-        @InjectModel(City.name) private cityModel: Model<City>
+        @InjectModel(City.name) private cityModel: Model<City>,
     ){}
 
     async createCountry(countryDto: CountryDto): Promise<Country> {
@@ -28,5 +29,5 @@ export class LocationRepository{
     async createCity(cityDto): Promise<City> {
         const createCity = await new this.cityModel(cityDto);
         return createCity.save();
-    }
+    } 
 }

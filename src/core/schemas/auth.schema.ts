@@ -3,20 +3,18 @@ import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Auth extends Document {
-  @Prop({ type: Types.ObjectId, required: true })
-  _id: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  UserID: Types.ObjectId;
+  userId: Types.ObjectId;
 
   @Prop({ type: String, required: true })
-  Username: string;
+  username: string;
 
   @Prop({ type: String, required: true })
-  PasswordHash: string;
+  passwordHash: string;
 
   @Prop({ type: Date })
-  LastLogin: Date;
+  lastLogin: Date;
 
   @Prop({ type: Boolean, default: false, required: true })
   isVerified: Boolean; 

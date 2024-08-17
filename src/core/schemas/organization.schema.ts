@@ -5,34 +5,34 @@ import { Types, Document } from "mongoose";
 export class Organization extends Document {
 
     @Prop({ type: String, required: true })
-    OrganizationID: string;
+    organizationId: string;
 
     @Prop({ type: Types.ObjectId, ref: 'OrganizationType', required: true })
-    OrganizationTypeID: Types.ObjectId;
+    organizationTypeId: Types.ObjectId;
 
     @Prop({ type: Types.ObjectId, ref: 'Country', required: true })
-    CountryID: Types.ObjectId;
+    countryId: Types.ObjectId;
 
     @Prop({ type: Types.ObjectId, ref: 'State', required: true })
-    StateID: Types.ObjectId;
+    stateId: Types.ObjectId;
 
     @Prop({ type: Types.ObjectId, ref: 'City', required: true })
-    CityID: Types.ObjectId;
+    cityId: Types.ObjectId;
 
     @Prop({ type: String, required: true })
-    Name: string;
+    name: string;
 
     @Prop({ type: String, required: true })
-    Address: string;
+    address: string;
 
     @Prop({ type: String, required: true })
-    Pincode: string;
+    pincode: string;
 
     @Prop({ type: String, required: true })
-    ContactEmail: string;
+    email: string;
 
     @Prop({ type: String, required: true })      
-    ContactPhone: string;
+    phone: string;
 
 }
 

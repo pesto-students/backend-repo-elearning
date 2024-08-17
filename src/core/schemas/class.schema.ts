@@ -3,17 +3,15 @@ import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Class extends Document {
-  @Prop({ type: Types.ObjectId, required: true })
-  _id: Types.ObjectId;
-
+  
   @Prop({ type: Types.ObjectId, ref: 'Branch', required: true })
-  BranchID: Types.ObjectId;
+  branchId: Types.ObjectId;
 
   @Prop({ type: String, required: true })
-  ClassName: string;
+  className: string;
 
   @Prop({ type: String })
-  Schedule: string;
+  schedule: string;
 }
 
 export const ClassSchema = SchemaFactory.createForClass(Class);

@@ -2,6 +2,7 @@ import { Body, Controller, HttpStatus, Post, Res, Get, Param } from "@nestjs/com
 import { OrganizationService } from "./organization.service";
 import { CreateOrganizationDto } from "./dto/create-organization.dto";
 import { UpdateOrganizationDto } from "./dto/update-organization.dto";
+import { OrganizationTypeEnum } from "src/core/enums/organization-type.enum";
 
 @Controller('organization')
 export class OrganizationController {
@@ -26,6 +27,12 @@ export class OrganizationController {
             //     error: error.message,
             //   });
         }
+    }
+
+    @Post('organizationType/save')
+    async saveOrganizationType(@Body() organizationType, @Res() res: Response){
+      console.log('organizationType', organizationType);
+      return await this.organizationService.organizationType(organizationType);
     }
 
 

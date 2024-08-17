@@ -4,11 +4,14 @@ import { Document, Types } from 'mongoose';
 @Schema({ timestamps: true })
 export class DoubtAnswer extends Document {
 
+  @Prop({ type: Types.ObjectId, ref: 'Branch', required: true })
+  branchId: Types.ObjectId;
+  
   @Prop({ type: Types.ObjectId, ref: 'DoubtQuestion', required: true })
-  DoubtQuestionID: Types.ObjectId;
+  doubtQuestionId: Types.ObjectId;
 
   @Prop({ type: String, required: true })
-  AnswerText: string;
+  answerText: string;
 }
 
 export const DoubtAnswerSchema = SchemaFactory.createForClass(DoubtAnswer);

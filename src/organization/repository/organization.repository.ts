@@ -4,10 +4,14 @@ import { Model } from "mongoose";
 import { Organization } from "src/core/schemas/organization.schema";
 import { CreateOrganizationDto } from "../dto/create-organization.dto";
 import { UpdateOrganizationDto } from "../dto/update-organization.dto";
+import { OrganizationType } from "src/core/schemas/organization-type.schema";
 
 @Injectable()
 export class OrganizationRepository{
-    constructor(@InjectModel(Organization.name) private organizationModel: Model<Organization>) {}
+    constructor(
+      @InjectModel(Organization.name) private organizationModel: Model<Organization>,
+      @InjectModel(OrganizationType.name) private organizationTypeModel: Model<OrganizationType>,
+    ) {}
     
     async create(createOrganizationDto: CreateOrganizationDto): Promise<Organization> {
         const createdOrganization = new this.organizationModel(createOrganizationDto);
@@ -29,4 +33,9 @@ export class OrganizationRepository{
       async remove(id: string): Promise<Organization> {
         return this.organizationModel.findByIdAndDelete(id).exec();
       }
+
+      async createLocationType(organizationType: string): Promise<OrganizationType> {
+        const createOrganizationType = await new this.organizationTypeModel(organizationType);
+        return createOrganizationType.save();
+    }
 }

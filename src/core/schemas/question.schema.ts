@@ -2,18 +2,19 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
-export class Question extends Document {
-  @Prop({ type: Types.ObjectId, required: true })
-  _id: Types.ObjectId;
+export class Question extends Document { 
+
+  @Prop({ type: Types.ObjectId, ref: 'Branch', required: true })
+  branchId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'QuestionPaper', required: true })
-  QuestionPaperID: Types.ObjectId;
+  questionPaperId: Types.ObjectId;
 
   @Prop({ type: String, required: true })
-  Prompt: string;
+  prompt: string;
 
   @Prop({ type: String })
-  AnswerText: string;
+  answerText: string;
 }
 
 export const QuestionSchema = SchemaFactory.createForClass(Question);

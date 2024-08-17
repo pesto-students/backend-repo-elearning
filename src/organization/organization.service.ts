@@ -12,12 +12,8 @@ export class OrganizationService{
         return this.organizationRepository.create(createOrganizationDto);
     }
 
-    async findAll(){}
-
-    async findOne(){}
-    
-    async update(id, updateOrganizationDto: UpdateOrganizationDto){}
-
-    async remove(){}
+    async organizationType(organizationType:string){ 
+        await this.organizationRepository.createLocationType(organizationType);  
+    }
 
 }
