@@ -40,6 +40,6 @@ export class OrganizationRepository{
       }
 
       async fetchOrganizationType(): Promise<OrganizationType[]>{ 
-        return await this.organizationTypeModel.find().exec(); 
+        return await this.organizationTypeModel.find(); 
       }
 }

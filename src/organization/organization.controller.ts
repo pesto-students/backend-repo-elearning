@@ -18,8 +18,8 @@ export class OrganizationController {
        return await this.organizationService.organizationType(organizationType);
     }
 
-    @Post('organizationType/fetch')
-    async fetchOrganiationType(@Res() res: Response){
+    @Get('organizationType/fetch')
+    async fetchOrganiationType(){
       const organizationType = await this.organizationService.fetchOrganizationType();
       console.log('Fetched Data:', organizationType); // Log the fetched data 
       return organizationType;
