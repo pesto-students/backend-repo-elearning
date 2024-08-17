@@ -7,39 +7,39 @@ export class CreateOrganizationDto {
   @IsNotEmpty()
   OrganizationID: string;
 
-  // @IsMongoId()
-  // @IsNotEmpty()
-  // OrganizationTypeID: Types.ObjectId;
+  @IsMongoId()
+  @IsNotEmpty()
+  OrganizationTypeID: Types.ObjectId;
 
-  // @IsMongoId()
-  // @IsNotEmpty()
-  // CountryID: Types.ObjectId;
+  @IsMongoId()
+  @IsNotEmpty()
+  CountryID: Types.ObjectId;
 
-  // @IsMongoId()
-  // @IsNotEmpty()
-  // StateID: Types.ObjectId;
+  @IsMongoId()
+  @IsNotEmpty()
+  StateID: Types.ObjectId;
 
-  // @IsMongoId()
-  // @IsNotEmpty()
-  // CityID: Types.ObjectId;
+  @IsMongoId()
+  @IsNotEmpty()
+  CityID: Types.ObjectId;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // Name: string;
+  @IsString()
+  @IsNotEmpty()
+  Name: string;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // Address: string;
+  @IsString()
+  @IsNotEmpty()
+  Address: string;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // Pincode: string;
+  @IsString()
+  @IsNotEmpty()
+  Pincode: string;
 
-  // @IsEmail()
-  // @IsNotEmpty()
-  // ContactEmail: string;
+  @IsEmail()
+  @IsNotEmpty()
+  ContactEmail: string;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // ContactPhone: string;
+  @IsString()
+  @IsNotEmpty()
+  ContactPhone: string;
 }
