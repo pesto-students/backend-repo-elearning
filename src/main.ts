@@ -10,7 +10,7 @@ async function bootstrap() {
   const NODE_ENV = process.env.NODE_ENV;
   const port = parseInt(process.env.PORT) || 4000;
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-console.log("env: ", port)
+ 
   app.setGlobalPrefix('api', {
     exclude: [{ path: '/', method: RequestMethod.GET }],
   });
@@ -19,7 +19,7 @@ console.log("env: ", port)
     "'self'",
   ];
 
-  if(NODE_ENV === Environment.DEVELOPMENT){
+  if (NODE_ENV === Environment.DEVELOPMENT) {
     connectSrc.push('*');
   }
 
@@ -37,11 +37,11 @@ console.log("env: ", port)
 
   app.useGlobalPipes(new ValidationPipe());
 
-  app.useStaticAssets(join(__dirname,'..','public'));
-  app.setBaseViewsDir(join(__dirname,'..','views'));
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
 
-  await app.listen(port, ()=>{
+  await app.listen(port, () => {
     console.log(`server running on ${port}`);
   });
 
