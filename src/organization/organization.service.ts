@@ -9,11 +9,15 @@ export class OrganizationService{
     constructor(private readonly organizationRepository: OrganizationRepository){}
 
     async create(createOrganizationDto: CreateOrganizationDto){
-        return this.organizationRepository.create(createOrganizationDto);
+        return await this.organizationRepository.create(createOrganizationDto);
     }
 
     async organizationType(organizationType:string){ 
-        await this.organizationRepository.createLocationType(organizationType);  
+        return await this.organizationRepository.createOrganizationType(organizationType);  
+    }
+
+    async fetchOrganizationType(): Promise<any>{ 
+       return await this.organizationRepository.fetchOrganizationType();     
     }
 
 }

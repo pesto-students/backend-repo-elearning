@@ -34,8 +34,12 @@ export class OrganizationRepository{
         return this.organizationModel.findByIdAndDelete(id).exec();
       }
 
-      async createLocationType(organizationType: string): Promise<OrganizationType> {
+      async createOrganizationType(organizationType: string): Promise<OrganizationType> {
         const createOrganizationType = await new this.organizationTypeModel(organizationType);
         return createOrganizationType.save();
-    }
+      }
+
+      async fetchOrganizationType(): Promise<OrganizationType[]>{ 
+        return await this.organizationTypeModel.find().exec(); 
+      }
 }

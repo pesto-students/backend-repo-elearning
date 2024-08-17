@@ -32,4 +32,8 @@ export enum ActionEnum{
 
     /* Dobut */
 
+    /* Organization Type */
+    GET_ORG_TYPE = 'GET_ORG_TYPE',
+    ADD_ORG_TYPE = 'ADD_ORG_TYPE',
+    UPDATE_ORG_TYPE = 'UPDATE_ORG_TYPE',
 }
