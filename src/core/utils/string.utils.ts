@@ -14,7 +14,7 @@ import { UrlParser } from "./url-parser/url-parser";
 
 const imageExtensions = [
   ".jpg",
-  ".jpeg",
+".jpeg",
   ".png",
   ".gif",
   ".bmp",
