@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './users/user.module';
 import { OrganizationModule } from './organization/organization.module';
+import { TeacherModule } from './teachers/teacher.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { OrganizationModule } from './organization/organization.module';
     ...mongoDbProvider,
     AuthModule,
     OrganizationModule,
+    TeacherModule
   ],
   controllers: [AppController],
   providers: [AppService],

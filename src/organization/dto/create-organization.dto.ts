@@ -3,7 +3,7 @@ import { Types } from 'mongoose';
 
 export class CreateOrganizationDto {
 
-  @IsString({message: "Please enter valid Organization id"})
+  @IsString({ message: "Please enter valid Organization id" })
   @IsNotEmpty()
   OrganizationID: string;
 
@@ -42,4 +42,8 @@ export class CreateOrganizationDto {
   @IsString()
   @IsNotEmpty()
   ContactPhone: string;
+
+  @IsString()
+  @IsNotEmpty()
+  Password: string
 }
