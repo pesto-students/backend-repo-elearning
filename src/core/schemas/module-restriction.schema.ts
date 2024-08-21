@@ -1,8 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
-@Schema({ timestamps: true })
-export class ModuleRestriction extends Document { 
+@BaseSchemaOptions()
+export class ModuleRestriction extends BaseSchema { 
 
   @Prop({ type: Types.ObjectId, ref: 'Plan', required: true })
   planId: Types.ObjectId;

@@ -3,10 +3,8 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Country } from "src/core/schemas/country.schema";
 import { CountryDto } from "./dto/country.dto";
-import { StateDto } from "./dto/state.dto";
 import { State } from "src/core/schemas/state.schema";
 import { City } from "src/core/schemas/city.schema";
-import { OrganizationType } from "src/core/schemas/organization-type.schema";
 
 @Injectable()
 export class LocationRepository{

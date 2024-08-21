@@ -39,7 +39,11 @@ export class OrganizationRepository{
         return createOrganizationType.save();
       }
 
-      async fetchOrganizationType(): Promise<OrganizationType[]>{ 
-        return await this.organizationTypeModel.find(); 
+      async fetchOrganizationType(){ 
+        const orgType: OrganizationType[] = await this.organizationTypeModel.find().lean().exec();
+        return orgType.map(orgType => ({
+          ...orgType,
+          _id: orgType._id.toString(),
+        }));
       }
 }

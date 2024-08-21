@@ -1,8 +1,9 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Types, Document } from "mongoose";
+import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
-@Schema({ timestamps: true })
-export class Organization extends Document {
+@BaseSchemaOptions()
+export class Organization extends BaseSchema {
 
     @Prop({ type: String, required: true })
     organizationId: string;

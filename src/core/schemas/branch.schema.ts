@@ -1,8 +1,9 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
+import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
-@Schema({ timestamps: true })
-export class Branch extends Document {
+@BaseSchemaOptions()
+export class Branch extends BaseSchema {
    
   @Prop({ type: Types.ObjectId, ref: 'Organization', required: true })
   organizationId: Types.ObjectId;

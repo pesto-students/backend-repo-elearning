@@ -1,8 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
-@Schema({ timestamps: true })
-export class DoubtQuestion extends Document { 
+@BaseSchemaOptions()
+export class DoubtQuestion extends BaseSchema { 
 
   @Prop({ type: Types.ObjectId, ref: 'Doubt', required: true })
   doubtId: Types.ObjectId;
