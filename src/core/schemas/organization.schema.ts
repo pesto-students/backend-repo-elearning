@@ -1,11 +1,11 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Types, Document } from "mongoose";
+import { Prop, SchemaFactory } from "@nestjs/mongoose";
+import { Types } from "mongoose";
 import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
 @BaseSchemaOptions()
 export class Organization extends BaseSchema {
 
-    @Prop({ type: String, required: true })
+    @Prop({ type: String, required: true, unique: true, })
     organizationId: string;
 
     @Prop({ type: Types.ObjectId, ref: 'OrganizationType', required: true })
@@ -34,6 +34,9 @@ export class Organization extends BaseSchema {
 
     @Prop({ type: String, required: true })      
     phone: string;
+
+    @Prop({ type: String, required: true, default: false })      
+    emailVerified: boolean;
 
 }
 

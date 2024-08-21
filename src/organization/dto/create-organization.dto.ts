@@ -1,45 +1,68 @@
-import { IsEmail, IsNotEmpty, IsString, IsMongoId, IsNumber } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsMongoId, IsNumber, IsOptional, IsBoolean } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class CreateOrganizationDto {
 
   @IsString({message: "Please enter valid Organization id"})
   @IsNotEmpty()
-  OrganizationID: string;
+  organizationId: string;
 
   @IsMongoId()
   @IsNotEmpty()
-  OrganizationTypeID: Types.ObjectId;
+  organizationTypeId: Types.ObjectId;
 
   @IsMongoId()
   @IsNotEmpty()
-  CountryID: Types.ObjectId;
+  countryId: Types.ObjectId;
 
   @IsMongoId()
   @IsNotEmpty()
-  StateID: Types.ObjectId;
+  stateId: Types.ObjectId;
 
   @IsMongoId()
   @IsNotEmpty()
-  CityID: Types.ObjectId;
+  cityId: Types.ObjectId;
 
   @IsString()
   @IsNotEmpty()
-  Name: string;
+  name: string;
 
   @IsString()
   @IsNotEmpty()
-  Address: string;
+  address: string;
 
   @IsString()
   @IsNotEmpty()
-  Pincode: string;
+  pincode: string;
 
   @IsEmail()
   @IsNotEmpty()
-  ContactEmail: string;
+  email: string;
 
   @IsString()
   @IsNotEmpty()
-  ContactPhone: string;
+  phone: string;
+
+  @IsOptional()
+  @IsBoolean()
+  emailVerified: boolean;
+}
+
+
+export class GetOrganizationQueryDto {
+  @IsOptional()
+  @IsString()
+  organizationId?: string;
+  
+  @IsOptional()
+  @IsMongoId()
+  _id?: string;
+  
+  @IsOptional()
+  @IsMongoId()
+  organizationTypeId?: string;
+ 
+  constructor(partial: Promise<GetOrganizationQueryDto>){
+    Object.assign(this, partial);
+  }
 }
