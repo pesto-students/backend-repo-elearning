@@ -46,6 +46,10 @@ export class CreateOrganizationDto {
   @IsOptional()
   @IsBoolean()
   emailVerified: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string
 }
 
 

@@ -8,6 +8,8 @@ import { OrganizationType, OrganizationTypeSchema } from "src/core/schemas/organ
 import { City, CitySchema } from "src/core/schemas/city.schema";
 import { Country, CountrySchema } from "src/core/schemas/country.schema";
 import { State, StateSchema } from "src/core/schemas/state.schema";
+import { OrganizationSchemaService } from "./organization.schema.service";
+import { OrganizationSchemaController } from "./organization.schema.controller";
 
 @Module({
     imports: [
@@ -34,8 +36,8 @@ import { State, StateSchema } from "src/core/schemas/state.schema";
             },
         ]),
     ],
-    controllers: [OrganizationController],
-    providers: [OrganizationService, OrganizationRepository]
+    controllers: [OrganizationController, OrganizationSchemaController],
+    providers: [OrganizationService, OrganizationRepository, OrganizationSchemaService]
 })
 
 export class OrganizationModule { }

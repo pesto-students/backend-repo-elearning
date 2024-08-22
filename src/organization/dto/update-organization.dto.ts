@@ -8,4 +8,5 @@ export class UpdateOrganizationDto {
   readonly Pincode?: string;
   readonly ContactEmail?: string;
   readonly ContactPhone?: string;
+  readonly Password?: string
 }

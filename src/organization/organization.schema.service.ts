@@ -11,7 +11,7 @@ export class OrganizationSchemaService {
         const schema = this.organizationModel.schema;
         const paths = schema.paths;
 
-        const excludedFields = ['_id', '__v', 'createdAt', 'updatedAt'];
+        const excludedFields = ['_id', '__v', 'createdAt', 'updatedAt', 'emailVerified'];
         const metadata = Object.keys(paths)
             .filter((path) => !excludedFields.includes(path)) // Exclude unwanted fields
             .map((path) => {
