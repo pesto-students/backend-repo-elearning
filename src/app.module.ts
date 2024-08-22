@@ -10,6 +10,7 @@ import { LocationModule } from './location/location.module';
 import { BranchModule } from './branch/branch.module';
 import { TeacherModule } from './teachers/teacher.module';
 import { ClassModule } from './classes/class.module';
+import { OnlineClassModule } from './online-class/online-class.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { ClassModule } from './classes/class.module';
     LocationModule,
     BranchModule,
     TeacherModule,
-    ClassModule
+    ClassModule,
+    OnlineClassModule,
   ],
   controllers: [AppController],
   providers: [AppService],
