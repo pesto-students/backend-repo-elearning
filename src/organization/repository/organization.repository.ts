@@ -9,6 +9,7 @@ import { transformId } from "src/core/utils/mongo-res.utils";
 import { State } from "src/core/schemas/state.schema";
 import { City } from "src/core/schemas/city.schema";
 import { Country } from "src/core/schemas/country.schema";
+import { OrganizationWithDetails } from "src/core/interface/organization.interface";
 
 @Injectable()
 export class OrganizationRepository{
@@ -61,7 +62,7 @@ export class OrganizationRepository{
 
       async findOrganization(condition:GetOrganizationQueryDto): Promise<Organization[]>{
         try {
-            const organization: State[] = await this.organizationModel.find(condition).lean().exec();
+            const organization: Organization[] = await this.organizationModel.find(condition).lean().exec();
             return transformId(organization);
         } catch (error) {
             return null;
@@ -79,11 +80,20 @@ export class OrganizationRepository{
         }
       }
 
-      async fetchOrganizationWithDetails(organizationId): Promise<any> {
+      async fetchOrganizationWithDetails(condition: GetOrganizationQueryDto): Promise<any> {
         try {
            
-          const result = await this.organizationModel.aggregate([
-            { $match: { organizationId: "1234123d" } },
+          const result: OrganizationWithDetails[] = await this.organizationModel.aggregate([
+            { $match: { ...condition } },
+            {
+              $lookup: {
+                from: 'organizationtypes',
+                localField: 'organizationTypeId',
+                foreignField: '_id',
+                as: 'organizationtype'
+              }
+            },
+            { $unwind: { path: '$organizationtype', preserveNullAndEmptyArrays: true } },
             {
               $lookup: {
                 from: 'cities',
@@ -119,6 +129,10 @@ export class OrganizationRepository{
                 pincode: 1,
                 email: 1,
                 phone: 1,
+                organiZationType: {
+                  _id: '$organizationtype._id',
+                  name: '$organizationtype.name'
+                },
                 city: {
                   _id: '$city._id',
                   name: '$city.name'
@@ -135,8 +149,7 @@ export class OrganizationRepository{
             }
           ]).exec();
     
-          console.log('Organization with details:', JSON.stringify(result, null, 2));
-          return result.length > 0 ? result[0] : null;
+          return result.length > 0 ? JSON.parse(JSON.stringify(result, null, 2)): null;
         } catch (error) {
           console.error('Error fetching organization with details:', error);
           throw new Error('Error fetching organization with details');

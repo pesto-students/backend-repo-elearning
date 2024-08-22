@@ -1,6 +1,10 @@
 import { Prop, SchemaFactory } from "@nestjs/mongoose";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { BaseSchema, BaseSchemaOptions } from './base.schema';
+import { Country } from "./country.schema";
+import { State } from "./state.schema";
+import { City } from "./city.schema";
+import { OrganizationType } from "./organization-type.schema";
 
 @BaseSchemaOptions()
 export class Organization extends BaseSchema {
@@ -8,17 +12,17 @@ export class Organization extends BaseSchema {
     @Prop({ type: String, required: true, unique: true, })
     organizationId: string;
 
-    @Prop({ type: Types.ObjectId, ref: 'OrganizationType', required: true })
-    organizationTypeId: Types.ObjectId;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'OrganizationType', required: true })
+    organizationTypeId: OrganizationType;
 
-    @Prop({ type: Types.ObjectId, ref: 'Country', required: true })
-    countryId: Types.ObjectId;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true })
+    countryId: Country;
 
-    @Prop({ type: Types.ObjectId, ref: 'State', required: true })
-    stateId: Types.ObjectId;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'State', required: true })
+    stateId: State;
 
-    @Prop({ type: Types.ObjectId, ref: 'City', required: true })
-    cityId: Types.ObjectId;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true })
+    cityId: City;
 
     @Prop({ type: String, required: true })
     name: string;
