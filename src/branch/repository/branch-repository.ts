@@ -109,7 +109,7 @@ export class BranchRepository {
                     }
                 }
             ]).exec();
-console.log("result: ", result);
+
             return result.length > 0 ? JSON.parse(JSON.stringify(result, null, 2)) : null;
         } catch (error) {
             console.error('Error fetching branch with details:', error);

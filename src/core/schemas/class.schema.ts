@@ -1,13 +1,15 @@
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { BaseSchema, BaseSchemaOptions } from './base.schema';
+import { Branch } from './branch.schema';
 
 @BaseSchemaOptions()
 export class Class extends BaseSchema {
-  @Prop({ type: Types.ObjectId, ref: 'Branch', required: true })
-  branchId: Types.ObjectId;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Branch', required: true })
+  branchId: Branch;
+
+  @Prop({ type: String, required: true,  formControl: { name: 'input', label: "Class Name" } })
   className: string;
 
   @Prop({ type: String })
