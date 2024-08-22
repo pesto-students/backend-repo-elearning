@@ -1,29 +1,17 @@
-import { Teacher } from 'src/core/schemas/teacher.schema';
-import { CreateTeacherDto } from './dto/create-teacher.dto';
-import { TeacherRepository } from './teacher.repository';
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
+import { CreateTeacherDto, GetTeacherQueryDto } from "./dto/teacher.dto";
+import { TeacherRepository } from "./repository/teacher.repository";
+import { Teacher } from "src/core/schemas/teacher.schema";
 
 @Injectable()
 export class TeacherService {
-    constructor(private readonly teacherRepository: TeacherRepository) { }
+    constructor(private teacherRepository: TeacherRepository) { }
 
-    async create(createTeacherDto: CreateTeacherDto): Promise<Teacher> {
-        return this.teacherRepository.create(createTeacherDto);
+    async CreateTeacher(teacherDto: CreateTeacherDto) {
+        return await this.teacherRepository.create(teacherDto);
     }
 
-    async findAll(): Promise<Teacher[]> {
-        return this.teacherRepository.findAll();
+    async fetchTeacher(condition: GetTeacherQueryDto): Promise<Teacher[]> {
+        return await this.teacherRepository.fetchTeacherWithDetails(condition);
     }
-
-    async findOne(id: string): Promise<Teacher> {
-        return this.teacherRepository.findOne(id);
-    }
-
-    async update(id: string, updateTeacherDto: CreateTeacherDto): Promise<Teacher> {
-        return this.teacherRepository.update(id, updateTeacherDto);
-    }
-
-    // async remove(id: string): Promise<any> {
-    //     return this.teacherRepository.remove(id);
-    // }
 }

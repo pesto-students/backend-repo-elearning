@@ -1,42 +1,20 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Param,
-    Put,
-    Delete,
-} from '@nestjs/common';
-import { TeacherService } from './teacher.service';
-import { CreateTeacherDto } from './dto/create-teacher.dto';
+import { Body, Controller, Post } from "@nestjs/common";
+import { CreateTeacherDto, GetTeacherQueryDto } from "./dto/teacher.dto";
+import { TeacherService } from "./teacher.service";
 
-@Controller('teachers')
+@Controller('teacher')
 export class TeacherController {
-    constructor(private readonly teacherService: TeacherService) { }
+
+    constructor(private teacherService: TeacherService) { }
 
     @Post('create')
-    async create(@Body() createTeacherDto: CreateTeacherDto) {
-        console.log('create teacher dto', createTeacherDto);
-        return this.teacherService.create(createTeacherDto);
+    async AddTeacher(@Body() teacherDto: CreateTeacherDto) {
+        return await this.teacherService.CreateTeacher(teacherDto);
     }
 
-    // @Get()
-    // async findAll() {
-    //     return this.teacherService.findAll();
-    // }
-
-    @Get(':id')
-    async findOne(@Param('id') id: string) {
-        return this.teacherService.findOne(id);
+    @Post('fetch')
+    async fetchTeacher(@Body() condition: GetTeacherQueryDto) {
+        return await this.teacherService.fetchTeacher(condition);
     }
 
-    // @Put(':id')
-    // async update(@Param('id') id: string, @Body() updateTeacherDto: CreateTeacherDto) {
-    //     return this.teacherService.update(id, updateTeacherDto);
-    // }
-
-    // @Delete(':id')
-    // async remove(@Param('id') id: string) {
-    //     return this.teacherService.remove(id);
-    // }
 }

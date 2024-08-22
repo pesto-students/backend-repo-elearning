@@ -1,31 +1,33 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
-@Schema({ timestamps: true })
-export class OnlineClass extends Document {
-  @Prop({ type: Number, required: true })
-  _id: number;
+@BaseSchemaOptions()
+export class OnlineClass extends BaseSchema {
+
+  @Prop({ type: Types.ObjectId, ref: 'Branch', required: true })
+  branchId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Class', required: true })
-  ClassID: Types.ObjectId;
+  classId: Types.ObjectId;
 
   @Prop({ type: String, required: true })
-  Title: string;
+  title: string;
 
   @Prop({ type: String })
-  Description: string;
+  description: string;
 
   @Prop({ type: Date, required: true })
-  ScheduledDate: Date;
+  scheduledDate: Date;
 
   @Prop({ type: String, required: true })
-  StartTime: string;
+  startTime: string;
 
   @Prop({ type: String, required: true })
-  EndTime: string;
+  endTime: string;
 
   @Prop({ type: String, required: true })
-  MeetingLink: string;
+  meetingLink: string;
 }
 
 export const OnlineClassSchema = SchemaFactory.createForClass(OnlineClass);

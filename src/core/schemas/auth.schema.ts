@@ -1,25 +1,24 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
-@Schema({ timestamps: true })
-export class Auth extends Document {
-  @Prop({ type: Types.ObjectId, required: true })
-  _id: Types.ObjectId;
+@BaseSchemaOptions()
+export class Auth extends BaseSchema {
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  UserID: Types.ObjectId;
+  userId: Types.ObjectId;
 
   @Prop({ type: String, required: true })
-  Username: string;
+  username: string;
 
   @Prop({ type: String, required: true })
-  PasswordHash: string;
+  passwordHash: string;
 
   @Prop({ type: Date })
-  LastLogin: Date;
+  lastLogin: Date;
 
   @Prop({ type: Boolean, default: false, required: true })
-  isVerified: Boolean; 
+  isVerified: Boolean;
 
 }
 

@@ -1,16 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
-@Schema({ timestamps: true })
-export class Plan extends Document {
-  @Prop({ type: Types.ObjectId, required: true })
-  _id: Types.ObjectId;
+@BaseSchemaOptions()
+export class Plan extends BaseSchema {
 
   @Prop({ type: String, required: true })
-  PlanName: string;
+  name: string;
 
   @Prop({ type: String })
-  Description: string;
+  description: string;
 }
 
 export const PlanSchema = SchemaFactory.createForClass(Plan);

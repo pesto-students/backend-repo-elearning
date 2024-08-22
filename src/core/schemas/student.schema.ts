@@ -1,49 +1,48 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
-@Schema({ timestamps: true })
-export class Student extends Document {
-    @Prop({ type: Number, required: true })
-    _id: number;
+@BaseSchemaOptions()
+export class Student extends BaseSchema {
 
     @Prop({ type: Types.ObjectId, ref: 'Branch', required: true })
-    BranchID: Types.ObjectId;
+    branchId: Types.ObjectId;
 
     @Prop({ type: String, required: true })
-    FirstName: string;
+    firstName: string;
 
     @Prop({ type: String, required: true })
-    LastName: string;
+    lastName: string;
 
     @Prop({ type: Date, required: true })
-    DateOfBirth: Date;
+    dateOfBirth: Date;
 
     @Prop({ type: String, required: true })
-    Gender: string;
+    gender: string;
 
     @Prop({ type: Date, required: true })
-    EnrollmentDate: Date;
+    enrollmentDate: Date;
 
     @Prop({ type: String, required: true })
-    Email: string;
+    email: string;
 
     @Prop({ type: String, required: true })
-    Phone: string;
+    phone: string;
 
     @Prop({ type: String, required: true })
-    Address: string;
+    address: string;
 
     @Prop({ type: Types.ObjectId, ref: 'Country', required: true })
-    CountryID: Types.ObjectId;
+    countryId: Types.ObjectId;
 
     @Prop({ type: Types.ObjectId, ref: 'State', required: true })
-    StateID: Types.ObjectId;
+    stateId: Types.ObjectId;
 
     @Prop({ type: Types.ObjectId, ref: 'City', required: true })
-    CityID: Types.ObjectId;
+    cityId: Types.ObjectId;
 
     @Prop({ type: String, required: true })
-    Pincode: string;
+    pincode: string;
 }
 
 export const StudentSchema = SchemaFactory.createForClass(Student);

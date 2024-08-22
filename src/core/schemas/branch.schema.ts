@@ -1,37 +1,40 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import mongoose, { Types } from 'mongoose';
+import { BaseSchema, BaseSchemaOptions } from './base.schema';
+import { Organization } from './organization.schema';
+import { Country } from './country.schema';
+import { State } from './state.schema';
+import { City } from './city.schema';
 
-@Schema({ timestamps: true })
-export class Branch extends Document {
-  @Prop({ type: Number, required: true })
-  _id: number;
+@BaseSchemaOptions()
+export class Branch extends BaseSchema {
 
-  @Prop({ type: Types.ObjectId, ref: 'Organization', required: true })
-  OrganizationID: Types.ObjectId;
-
-  @Prop({ type: String, required: true })
-  Name: string;
-
-  @Prop({ type: String, required: true })
-  Address: string;
-
-  @Prop({ type: Types.ObjectId, ref: 'Country', required: true })
-  CountryID: Types.ObjectId;
-
-  @Prop({ type: Types.ObjectId, ref: 'State', required: true })
-  StateID: Types.ObjectId;
-
-  @Prop({ type: Types.ObjectId, ref: 'City', required: true })
-  CityID: Types.ObjectId;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Organization', required: true })
+  organizationId: Organization;
 
   @Prop({ type: String, required: true })
-  Pincode: string;
+  name: string;
 
   @Prop({ type: String, required: true })
-  ContactEmail: string;
+  address: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true })
+  countryId: Country;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'State', required: true })
+  stateId: State;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true })
+  cityId: City;
 
   @Prop({ type: String, required: true })
-  ContactPhone: string;
+  pincode: string;
+
+  @Prop({ type: String, required: true })
+  email: string;
+
+  @Prop({ type: String, required: true })
+  phone: string;
 }
 
 export const BranchSchema = SchemaFactory.createForClass(Branch);

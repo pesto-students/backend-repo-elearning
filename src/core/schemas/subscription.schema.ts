@@ -1,28 +1,30 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
-@Schema({ timestamps: true })
-export class Subscription extends Document {
-  @Prop({ type: Types.ObjectId, required: true })
-  _id: Types.ObjectId;
+@BaseSchemaOptions()
+export class Subscription extends BaseSchema {
 
   @Prop({ type: Types.ObjectId, ref: 'Organization', required: true })
-  OrganizationID: Types.ObjectId;
+  organizationId: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: 'Branch', required: true })
+  branchId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Module', required: true })
-  ModuleID: Types.ObjectId;
+  moduleId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Plan', required: true })
-  PlanID: Types.ObjectId;
+  planId: Types.ObjectId;
 
   @Prop({ type: Date, required: true })
-  SubscriptionDate: Date;
+  subscriptionDate: Date;
 
   @Prop({ type: Date, required: true })
-  ExpiryDate: Date;
+  expiryDate: Date;
 
   @Prop({ type: String, required: true })
-  Status: string;
+  status: string;
 }
 
 export const SubscriptionSchema = SchemaFactory.createForClass(Subscription);

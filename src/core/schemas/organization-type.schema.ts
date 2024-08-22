@@ -1,13 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
+import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
-@Schema({ timestamps: true })
-export class OrganizationType extends Document {
-  @Prop({ type: Types.ObjectId, required: true })
-  _id: Types.ObjectId;
 
+@BaseSchemaOptions()
+
+export class OrganizationType extends BaseSchema {
   @Prop({ type: String, required: true })
-  TypeName: string;
+  name: string;
 }
+
 
 export const OrganizationTypeSchema = SchemaFactory.createForClass(OrganizationType);

@@ -1,46 +1,54 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Types, Document } from "mongoose";
+import { Prop, SchemaFactory } from "@nestjs/mongoose";
+import mongoose, { Types } from "mongoose";
+import { BaseSchema, BaseSchemaOptions } from './base.schema';
+import { Country } from "./country.schema";
+import { State } from "./state.schema";
+import { City } from "./city.schema";
+import { OrganizationType } from "./organization-type.schema";
 
-@Schema({ timestamps: true })
-export class Organization extends Document {
+@BaseSchemaOptions()
+export class Organization extends BaseSchema {
 
     @Prop({ type: String, required: true, formControl: { name: 'input', label: "Organization Name" } })
-    Name: string;
+    name: string;
 
-    @Prop({ type: String, required: true, formControl: { name: 'input', label: "Organization Registration Number" } })
-    7: string;
+    @Prop({ type: String, required: true, unique: true, formControl: { name: 'input', label: "Organization Registration Number" } })
+    organizationId: string;
 
     @Prop({
-        type: Types.ObjectId, ref: 'OrganizationType', required: true, formControl: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'OrganizationType', required: true, formControl: {
             name: 'select', label: "Organization Type",
             data: ['School', 'College', 'Coaching', 'Individual']
         }
     })
-    OrganizationTypeID: Types.ObjectId;
+    organizationTypeId: OrganizationType;
 
     @Prop({ type: String, required: true, formControl: { name: 'input', type: 'email', label: "Organization Email ID" } })
-    ContactEmail: string;
+    email: string;
 
     @Prop({ type: String, required: true, formControl: { name: 'input', type: 'password', label: "Password" } })
-    Password: string;
+    password: string;
 
     @Prop({ type: String, required: true, formControl: { name: "input", label: "Organization Contact Number", maxLength: 10 } })
-    ContactPhone: string;
+    phone: string;
 
     @Prop({ type: String, required: true, formControl: { name: "textarea", label: "Organization Address" } })
-    Address: string;
+    address: string;
 
     @Prop({ type: String, required: true, formControl: { name: "input", maxLength: 6, label: "Pincode" } })
-    Pincode: string;
+    pincode: string;
 
-    @Prop({ type: Types.ObjectId, ref: 'City', required: true, formControl: { name: "select", label: "City" } })
-    CityID: Types.ObjectId;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true, formControl: { name: "select", label: "City" } })
+    cityId: City;
 
-    @Prop({ type: Types.ObjectId, ref: 'State', required: true, formControl: { name: "select", label: "State", data: ['Delhi', 'Maharashtra', 'Karnataka'] } })
-    StateID: Types.ObjectId;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'State', required: true, formControl: { name: "select", label: "State", data: ['Delhi', 'Maharashtra', 'Karnataka'] } })
+    stateId: State;
 
-    @Prop({ type: Types.ObjectId, ref: 'Country', required: true, formControl: { name: "select", label: "Country", data: ['India'] } })
-    CountryID: Types.ObjectId;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true, formControl: { name: "select", label: "Country", data: ['India'] } })
+    countryId: Country;
+
+    @Prop({ type: String, required: true, default: false })
+    emailVerified: boolean;
 }
 
 export const OrganizationSchema = SchemaFactory.createForClass(Organization);
