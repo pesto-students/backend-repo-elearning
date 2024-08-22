@@ -3,7 +3,7 @@ import { Document, Types } from 'mongoose';
 import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
 @BaseSchemaOptions()
-export class ModuleRestriction extends BaseSchema { 
+export class ModuleRestriction extends BaseSchema {
 
   @Prop({ type: Types.ObjectId, ref: 'Plan', required: true })
   planId: Types.ObjectId;

@@ -4,7 +4,7 @@ import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
 @BaseSchemaOptions()
 export class Class extends BaseSchema {
-  
+
   @Prop({ type: Types.ObjectId, ref: 'Branch', required: true })
   branchId: Types.ObjectId;
 

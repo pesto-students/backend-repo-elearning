@@ -4,10 +4,10 @@ import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
 @BaseSchemaOptions()
 export class Enrollment extends BaseSchema {
-  
+
   @Prop({ type: Types.ObjectId, ref: 'Branch', required: true })
   branchId: Types.ObjectId;
-  
+
   @Prop({ type: Types.ObjectId, ref: 'Student', required: true })
   studentId: Types.ObjectId;
 

@@ -18,7 +18,7 @@ export class Auth extends BaseSchema {
   lastLogin: Date;
 
   @Prop({ type: Boolean, default: false, required: true })
-  isVerified: Boolean; 
+  isVerified: Boolean;
 
 }
 

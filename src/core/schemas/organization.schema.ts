@@ -36,10 +36,10 @@ export class Organization extends BaseSchema {
     @Prop({ type: String, required: true })
     email: string;
 
-    @Prop({ type: String, required: true })      
+    @Prop({ type: String, required: true })
     phone: string;
 
-    @Prop({ type: String, required: true, default: false })      
+    @Prop({ type: String, required: true, default: false })
     emailVerified: boolean;
 
 }
