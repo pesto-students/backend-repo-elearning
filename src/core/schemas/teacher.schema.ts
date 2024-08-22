@@ -1,12 +1,16 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { BaseSchema, BaseSchemaOptions } from './base.schema';
+import { Branch } from "./branch.schema";
+import { Country } from "./country.schema";
+import { State } from "./state.schema";
+import { City } from "./city.schema";
 
 @BaseSchemaOptions()
 export class Teacher extends BaseSchema { 
 
-    @Prop({type: Types.ObjectId, ref: 'Branch', required: true})
-    branchId: Types.ObjectId;
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Branch', required: true})
+    branchId: Branch;
 
     @Prop({type: String, required: true})
     firstName: string;
@@ -23,14 +27,14 @@ export class Teacher extends BaseSchema {
     @Prop({ type: String, required: true })
     address: string;
 
-    @Prop({ type: Types.ObjectId, ref: 'Country', required: true })
-    countryId: Types.ObjectId;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true })
+    countryId: Country;
 
-    @Prop({ type: Types.ObjectId, ref: 'State', required: true })
-    stateId: Types.ObjectId;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'State', required: true })
+    stateId: State;
 
-    @Prop({ type: Types.ObjectId, ref: 'City', required: true })
-    cityId: Types.ObjectId;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true })
+    cityId: City;
 
     @Prop({ type: String, required: true })
     pincode: string;

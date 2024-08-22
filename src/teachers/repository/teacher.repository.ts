@@ -1,8 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export class TeacherService{
+export class TeacherRepository{
     constructor(){}
-
-    async CreateTeacher(){}
 }
