@@ -14,7 +14,7 @@ export class OrganizationService {
             organizationId: createOrganizationDto?.organizationId
         };
         const isOrgExist: number = await this.organizationRepository.countOrganizations(condition);
-        if (isOrgExist) {
+        if(isOrgExist){
             return "Organization already exist with Organization ID";
         }
         return await this.organizationRepository.create(createOrganizationDto);
