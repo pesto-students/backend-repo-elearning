@@ -8,6 +8,7 @@ import { UserModule } from './users/user.module';
 import { OrganizationModule } from './organization/organization.module';
 import { LocationModule } from './location/location.module';
 import { BranchModule } from './branch/branch.module';
+import { TeacherModule } from './teachers/teacher.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { BranchModule } from './branch/branch.module';
     AuthModule,
     OrganizationModule,
     LocationModule,
-    BranchModule
+    BranchModule,
+    TeacherModule
   ],
   controllers: [AppController],
   providers: [AppService],
