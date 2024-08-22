@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './users/user.module';
 import { OrganizationModule } from './organization/organization.module';
 import { LocationModule } from './location/location.module';
+import { BranchModule } from './branch/branch.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { LocationModule } from './location/location.module';
     ...mongoDbProvider,
     AuthModule,
     OrganizationModule,
-    LocationModule
+    LocationModule,
+    BranchModule
   ],
   controllers: [AppController],
   providers: [AppService],
