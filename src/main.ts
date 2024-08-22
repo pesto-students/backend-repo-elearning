@@ -4,6 +4,7 @@ import { ClassSerializerInterceptor, RequestMethod, ValidationPipe } from '@nest
 import { Environment } from './core/enums/environment.enum';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'node:path';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
 
@@ -21,6 +22,15 @@ async function bootstrap() {
 
   if (NODE_ENV === Environment.DEVELOPMENT) {
     connectSrc.push('*');
+    app.enableCors()
+    const config = new DocumentBuilder()
+      .setTitle('Cats example')
+      .setDescription('The cats API description')
+      .setVersion('1.0')
+      .addTag('cats')
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
   }
 
   // app.use(cookieParser()) // node module

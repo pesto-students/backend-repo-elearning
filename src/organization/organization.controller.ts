@@ -4,26 +4,26 @@ import { CreateOrganizationDto, GetOrganizationQueryDto } from "./dto/create-org
 
 @Controller('organization')
 export class OrganizationController {
-    constructor(private readonly organizationService: OrganizationService){}
+  constructor(private readonly organizationService: OrganizationService) { }
 
-    @Post('create')
-    async create(@Body() createOrganizationDto: CreateOrganizationDto){ 
-      return await this.organizationService.create(createOrganizationDto); 
-    }
+  @Post('create')
+  async create(@Body() createOrganizationDto: CreateOrganizationDto) {
+    return await this.organizationService.create(createOrganizationDto);
+  }
 
-    @Post('fetch')
-    async fetchOrganization(@Body() condition: GetOrganizationQueryDto){
-      return await this.organizationService.fetchOrganization(condition);
-    }
+  @Post('fetch')
+  async fetchOrganization(@Body() condition: GetOrganizationQueryDto) {
+    return await this.organizationService.fetchOrganization(condition);
+  }
 
-    @Post('organizationType/save')
-    async saveOrganizationType(@Body() organizationType, @Res() res: Response){
-       return await this.organizationService.organizationType(organizationType);
-    }
+  @Post('organizationType/save')
+  async saveOrganizationType(@Body() organizationType, @Res() res: Response) {
+    return await this.organizationService.organizationType(organizationType);
+  }
 
-    @Get('organizationType/fetch')
-    async fetchOrganiationType(){
-      return await this.organizationService.fetchOrganizationType();
-    }
-   
+  @Get('organizationType/fetch')
+  async fetchOrganiationType() {
+    return await this.organizationService.fetchOrganizationType();
+  }
+
 }

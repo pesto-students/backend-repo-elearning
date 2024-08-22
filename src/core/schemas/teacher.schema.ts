@@ -7,12 +7,12 @@ import { State } from "./state.schema";
 import { City } from "./city.schema";
 
 @BaseSchemaOptions()
-export class Teacher extends BaseSchema { 
+export class Teacher extends BaseSchema {
 
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Branch', required: true})
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Branch', required: true })
     branchId: Branch;
 
-    @Prop({type: String, required: true})
+    @Prop({ type: String, required: true })
     firstName: string;
 
     @Prop({ type: String })

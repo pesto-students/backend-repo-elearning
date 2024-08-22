@@ -3,11 +3,11 @@ import { Document, Types } from 'mongoose';
 import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
 @BaseSchemaOptions()
-export class OnlineClassAttendance extends BaseSchema { 
+export class OnlineClassAttendance extends BaseSchema {
 
   @Prop({ type: Types.ObjectId, ref: 'Branch', required: true })
   branchId: Types.ObjectId;
-  
+
   @Prop({ type: Types.ObjectId, ref: 'OnlineClass', required: true })
   onlineClassId: Types.ObjectId;
 

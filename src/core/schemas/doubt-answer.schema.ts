@@ -7,7 +7,7 @@ export class DoubtAnswer extends BaseSchema {
 
   @Prop({ type: Types.ObjectId, ref: 'Branch', required: true })
   branchId: Types.ObjectId;
-  
+
   @Prop({ type: Types.ObjectId, ref: 'DoubtQuestion', required: true })
   doubtQuestionId: Types.ObjectId;
 

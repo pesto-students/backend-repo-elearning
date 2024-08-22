@@ -3,7 +3,7 @@ import { Document, Types } from 'mongoose';
 import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
 @BaseSchemaOptions()
-export class DoubtQuestion extends BaseSchema { 
+export class DoubtQuestion extends BaseSchema {
 
   @Prop({ type: Types.ObjectId, ref: 'Doubt', required: true })
   doubtId: Types.ObjectId;

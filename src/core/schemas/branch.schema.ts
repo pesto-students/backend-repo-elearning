@@ -8,7 +8,6 @@ import { City } from './city.schema';
 
 @BaseSchemaOptions()
 export class Branch extends BaseSchema {
-   
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Organization', required: true })
   organizationId: Organization;
 

@@ -3,7 +3,7 @@ import { Types } from 'mongoose';
 
 export class CreateOrganizationDto {
 
-  @IsString({message: "Please enter valid Organization id"})
+  @IsString({ message: "Please enter valid Organization id" })
   @IsNotEmpty()
   organizationId: string;
 
@@ -46,6 +46,10 @@ export class CreateOrganizationDto {
   @IsOptional()
   @IsBoolean()
   emailVerified: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string
 }
 
 
@@ -53,16 +57,16 @@ export class GetOrganizationQueryDto {
   @IsOptional()
   @IsString()
   organizationId?: string;
-  
+
   @IsOptional()
   @IsMongoId()
   _id?: string;
-  
+
   @IsOptional()
   @IsMongoId()
   organizationTypeId?: string;
- 
-  constructor(partial: Promise<GetOrganizationQueryDto>){
+
+  constructor(partial: Promise<GetOrganizationQueryDto>) {
     Object.assign(this, partial);
   }
 }

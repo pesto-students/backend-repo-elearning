@@ -5,11 +5,11 @@ import { OrganizationRepository } from "./repository/organization.repository";
 import { Organization } from "src/core/schemas/organization.schema";
 
 @Injectable()
-export class OrganizationService{
+export class OrganizationService {
 
-    constructor(private readonly organizationRepository: OrganizationRepository){}
+    constructor(private readonly organizationRepository: OrganizationRepository) { }
 
-    async create(createOrganizationDto: CreateOrganizationDto){
+    async create(createOrganizationDto: CreateOrganizationDto) {
         const condition: GetOrganizationQueryDto = {
             organizationId: createOrganizationDto?.organizationId
         };
@@ -20,15 +20,15 @@ export class OrganizationService{
         return await this.organizationRepository.create(createOrganizationDto);
     }
 
-    async organizationType(organizationType:string){ 
-        return await this.organizationRepository.createOrganizationType(organizationType);  
+    async organizationType(organizationType: string) {
+        return await this.organizationRepository.createOrganizationType(organizationType);
     }
 
-    async fetchOrganizationType(): Promise<any>{ 
-       return await this.organizationRepository.fetchOrganizationType();     
+    async fetchOrganizationType(): Promise<any> {
+        return await this.organizationRepository.fetchOrganizationType();
     }
 
-    async fetchOrganization(condition: GetOrganizationQueryDto): Promise<Organization[]>{
+    async fetchOrganization(condition: GetOrganizationQueryDto): Promise<Organization[]> {
         return await this.organizationRepository.fetchOrganizationWithDetails(condition);
     }
 

@@ -4,7 +4,6 @@ import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
 @BaseSchemaOptions()
 export class Module extends BaseSchema {
-  
   @Prop({ type: String, required: true })
   moduleName: string;
 

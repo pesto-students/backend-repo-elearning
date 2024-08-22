@@ -9,7 +9,7 @@ import { TeacherService } from "./teacher.service";
 import { TeacherRepository } from "./repository/teacher.repository";
 
 @Module({
-    imports:[
+    imports: [
         MongooseModule.forFeature([
             {
                 name: Teacher.name,
@@ -29,9 +29,9 @@ import { TeacherRepository } from "./repository/teacher.repository";
             },
         ])
     ],
-    providers:[TeacherService, TeacherRepository],
-    controllers:[TeacherController],
-    exports:[]
+    providers: [TeacherService, TeacherRepository],
+    controllers: [TeacherController],
+    exports: []
 })
 
-export class TeacherModule{}
+export class TeacherModule { }
