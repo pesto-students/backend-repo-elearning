@@ -11,6 +11,7 @@ import { BranchModule } from './branch/branch.module';
 import { TeacherModule } from './teachers/teacher.module';
 import { ClassModule } from './classes/class.module';
 import { OnlineClassModule } from './online-class/online-class.module';
+import { StudentModule } from './students/student.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { OnlineClassModule } from './online-class/online-class.module';
     TeacherModule,
     ClassModule,
     OnlineClassModule,
+    StudentModule
   ],
   controllers: [AppController],
   providers: [AppService],
