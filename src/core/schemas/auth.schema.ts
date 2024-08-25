@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document, Types } from 'mongoose';
 import { BaseSchema, BaseSchemaOptions } from './base.schema';
 import { Branch } from './branch.schema';
+import { Organization } from './organization.schema';
 
 @BaseSchemaOptions()
 export class Auth extends BaseSchema {
@@ -26,6 +27,18 @@ export class Auth extends BaseSchema {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Branch', required: true })
   branchId: Branch;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Organization', required: true })
+  organizationId: Organization;
+
+  @Prop({ type: Boolean, default: false, required: true })
+  isActive: Boolean;
+
+  @Prop()
+  verificationToken: string;
+
+  @Prop()
+  verificationTokenExpires: Date;
 
 }
 

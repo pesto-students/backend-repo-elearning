@@ -26,7 +26,7 @@ export class Organization extends BaseSchema {
     @Prop({ type: String, required: true, formControl: { name: 'input', type: 'email', label: "Organization Email ID" } })
     email: string;
 
-    @Prop({ type: String, required: true, formControl: { name: 'input', type: 'password', label: "Password" } })
+    @Prop({ type: String, formControl: { name: 'input', type: 'password', label: "Password", required: true } })
     password: string;
 
     @Prop({ type: String, required: true, formControl: { name: "input", label: "Organization Contact Number", maxLength: 10 } })

@@ -34,6 +34,9 @@ export class Branch extends BaseSchema {
 
   @Prop({ type: String, required: true })
   phone: string;
+
+  @Prop({ type: Boolean, default: true })
+  isActive: boolean;
 }
 
 export const BranchSchema = SchemaFactory.createForClass(Branch);

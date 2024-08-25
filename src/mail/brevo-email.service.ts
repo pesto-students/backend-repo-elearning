@@ -8,7 +8,7 @@ import { HandlebarsService } from './handlebars.service';
 export class BrevoEmailService {
     private readonly apiInstance: TransactionalEmailsApi;
 
-    constructor(private readonly handlebarsService: HandlebarsService) {
+    constructor() {
       this.apiInstance = new TransactionalEmailsApi();
       this.apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_EMAIL_API_KEY); // Replace with your actual API key
     }
@@ -16,10 +16,8 @@ export class BrevoEmailService {
     async sendEmail(
         to: string,
         subject: string,
-        templateName: string,
-        context: any
+        htmlContent: string,
       ) {
-        const htmlContent = await this.handlebarsService.renderTemplate(templateName, context);
     
         const sendSmtpEmail = new SendSmtpEmail();
         sendSmtpEmail.subject = subject;
@@ -31,10 +29,8 @@ export class BrevoEmailService {
     
         try {
           const response = await this.apiInstance.sendTransacEmail(sendSmtpEmail);
-          console.log('Email sent successfully:', response);
-          return response;
+          return response.response.statusCode;
         } catch (error) {
-          console.error('Error sending email:', error);
           throw error;
         }
       }
