@@ -10,6 +10,7 @@ import { Country, CountrySchema } from "src/core/schemas/country.schema";
 import { State, StateSchema } from "src/core/schemas/state.schema";
 import { OrganizationSchemaService } from "./organization.schema.service";
 import { OrganizationSchemaController } from "./organization.schema.controller";
+import { EmailModule } from "src/mail/email.module";
 
 @Module({
     imports: [
@@ -35,6 +36,7 @@ import { OrganizationSchemaController } from "./organization.schema.controller";
                 schema: CitySchema
             },
         ]),
+        EmailModule
     ],
     controllers: [OrganizationController, OrganizationSchemaController],
     providers: [OrganizationService, OrganizationRepository, OrganizationSchemaService]
