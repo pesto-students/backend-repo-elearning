@@ -11,6 +11,9 @@ import { State, StateSchema } from "src/core/schemas/state.schema";
 import { OrganizationSchemaService } from "./organization.schema.service";
 import { OrganizationSchemaController } from "./organization.schema.controller";
 import { EmailModule } from "src/mail/email.module";
+import { Branch, BranchSchema } from "src/core/schemas/branch.schema";
+import { Auth, AuthSchema } from "src/core/schemas/auth.schema";
+import { UserModule } from "src/users/user.module";
 
 @Module({
     imports: [
@@ -35,8 +38,16 @@ import { EmailModule } from "src/mail/email.module";
                 name: City.name,
                 schema: CitySchema
             },
+            {
+                name: Branch.name,
+                schema: BranchSchema
+            },
+            {
+                name: Auth.name,
+                schema: AuthSchema
+            }
         ]),
-        EmailModule
+        UserModule
     ],
     controllers: [OrganizationController, OrganizationSchemaController],
     providers: [OrganizationService, OrganizationRepository, OrganizationSchemaService]

@@ -1,0 +1,7 @@
+export enum UserTypeEnum {
+    SUPER_ADMIN = 'SUPER_ADMIN',
+    ORG_ADMIN = 'ORG_ADMIN',
+    BRANCH_ADMIN = 'BRANCH_ADMIN',
+    TEACHER = 'TEACHER',
+    STUDENT = 'STUDENT',
+  }

@@ -1,12 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { UserRepository } from "./repository/user.repository";
+import { EmailSubjectEnum } from "src/mail/enum/email-subject.enum";
+import { EmailProvider } from "src/mail/enum/email-providers.enum";
+import { EmailTemplateEnum } from "src/mail/enum/email-template.enum";
+import { EmailService } from "src/mail/email.service";
 export type User = any;
 
 @Injectable()
 
 export class UserService {
 
-    constructor(private userRepository: UserRepository){}
+    constructor(private userRepository: UserRepository,
+      private emailService: EmailService
+    ){}
 
     private readonly users = [
         {
@@ -28,5 +34,35 @@ export class UserService {
       async createUserType(userTypeDto){
         return this.userRepository.createUserType(userTypeDto);
       }
+
+      async sendVerificationMail(verificationData){
+        const to = verificationData?.email;
+        const subject = EmailSubjectEnum.EMAIL_VERIFICATION;
+        const templateName = EmailTemplateEnum.EMAIL_VERIFICATION;
+        const context = verificationData;
+    
+        await this.emailService.sendEmail(
+          EmailProvider.BREVO,
+          to,
+          subject,
+          templateName,
+          context
+        );
+      }
+
+      async sendWelcomeEmail(userDetails) {
+        const to = userDetails?.email;
+        const subject = EmailSubjectEnum.WELCOME;
+        const templateName = EmailTemplateEnum.ONBOARD_ORGANIZATION;
+        const context = { username: userDetails.name };
+    
+        await this.emailService.sendEmail(
+          EmailProvider.BREVO,
+          to,
+          subject,
+          templateName,
+          context
+        );
+    }
 
 }

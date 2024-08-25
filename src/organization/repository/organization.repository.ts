@@ -1,36 +1,75 @@
-import { ConflictException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import mongoose, { Model, Types } from "mongoose";
+import { Model } from "mongoose";
 import { Organization } from "src/core/schemas/organization.schema";
 import { CreateOrganizationDto, GetOrganizationQueryDto } from "../dto/create-organization.dto";
 import { UpdateOrganizationDto } from "../dto/update-organization.dto";
 import { OrganizationType } from "src/core/schemas/organization-type.schema";
 import { transformId } from "src/core/utils/mongo-res.utils";
-import { State } from "src/core/schemas/state.schema";
-import { City } from "src/core/schemas/city.schema";
-import { Country } from "src/core/schemas/country.schema";
 import { OrganizationWithDetails } from "src/core/interface/organization.interface";
+import { Branch } from "src/core/schemas/branch.schema";
+import { Auth } from "src/core/schemas/auth.schema";
+import { BranchDto } from "src/branch/dto/branch.dto";
+import { UserTypeEnum } from "src/core/enums/user-type.enum";
 
 @Injectable()
 export class OrganizationRepository {
   constructor(
     @InjectModel(Organization.name) private organizationModel: Model<Organization>,
     @InjectModel(OrganizationType.name) private organizationTypeModel: Model<OrganizationType>,
-    @InjectModel(Country.name) private countryModel: Model<Country>,
-    @InjectModel(State.name) private stateModel: Model<State>,
-    @InjectModel(City.name) private cityModel: Model<City>,
+    @InjectModel(Branch.name) private branchModel: Model<Branch>,
+    @InjectModel(Auth.name) private authModel: Model<Auth>
   ) { }
 
-  async create(createOrganizationDto: CreateOrganizationDto): Promise<boolean> {
+  async create(createOrganizationDto: CreateOrganizationDto): Promise<boolean>{
+    
+    const session = await this.organizationModel.db.startSession();
+    session.startTransaction();
+
     try {
-      const createdOrganization = new this.organizationModel(createOrganizationDto);
-      const res = await createdOrganization.save();
-      return res ? true : false;
+      const originalData = createOrganizationDto;
+      const {password, ...organizationData} = createOrganizationDto;
+      const organization = await this.organizationModel.create([organizationData], { session });
+   
+      const branchData = {
+        organizationId: organization[0]._id.toString(),
+        name: organizationData.name,
+        address: organizationData.address,
+        countryId: organizationData.countryId,
+        stateId: organizationData.stateId,
+        cityId: organizationData.cityId,
+        pincode: organizationData.pincode,
+        email: organizationData.email,
+        phone: organizationData.phone
+      };
+
+      const branch = await this.branchModel.create([branchData], { session });
+
+      const authData = {
+        userId: organization[0]._id.toString(),
+        username: organization[0].email,
+        password: password,
+        isVerified: false,
+        userType: UserTypeEnum.ORG_ADMIN,
+        branchId: branch[0]._id.toString(),
+        organizationId: organization[0]._id.toString()
+      }
+
+      await this.authModel.create([authData], { session });
+
+      await session.commitTransaction();
+
+      return true;
+
     } catch (error) {
+      await session.abortTransaction();
+      
       if (error.code === 11000) { // MongoDB duplicate key error code
         throw new ConflictException('Organization ID already exists');
       }
       throw error;
+    } finally {
+      session.endSession();
     }
   }
 
