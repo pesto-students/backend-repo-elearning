@@ -2,21 +2,18 @@ import { Injectable } from "@nestjs/common";
 import { CreateOrganizationDto, GetOrganizationQueryDto } from "./dto/create-organization.dto";
 import { OrganizationRepository } from "./repository/organization.repository";
 import { Organization } from "src/core/schemas/organization.schema";
-import { EmailService } from "src/mail/email.service";
-import { EmailProvider } from "src/mail/enum/email-providers.enum";
-import { EmailSubjectEnum } from "src/mail/enum/email-subject.enum";
 import { AuthUtils } from "src/core/utils/auth.utils";
-import { EmailTemplateEnum } from "src/mail/enum/email-template.enum";
 import { UserService } from "src/users/users.service";
 import { EncryptionUtils } from "src/core/utils/encryption.utils";
-import { randomBytes } from "node:crypto";
 import { DateUtils } from "src/core/utils/date.utils";
+import { AuthService } from "src/auth/auth.service";
 
 @Injectable()
 export class OrganizationService {
 
     constructor(private readonly organizationRepository: OrganizationRepository,
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly authService: AuthService
     ) { }
 
     async create(organizationData: CreateOrganizationDto) {
@@ -35,9 +32,7 @@ export class OrganizationService {
         
         const res: boolean = await this.organizationRepository.create(organizationData);
         if(res){
-            const linkExpire = parseInt(process.env.VERIFICATION_TOKEN_EXPIRES)/60;
-            const encryptedToken: string = await EncryptionUtils.encryptWithPublicKey(JSON.stringify({name: organizationData.name, email: organizationData.email, linkExpire: DateUtils.addTimeToDate(new Date(), {seconds: linkExpire})}));
-            const verificationLink = `${process.env.FRONT_END_URL}/verify-email?token=${encryptedToken}`;
+            const verificationLink: string = await this.authService.createVerificationLink({name: organizationData.name, email: organizationData.email})
             await this.userService.sendWelcomeEmail({name: organizationData.name, email: organizationData.email});
             await this.userService.sendVerificationMail(
                 {

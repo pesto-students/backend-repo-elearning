@@ -6,17 +6,34 @@ import { Student } from "src/core/schemas/student.schema";
 import { AbstractSchemaMetadataService } from "src/common/abstract-schema-metadata.service";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { AuthService } from "src/auth/auth.service";
+import { UserService } from "src/users/users.service";
 
 @Injectable()
 export class StudentService extends AbstractSchemaMetadataService<Student>{
+
     constructor(
         private studentRepository: StudentRepository, 
-        @InjectModel(Student.name) studentModel: Model<Student>){
+        @InjectModel(Student.name) studentModel: Model<Student>,
+        private authService: AuthService,
+        private userService: UserService
+    ){
             super(studentModel)
         }
 
     async CreateStudent(studentDto: StudentDto) {
-        return await this.studentRepository.create(studentDto);
+        const res = await this.studentRepository.create(studentDto);
+        if(res){
+            const verificationLink: string = await this.authService.createVerificationLink({name: studentDto.firstName, email: studentDto.email})
+            await this.userService.sendWelcomeEmail({name: studentDto.firstName, email: studentDto.email});
+            await this.userService.sendVerificationMail(
+                {
+                    name: studentDto.firstName, 
+                    email: studentDto.email, 
+                    verificationLink,
+                    currentYear:  new Date().getFullYear()
+                });
+        }
     }
 
     async fetchStudent(condition: DbQueryConditionDto): Promise<Student[]> {
