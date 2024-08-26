@@ -6,7 +6,9 @@ import { Teacher } from "src/core/schemas/teacher.schema";
 
 @Injectable()
 export class OnlineClassService{
-    constructor(private onlineClassRepository: OnlineClassRepository){}
+    constructor(
+        private onlineClassRepository: OnlineClassRepository
+    ){}
 
     async createOnlineClass(onlineClassDto: OnlineClassDto) {
         return await this.onlineClassRepository.create(onlineClassDto);

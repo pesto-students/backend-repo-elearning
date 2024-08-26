@@ -2,24 +2,18 @@ import { Injectable } from "@nestjs/common";
 import { StudentRepository } from "./repository/student.repository";
 import { StudentDto } from "./dto/student.dto";
 import { DbQueryConditionDto } from "./dto/db-query-condition.dto";
-import { Student } from "src/core/schemas/student.schema";
-import { AbstractSchemaMetadataService } from "src/common/abstract-schema-metadata.service";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Student } from "src/core/schemas/student.schema"; 
 import { AuthService } from "src/auth/auth.service";
 import { UserService } from "src/users/users.service";
 
 @Injectable()
-export class StudentService extends AbstractSchemaMetadataService<Student>{
+export class StudentService{
 
     constructor(
-        private studentRepository: StudentRepository, 
-        @InjectModel(Student.name) studentModel: Model<Student>,
+        private studentRepository: StudentRepository,
         private authService: AuthService,
         private userService: UserService
-    ){
-            super(studentModel)
-        }
+    ){}
 
     async CreateStudent(studentDto: StudentDto) {
         const res = await this.studentRepository.create(studentDto);

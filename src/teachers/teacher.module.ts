@@ -31,7 +31,7 @@ import { TeacherRepository } from "./repository/teacher.repository";
     ],
     providers: [TeacherService, TeacherRepository],
     controllers: [TeacherController],
-    exports: []
+    exports: [TeacherService]
 })
 
 export class TeacherModule { }

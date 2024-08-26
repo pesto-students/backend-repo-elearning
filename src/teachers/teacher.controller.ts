@@ -16,10 +16,5 @@ export class TeacherController {
     async fetchTeacher(@Body() condition: GetTeacherQueryDto) {
         return await this.teacherService.fetchTeacher(condition);
     }
-
-    @Get('schema')
-    getTeacherSchemaMetadata() {
-        return this.teacherService.getSchemaMetadata();
-    }
-
+ 
 }

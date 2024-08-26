@@ -3,15 +3,14 @@ import { CreateOrganizationDto, GetOrganizationQueryDto } from "./dto/create-org
 import { OrganizationRepository } from "./repository/organization.repository";
 import { Organization } from "src/core/schemas/organization.schema";
 import { AuthUtils } from "src/core/utils/auth.utils";
-import { UserService } from "src/users/users.service";
-import { EncryptionUtils } from "src/core/utils/encryption.utils";
-import { DateUtils } from "src/core/utils/date.utils";
+import { UserService } from "src/users/users.service"; 
 import { AuthService } from "src/auth/auth.service";
 
 @Injectable()
 export class OrganizationService {
 
-    constructor(private readonly organizationRepository: OrganizationRepository,
+    constructor(
+        private readonly organizationRepository: OrganizationRepository,
         private readonly userService: UserService,
         private readonly authService: AuthService
     ) { }

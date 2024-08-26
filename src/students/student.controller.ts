@@ -17,10 +17,5 @@ export class StudentController {
     async fetchStudent(@Body() condition: DbQueryConditionDto) {
         return await this.studentService.fetchStudent(condition);
     }
-
-    @Get('schema')
-    getStudentSchemaMetadata() {
-        return this.studentService.getSchemaMetadata();
-    }
-
+  0
 }
