@@ -9,7 +9,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
 
   const NODE_ENV = process.env.NODE_ENV;
-  const port = parseInt(process.env.PORT) || 4000;
+  const port = parseInt(process.env.PORT,10) || 4000;
+  console.log("port set on: ",port)
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors();
   app.setGlobalPrefix('api', {
