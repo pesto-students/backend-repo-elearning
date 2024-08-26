@@ -8,9 +8,7 @@ import { OrganizationType, OrganizationTypeSchema } from "src/core/schemas/organ
 import { City, CitySchema } from "src/core/schemas/city.schema";
 import { Country, CountrySchema } from "src/core/schemas/country.schema";
 import { State, StateSchema } from "src/core/schemas/state.schema";
-import { OrganizationSchemaService } from "./organization.schema.service";
-import { OrganizationSchemaController } from "./organization.schema.controller";
- import { Branch, BranchSchema } from "src/core/schemas/branch.schema";
+import { Branch, BranchSchema } from "src/core/schemas/branch.schema";
 import { Auth, AuthSchema } from "src/core/schemas/auth.schema";
 import { UserModule } from "src/users/user.module";
 import { UserRepository } from "src/users/repository/user.repository";
@@ -55,8 +53,8 @@ import { AuthModule } from "src/auth/auth.module";
         UserModule,
         AuthModule
     ],
-    controllers: [OrganizationController, OrganizationSchemaController],
-    providers: [OrganizationService, OrganizationRepository, OrganizationSchemaService, UserRepository]
+    controllers: [OrganizationController],
+    providers: [OrganizationService, OrganizationRepository, UserRepository]
 })
 
 export class OrganizationModule { }
