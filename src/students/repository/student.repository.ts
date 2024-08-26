@@ -5,23 +5,46 @@ import { StudentWithDetailsInterface } from "src/core/interface/student.interfac
 import { Student } from "src/core/schemas/student.schema";
 import { DbQueryConditionDto } from "../dto/db-query-condition.dto";
 import { StudentDto } from "../dto/student.dto";
+import { UserTypeEnum } from "src/core/enums/user-type.enum";
+import { AuthUtils } from "src/core/utils/auth.utils";
+import { UserRepository } from "src/users/repository/user.repository";
 
 @Injectable()
 export class StudentRepository{
     constructor(
-        @InjectModel(Student.name) private studentModel: Model<Student>
+        @InjectModel(Student.name) private studentModel: Model<Student>,
+        private userRepository: UserRepository
     ){}
 
     async create(studentDto: StudentDto): Promise<boolean> {
+      const session = await this.studentModel.db.startSession();
+    session.startTransaction();
         try {
-          const createStudet = new this.studentModel(studentDto);
-          const res = await createStudet.save(); 
-          return res ? true: false;
+          const hasPassword: string = await AuthUtils.createPasswordHash('student');
+
+          const createStudet = await this.studentModel.create([studentDto], { session });
+          const authData = {
+            userId: createStudet[0]._id.toString(),
+            username: createStudet[0].email,
+            password: hasPassword,
+            isVerified: false,
+            userType: UserTypeEnum.STUDENT,
+            branchId: createStudet[0].branchId.toString(),
+          }
+    
+          // await this.authModel.create([authData], { session });
+          await this.userRepository.createAuth(authData, session);
+    
+          await session.commitTransaction();
+          return true;
         } catch (error) {
+          await session.abortTransaction();
           if (error.code === 11000) { // MongoDB duplicate key error code
             throw new ConflictException('Student already exists');
           }
           throw error; 
+        } finally {
+          session.endSession();
         }
       }
 

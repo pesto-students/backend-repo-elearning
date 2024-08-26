@@ -13,13 +13,7 @@ export class HandlebarsService {
     }
 
   async renderTemplate(templateName: string, context: any): Promise<string> {
-    console.log("Template Path: ", this.templatesPath);
     const templatePath = path.join(this.templatesPath, `${templateName}.hbs`);
-    console.log("TemplatePath: ", templatePath);
-    
-    // if (!fs.existsSync(templatePath)) {
-    //   throw new Error(`Template file ${templatePath} does not exist`);
-    // }
 
     const templateSource = fs.readFileSync(templatePath, 'utf8');
     const template = handlebars.compile(templateSource);

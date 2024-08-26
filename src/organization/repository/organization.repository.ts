@@ -11,6 +11,7 @@ import { Branch } from "src/core/schemas/branch.schema";
 import { Auth } from "src/core/schemas/auth.schema";
 import { BranchDto } from "src/branch/dto/branch.dto";
 import { UserTypeEnum } from "src/core/enums/user-type.enum";
+import { UserRepository } from "src/users/repository/user.repository";
 
 @Injectable()
 export class OrganizationRepository {
@@ -18,7 +19,8 @@ export class OrganizationRepository {
     @InjectModel(Organization.name) private organizationModel: Model<Organization>,
     @InjectModel(OrganizationType.name) private organizationTypeModel: Model<OrganizationType>,
     @InjectModel(Branch.name) private branchModel: Model<Branch>,
-    @InjectModel(Auth.name) private authModel: Model<Auth>
+    // @InjectModel(Auth.name) private authModel: Model<Auth>,
+    private userRepository: UserRepository
   ) { }
 
   async create(createOrganizationDto: CreateOrganizationDto): Promise<boolean>{
@@ -27,7 +29,6 @@ export class OrganizationRepository {
     session.startTransaction();
 
     try {
-      const originalData = createOrganizationDto;
       const {password, ...organizationData} = createOrganizationDto;
       const organization = await this.organizationModel.create([organizationData], { session });
    
@@ -55,7 +56,8 @@ export class OrganizationRepository {
         organizationId: organization[0]._id.toString()
       }
 
-      await this.authModel.create([authData], { session });
+      // await this.authModel.create([authData], { session });
+      await this.userRepository.createAuth(authData, session);
 
       await session.commitTransaction();
 

@@ -23,7 +23,7 @@ export class UserRepository{
         return await this.authModel.findOne(query).exec();
       }
     
-      async findOneById(id: string): Promise<Auth | null> {
+    async findOneById(id: string): Promise<Auth | null> {
         return await this.authModel.findById(id).exec();
       }
 
@@ -44,6 +44,13 @@ export class UserRepository{
         ).exec();
 
         return transformId(updatedUser);
+    }
+
+    async createAuth(authData, session?){
+        if(session){
+            return await this.authModel.create([authData], { session });
+        }
+
     }
 
 }

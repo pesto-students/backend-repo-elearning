@@ -10,11 +10,13 @@ import { Country, CountrySchema } from "src/core/schemas/country.schema";
 import { State, StateSchema } from "src/core/schemas/state.schema";
 import { OrganizationSchemaService } from "./organization.schema.service";
 import { OrganizationSchemaController } from "./organization.schema.controller";
-import { EmailModule } from "src/mail/email.module";
-import { Branch, BranchSchema } from "src/core/schemas/branch.schema";
+ import { Branch, BranchSchema } from "src/core/schemas/branch.schema";
 import { Auth, AuthSchema } from "src/core/schemas/auth.schema";
 import { UserModule } from "src/users/user.module";
-
+import { UserRepository } from "src/users/repository/user.repository";
+import { UserType, userTypeSchema } from "src/core/schemas/user-type.schema";
+import { AuthModule } from "src/auth/auth.module";
+ 
 @Module({
     imports: [
         MongooseModule.forFeature([
@@ -45,12 +47,16 @@ import { UserModule } from "src/users/user.module";
             {
                 name: Auth.name,
                 schema: AuthSchema
+            },{
+                name: UserType.name,
+                schema: userTypeSchema
             }
         ]),
-        UserModule
+        UserModule,
+        AuthModule
     ],
     controllers: [OrganizationController, OrganizationSchemaController],
-    providers: [OrganizationService, OrganizationRepository, OrganizationSchemaService]
+    providers: [OrganizationService, OrganizationRepository, OrganizationSchemaService, UserRepository]
 })
 
 export class OrganizationModule { }

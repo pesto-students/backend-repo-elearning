@@ -11,7 +11,7 @@ import { TeacherModule } from './teachers/teacher.module';
 import { ClassModule } from './classes/class.module';
 import { OnlineClassModule } from './online-class/online-class.module';
 import { StudentModule } from './students/student.module'; 
-
+ 
 @Module({
   imports: [
     ConfigModule.forRoot(),

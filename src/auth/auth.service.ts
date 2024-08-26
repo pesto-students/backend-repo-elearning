@@ -1,45 +1,69 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { UserService } from "src/users/users.service";
-import { LoginDto } from "./dtos/login.dto";
-import { AuthUtils } from "src/core/utils/auth.utils";
-import { Auth } from "src/core/schemas/auth.schema";
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { AuthUtils } from 'src/core/utils/auth.utils';
+import { UserService } from 'src/users/users.service';
+import { EcnryptedTokenDto } from './dto/verification-link.dto';
+import { EncryptionUtils } from 'src/core/utils/encryption.utils';
+import { DateUtils } from 'src/core/utils/date.utils';
+import { AuthInputDto, AuthResultDto, SignInDataDto } from './dto/auth.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
-
-export class AuthService{
-
+export class AuthService {
     constructor(
         private userService: UserService,
         private jwtService: JwtService
     ){} 
 
-    async validateUser(username: string, password: string): Promise<any>{
 
-        const user: Auth = await this.userService.findUserByEmail(username);
+    async authenticate(input: AuthInputDto): Promise<AuthResultDto>{
+        const user = await this.validateUser(input);
+        if(!user){
+            throw new UnauthorizedException();
+        }
 
+        return this.signIn(user);
+    }
+
+    async validateUser(input: AuthInputDto): Promise<SignInDataDto | null>{
+        const user = await this.userService.findUserByEmail(input.username);
         if (!user) {
             throw new NotFoundException('Username not found, please try again');
         }
+        const passwordMatched: boolean = await AuthUtils.matchHashPassword(user.password, input.password);
 
-        const passwordMatched: boolean = await AuthUtils.matchHashPassword(user.password, password);
-
-        if(passwordMatched){
-            const { password, ...result } = user;
-            return result;
+        if(user && passwordMatched){
+            return {
+                userId: user._id.toString(),
+                username: user.username
+            }
         }
         return null;
     }
 
-    async login(userCred: LoginDto){
-        const payload = { username: userCred.username, password: userCred.password };
-        return {
-            access_token: this.jwtService.sign(payload),
+    async createVerificationLink(tokenData: EcnryptedTokenDto): Promise<string>{
+        const linkExpire = parseInt(process.env.VERIFICATION_TOKEN_EXPIRES)/60;
+        const encryptedToken: string = await EncryptionUtils.encryptWithPublicKey(
+            JSON.stringify(
+            {
+                ...tokenData,
+                linkExpire: DateUtils.addTimeToDate(new Date(), {seconds: linkExpire})
+            })
+        );
+        return `${process.env.FRONT_END_URL}/verify-email?token=${encryptedToken}`;
+    }
+
+    async signIn(user: SignInDataDto): Promise<AuthResultDto>{
+        const tokenPayload = {
+            sub: user.userId,
+            username: user.username
         }
-    }
 
-    async findUserById(userId: string) {
-        return await this.userService.findUserById(userId);
-    }
+        const accessToken = await this.jwtService.signAsync(tokenPayload);
 
+        return {
+            accessToken,
+            username: user.username,
+            userId: user.userId
+        };
+    }
 }
