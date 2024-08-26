@@ -17,9 +17,9 @@ export class TeacherController {
         return await this.teacherService.fetchTeacher(condition);
     }
 
-    @Get('schema')
-    getTeacherSchemaMetadata() {
-        return this.teacherService.getSchemaMetadata();
-    }
+    // @Get('schema')
+    // getTeacherSchemaMetadata() {
+    //     return this.teacherService.getSchemaMetadata();
+    // }
 
 }

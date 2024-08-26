@@ -10,16 +10,13 @@ import { AuthService } from "src/auth/auth.service";
 import { UserService } from "src/users/users.service";
 
 @Injectable()
-export class StudentService extends AbstractSchemaMetadataService<Student>{
+export class StudentService{
 
     constructor(
-        private studentRepository: StudentRepository, 
-        @InjectModel(Student.name) studentModel: Model<Student>,
+        private studentRepository: StudentRepository,
         private authService: AuthService,
         private userService: UserService
-    ){
-            super(studentModel)
-        }
+    ){}
 
     async CreateStudent(studentDto: StudentDto) {
         const res = await this.studentRepository.create(studentDto);
