@@ -5,6 +5,7 @@ import { UserType, userTypeSchema } from "src/core/schemas/user-type.schema";
 import { UserController } from "./users.controller";
 import { UserRepository } from "./repository/user.repository";
 import { EmailModule } from "src/mail/email.module";
+import { Auth, AuthSchema } from "src/core/schemas/auth.schema";
 
 @Module({
     imports: [
@@ -12,6 +13,10 @@ import { EmailModule } from "src/mail/email.module";
             {
                 name: UserType.name,
                 schema: userTypeSchema
+            },
+            {
+                name: Auth.name,
+                schema: AuthSchema
             }
         ]),
         EmailModule
