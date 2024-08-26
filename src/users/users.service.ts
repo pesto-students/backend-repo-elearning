@@ -4,6 +4,7 @@ import { EmailSubjectEnum } from "src/mail/enum/email-subject.enum";
 import { EmailProvider } from "src/mail/enum/email-providers.enum";
 import { EmailTemplateEnum } from "src/mail/enum/email-template.enum";
 import { EmailService } from "src/mail/email.service";
+import { Auth } from "src/core/schemas/auth.schema";
 export type User = any;
 
 @Injectable()
@@ -27,12 +28,25 @@ export class UserService {
         },
       ];
     
-      async findOne(username: string): Promise<User | undefined> {
-        return this.users.find(user => user.username === username);
+      async findUserByEmail(username: string): Promise<Auth> {
+        return await this.userRepository.findOne({ username });
+      }
+    
+      async findUserById(id: string) {
+        return this.userRepository.findOneById(id);
       }
 
       async createUserType(userTypeDto){
         return this.userRepository.createUserType(userTypeDto);
+      }
+
+      async updateLastLoginAndToken(userId: string, token: string): Promise<any> {
+        const updateData = {
+          lastLogin: new Date(),
+          token: token,
+        };
+    
+        return this.userRepository.updateUser({ _id: userId }, updateData);
       }
 
       async sendVerificationMail(verificationData){
