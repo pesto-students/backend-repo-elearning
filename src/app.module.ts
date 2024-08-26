@@ -11,6 +11,9 @@ import { TeacherModule } from './teachers/teacher.module';
 import { ClassModule } from './classes/class.module';
 import { OnlineClassModule } from './online-class/online-class.module';
 import { StudentModule } from './students/student.module'; 
+import { SchemaService } from './schema/schema.service';
+import { SchemaController } from './schema/schema.controller';
+import { SchemaModule } from './schema/schema.module';
  
 @Module({
   imports: [
@@ -23,9 +26,10 @@ import { StudentModule } from './students/student.module';
     TeacherModule,
     ClassModule,
     OnlineClassModule,
-    StudentModule
+    StudentModule,
+    SchemaModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, SchemaController],
+  providers: [AppService, SchemaService],
 })
 export class AppModule { }
