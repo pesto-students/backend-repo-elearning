@@ -13,7 +13,6 @@ export class Student extends BaseSchema {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Branch', 
         required: true,
-        formControl: { name: 'select', label: 'Branch', required: true }
     })
     branchId: Branch;
 
