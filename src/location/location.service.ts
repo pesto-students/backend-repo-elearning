@@ -25,6 +25,10 @@ export class LocationService {
         return this.locationRepository.findCity(condition);
     }
 
+    async searchCity(keyword: string, limit=10){
+        return await this.locationRepository.searchCityNamesLike(keyword, limit);
+    }
+
     async firstTimeDataLoad(){
         const myLocationData = locationData;
         const countryDto: CountryDto = new CountryDto({

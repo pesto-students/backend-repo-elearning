@@ -84,4 +84,11 @@ export class LocationRepository{
             return null;
         }
     }
+
+    async searchCityNamesLike(keyword, limit=10){
+        const res = await this.cityModel.find({ name: { $regex: keyword, $options: 'i' } })
+                               .limit(limit)
+                               .lean();
+        return transformId(res);
+    }
 }

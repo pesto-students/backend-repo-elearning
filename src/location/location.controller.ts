@@ -22,5 +22,10 @@ export class LocationController{
     async fetchCity(@Body() condition: FetchCityDto){
         return this.locationService.fetchCity(condition);
     }
+
+    @Post('search/city')
+    async searchCity(@Body() condition){
+        return this.locationService.searchCity(condition.keyword, condition?.limit);
+    }
  
  }

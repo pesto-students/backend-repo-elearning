@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { CreateTeacherDto, GetTeacherQueryDto } from "./dto/teacher.dto";
 import { TeacherService } from "./teacher.service";
 
@@ -15,6 +15,11 @@ export class TeacherController {
     @Post('fetch')
     async fetchTeacher(@Body() condition: GetTeacherQueryDto) {
         return await this.teacherService.fetchTeacher(condition);
+    }
+
+    @Get('schema')
+    getTeacherSchemaMetadata() {
+        return this.teacherService.getSchemaMetadata();
     }
 
 }

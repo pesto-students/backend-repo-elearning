@@ -16,6 +16,7 @@ export abstract class AbstractSchemaMetadataService<T> {
                     path,
                     instance: field.instance,
                     required: field.isRequired || false,
+                    formControl: field.options.formControl
                 };
             });
 
