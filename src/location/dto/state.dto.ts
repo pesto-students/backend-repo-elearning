@@ -1,6 +1,6 @@
 import { IsMongoId, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-export class StateDto{
+export class StateDto {
 
     @IsNotEmpty()
     @IsString()
@@ -10,20 +10,21 @@ export class StateDto{
     @IsMongoId()
     readonly countryId: string;
 
-    constructor(partial: Partial<StateDto>){
+    constructor(partial: Partial<StateDto>) {
         Object.assign(this, partial);
     }
 }
 
-export class FetchStateDto{
+export class FetchStateDto {
     @IsOptional()
     @IsMongoId()
     _id: string;
 
+    @IsOptional()
     @IsMongoId()
     countryId: string;
 
-    constructor(partial: Partial<FetchStateDto>){
+    constructor(partial: Partial<FetchStateDto>) {
         Object.assign(this, partial);
     }
 
