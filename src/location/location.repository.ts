@@ -10,12 +10,12 @@ import { FetchStateDto } from "./dto/state.dto";
 import { FetchCityDto } from "./dto/city.dto";
 
 @Injectable()
-export class LocationRepository{
+export class LocationRepository {
     constructor(
         @InjectModel(Country.name) private countryModel: Model<Country>,
         @InjectModel(State.name) private stateModel: Model<State>,
         @InjectModel(City.name) private cityModel: Model<City>,
-    ){}
+    ) { }
 
     async createCountry(countryDto: CountryDto): Promise<Country> {
         const createCountry = await new this.countryModel(countryDto);
@@ -39,12 +39,12 @@ export class LocationRepository{
             if (!Types.ObjectId.isValid(countryId)) {
                 throw new HttpException('Invalid ObjectId format', HttpStatus.BAD_REQUEST);
             }
-    
+
             whereCond = {
                 _id: new Types.ObjectId(countryId),
             };
         }
-        
+
         try {
             const country: Country[] = await this.countryModel.find(whereCond).lean().exec();
             return transformId(country);
@@ -52,15 +52,15 @@ export class LocationRepository{
             return null;
         }
     }
-    
-    async findState(condition: FetchStateDto): Promise<State[]>{
 
-        if(condition){
-            if ((condition._id && !Types.ObjectId.isValid(condition._id)) || !Types.ObjectId.isValid(condition.countryId) ) {
+    async findState(condition?: FetchStateDto): Promise<State[]> {
+        const { _id, countryId } = condition
+        if (_id && countryId) {
+            if (!(Types.ObjectId.isValid(_id) || Types.ObjectId.isValid(countryId))) {
                 throw new HttpException('State not found', HttpStatus.BAD_REQUEST);
             }
         }
-        
+
         try {
             const state: State[] = await this.stateModel.find(condition).lean().exec();
             return transformId(state);
@@ -69,14 +69,14 @@ export class LocationRepository{
         }
     }
 
-    async findCity(condition: FetchCityDto): Promise<City[]>{
+    async findCity(condition: FetchCityDto): Promise<City[]> {
 
-        if(condition){
-            if ((condition?._id && !Types.ObjectId.isValid(condition?._id)) || !Types.ObjectId.isValid(condition?.stateId) ) {
+        if (condition) {
+            if ((condition?._id && !Types.ObjectId.isValid(condition?._id)) || !Types.ObjectId.isValid(condition?.stateId)) {
                 throw new HttpException('City not found', HttpStatus.BAD_REQUEST);
             }
         }
-        
+
         try {
             const city: City[] = await this.cityModel.find(condition).lean().exec();
             return transformId(city);
@@ -85,10 +85,10 @@ export class LocationRepository{
         }
     }
 
-    async searchCityNamesLike(keyword, limit=10){
+    async searchCityNamesLike(keyword, limit = 10) {
         const res = await this.cityModel.find({ name: { $regex: keyword, $options: 'i' } })
-                               .limit(limit)
-                               .lean();
+            .limit(limit)
+            .lean();
         return transformId(res);
     }
 }

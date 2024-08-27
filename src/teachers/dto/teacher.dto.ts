@@ -85,17 +85,17 @@ export class UpdateTeacherDto {
   pincode?: string;
 }
 
-export class GetTeacherQueryDto{
-    @IsOptional()
-    @IsMongoId()
-    branchId?: Types.ObjectId;
-    
-    @IsOptional()
-    @IsMongoId()
-    _id?:  Types.ObjectId;
-     
-   
-    constructor(partial: Promise<GetTeacherQueryDto>){
-      Object.assign(this, partial);
-    }
+export class GetTeacherQueryDto {
+  @IsOptional()
+  @IsMongoId()
+  branchId?: Types.ObjectId;
+
+  @IsOptional()
+  @IsMongoId()
+  _id?: Types.ObjectId;
+
+
+  constructor(partial: Promise<GetTeacherQueryDto>) {
+    Object.assign(this, partial);
+  }
 }

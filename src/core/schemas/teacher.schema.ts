@@ -11,31 +11,31 @@ export class Teacher extends BaseSchema {
 
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Branch', required: true })
     branchId: mongoose.Types.ObjectId;
-  
+
     @Prop({ type: String, required: true, formControl: { name: 'input', type: 'text', label: 'First Name' } })
     firstName: string;
-  
+
     @Prop({ type: String, formControl: { name: 'input', type: 'text', label: 'Last Name' } })
     lastName?: string;
-  
+
     @Prop({ type: String, required: true, formControl: { name: 'input', type: 'email', label: 'Email' } })
     email: string;
-  
+
     @Prop({ type: String, required: true, formControl: { name: 'input', type: 'tel', label: 'Phone' } })
     phone: string;
-  
+
     @Prop({ type: String, required: true, formControl: { name: 'input', type: 'text', label: 'Address' } })
     address: string;
-  
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true, formControl: { name: 'select', label: 'Country', options: [] } })
+
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true, formControl: { name: 'autosuggest', label: 'Country', apiDetails: { endpoint: '/api/location/country', onMount: true } } })
     countryId: Country;
-  
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'State', required: true, formControl: { name: 'select', label: 'State', options: [] } })
+
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'State', required: true, formControl: { name: 'autosuggest', label: 'State', apiDetails: { endpoint: '/api/location/state', onMount: true } } })
     stateId: State;
-  
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true, formControl: { name: 'select', label: 'City', options: [] } })
+
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true, formControl: { name: 'autosuggest', label: 'City', apiDetails: { endpoint: '/api/location/search/city', method: 'POST', body: { keyword: '' } } } })
     cityId: City;
-  
+
     @Prop({ type: String, required: true, formControl: { name: 'input', type: 'text', label: 'Pincode' } })
     pincode: string;
 }
