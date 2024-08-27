@@ -9,7 +9,7 @@ export class Class extends BaseSchema {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Branch', required: true })
   branchId: Branch;
 
-  @Prop({ type: String, required: true,  formControl: { name: 'input', label: "Class Name" } })
+  @Prop({ type: String, required: true,  formControl: { name: 'input', label: "Class Name", required: true } })
   className: string;
 
   @Prop({ type: String })
