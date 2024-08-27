@@ -5,6 +5,7 @@ import { Country } from "./country.schema";
 import { State } from "./state.schema";
 import { City } from "./city.schema";
 import { OrganizationType } from "./organization-type.schema";
+import { LocationRoutes } from "src/location/location.routes";
 
 @BaseSchemaOptions()
 export class Organization extends BaseSchema {
@@ -38,14 +39,14 @@ export class Organization extends BaseSchema {
     @Prop({ type: String, required: true, formControl: { name: "input", maxLength: 6, label: "Pincode" } })
     pincode: string;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true, formControl: { name: "select", label: "City" } })
-    cityId: City;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true, formControl: { name: 'autosuggest', label: 'Country', apiDetails: { endpoint: LocationRoutes.FETCH_COUNTRY, onMount: true } } })
+    countryId: Country;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'State', required: true, formControl: { name: "select", label: "State", data: ['Delhi', 'Maharashtra', 'Karnataka'] } })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'State', required: true, formControl: { name: 'autosuggest', label: 'State', apiDetails: { endpoint: LocationRoutes.FETCH_STATE, onMount: true } } })
     stateId: State;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true, formControl: { name: "select", label: "Country", data: ['India'] } })
-    countryId: Country;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true, formControl: { name: 'autosuggest', label: 'City', apiDetails: { endpoint: LocationRoutes.FETCH_CITY, method: 'POST', body: { keyword: '' } } } })
+    cityId: City;
 
     @Prop({ type: String, required: true, default: false })
     emailVerified: boolean;

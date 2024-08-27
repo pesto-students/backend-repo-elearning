@@ -5,7 +5,7 @@ import { BaseSchema, BaseSchemaOptions } from './base.schema';
 @BaseSchemaOptions()
 export class Country extends BaseSchema {
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, formControl: { name: 'input', label: 'Country Name', required: true } })
   name: string;
 }
 
