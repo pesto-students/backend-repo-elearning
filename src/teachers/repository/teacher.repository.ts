@@ -1,9 +1,10 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { Teacher } from "src/core/schemas/teacher.schema";
-import { CreateTeacherDto, GetTeacherQueryDto } from "../dto/teacher.dto";
+import { CreateTeacherDto, GetTeacherQueryDto, UpdateTeacherDto } from "../dto/teacher.dto";
 import { TeacherWithDetails } from "src/core/interface/teacher.interface";
+import { DEFAULT_BRANCH_ID } from '../../core/utils/string.utils';
 
 @Injectable()
 export class TeacherRepository {
@@ -11,7 +12,7 @@ export class TeacherRepository {
 
   async create(teacherDto: CreateTeacherDto): Promise<boolean> {
     try {
-      const createTeacher = new this.teacherModel({ ...teacherDto, branchId: '66cb9b846b0566074b381f85' });
+      const createTeacher = new this.teacherModel({ ...teacherDto, ...DEFAULT_BRANCH_ID });
       const res = await createTeacher.save();
       return res ? true : false;
     } catch (error) {
@@ -74,7 +75,8 @@ export class TeacherRepository {
         {
           $project: {
             _id: 1,
-            name: 1,
+            firstName: 1,
+            lastName: 1,
             address: 1,
             pincode: 1,
             email: 1,
@@ -106,4 +108,23 @@ export class TeacherRepository {
     }
   }
 
+  async update(updateTeacherDto: UpdateTeacherDto): Promise<Teacher> {
+    try {
+      const { _id, ...updateData } = updateTeacherDto;
+      const updatedTeacher = await this.teacherModel.findByIdAndUpdate(
+        _id,
+        updateData,
+        { new: true, runValidators: true }
+      );
+      if (!updatedTeacher) {
+        throw new NotFoundException('Teacher not found');
+      }
+      return updatedTeacher;
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new ConflictException('Email or phone number already exists');
+      }
+      throw error;
+    }
+  }
 }

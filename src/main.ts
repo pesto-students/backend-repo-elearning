@@ -9,8 +9,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
 
   const NODE_ENV = process.env.NODE_ENV;
-  const port = parseInt(process.env.PORT,10) || 4000;
-  console.log("port set on: ",port)
+  const port = parseInt(process.env.PORT, 10) || 4000;
+  console.log("port set on: ", port)
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors();
   app.setGlobalPrefix('api', {
@@ -25,10 +25,10 @@ async function bootstrap() {
     connectSrc.push('*');
     app.enableCors()
     const config = new DocumentBuilder()
-      .setTitle('Cats example')
-      .setDescription('The cats API description')
+      .setTitle('eLearning API Documentation')
+      .setDescription('REST API for the eLearning')
       .setVersion('1.0')
-      .addTag('cats')
+      .addTag('eLearning')
       .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);

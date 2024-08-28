@@ -247,3 +247,7 @@ export class StringUtils {
   }
 
 }
+
+export const DEFAULT_BRANCH_ID = { branchId: '66cb9b846b0566074b381f85' }
+
+export const DEFAULT_TEACHER = { teacherId: '66cdeafd4bca0f6ecdd0bb27' }

@@ -11,29 +11,51 @@ export class OnlineClass extends BaseSchema {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Branch', required: true })
   branchId: Branch;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class', required: true })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class', required: true, formControl: { name: 'autosuggest', label: 'Class', apiDetails: { endpoint: '/api/class/fetch', method: 'POST', body: {}, resultKey: 'className', onMount: true } } })
   classId: Class;
 
-  @Prop({ type: String, required: true,  formControl: { name: 'input', label: "Title", required: true } })
+  @Prop({ type: String, required: true, formControl: { name: 'input', label: "Title", required: true } })
   title: string;
 
-  @Prop({ type: String,  formControl: { name: 'input', label: "Description" } })
-  description: string;
+  @Prop({ type: String, formControl: { name: 'textarea', label: "Description" } })
+  description?: string;
 
-  @Prop({ type: Date, required: true,  formControl: { name: 'input', label: "Schedule Date", required: true } })
+  @Prop({ type: Date, required: true, formControl: { name: 'datePicker', label: "Schedule Date", required: true } })
   scheduledDate: Date;
 
-  @Prop({ type: String, required: true, formControl: { name: 'input', label: "Start Time", required: true } })
+  @Prop({ type: String, required: true, formControl: { name: 'timePicker', label: "Start Time", required: true } })
   startTime: string;
 
-  @Prop({ type: String, required: true,  formControl: { name: 'input', label: "End Time", required: true } })
+  @Prop({ type: String, required: true, formControl: { name: 'timePicker', label: "End Time", required: true } })
   endTime: string;
 
-  @Prop({ type: String, required: true })
-  meetingLink: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Auth' })
+  createdBy?: Auth;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'auth'})
-  createdBy: Auth;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Auth' })
+  teacherId?: Auth;
+
+  @Prop({
+    type: {
+      id: { type: String, required: true },
+      app_id: { type: String, required: true },
+      customer: { type: String, required: true },
+      customer_id: { type: String, required: true },
+      description: { type: String },
+      enabled: { type: Boolean, required: true },
+      created_at: { type: Date, required: true },
+    },
+    required: true,
+  })
+  hmsRoomInfo: {
+    id: string;
+    app_id: string;
+    customer: string;
+    customer_id: string;
+    description: string;
+    enabled: boolean;
+    created_at: Date;
+  };
 }
 
 export const OnlineClassSchema = SchemaFactory.createForClass(OnlineClass);

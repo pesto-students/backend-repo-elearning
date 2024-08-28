@@ -1,36 +1,25 @@
-import { Injectable } from "@nestjs/common";
-import { StudentRepository } from "./repository/student.repository";
-import { StudentDto } from "./dto/student.dto";
-import { DbQueryConditionDto } from "./dto/db-query-condition.dto";
-import { Student } from "src/core/schemas/student.schema"; 
-import { AuthService } from "src/auth/auth.service";
-import { UserService } from "src/users/users.service";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { StudentDto } from './dto/student.dto';
+import { DbQueryConditionDto } from './dto/db-query-condition.dto';
+import { StudentRepository } from './repository/student.repository';
 
 @Injectable()
-export class StudentService{
-
-    constructor(
-        private studentRepository: StudentRepository,
-        private authService: AuthService,
-        private userService: UserService
-    ){}
+export class StudentService {
+    constructor(private studentRepository: StudentRepository) { }
 
     async CreateStudent(studentDto: StudentDto) {
-        const res = await this.studentRepository.create(studentDto);
-        if(res){
-            const verificationLink: string = await this.authService.createVerificationLink({name: studentDto.firstName, email: studentDto.email})
-            await this.userService.sendWelcomeEmail({name: studentDto.firstName, email: studentDto.email});
-            await this.userService.sendVerificationMail(
-                {
-                    name: studentDto.firstName, 
-                    email: studentDto.email, 
-                    verificationLink,
-                    currentYear:  new Date().getFullYear()
-                });
-        }
+        return await this.studentRepository.create(studentDto);
     }
 
-    async fetchStudent(condition: DbQueryConditionDto): Promise<Student[]> {
-        return await this.studentRepository.fetchStudentWithDetails(condition);
+    async fetchStudent(condition: DbQueryConditionDto) {
+        return await this.studentRepository.find(condition);
+    }
+
+    async updateStudent(id: string, studentDto: StudentDto) {
+        const updatedStudent = await this.studentRepository.update(id, studentDto);
+        if (!updatedStudent) {
+            throw new NotFoundException(`Student with ID "${id}" not found`);
+        }
+        return updatedStudent;
     }
 }
