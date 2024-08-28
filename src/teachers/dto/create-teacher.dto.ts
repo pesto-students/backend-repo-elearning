@@ -1,8 +1,8 @@
-import { IsNotEmpty, IsString, IsEmail, IsPhoneNumber, IsMongoId } from 'class-validator';
+import { IsNotEmpty, IsString, IsEmail, IsPhoneNumber, IsMongoId, IsOptional } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class CreateTeacherDto {
-    @IsMongoId()
+    @IsOptional()
     @IsNotEmpty()
     readonly BranchID: Types.ObjectId;
 

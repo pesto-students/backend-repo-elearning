@@ -5,9 +5,11 @@ import { OnlineClassService } from "./online-class.service";
 import { OnlineClassRepository } from "./repository/online-class.respository";
 import { OnlineClass, OnlineClassSchema } from "src/core/schemas/online-class.schema";
 import { Branch, BranchSchema } from "src/core/schemas/branch.schema";
+import { HMSRepository } from "./repository/online-class-create-hmsroom.repository";
+import { HmsAxiosConfig, HmsAxiosService } from "src/config/hms-axios.config";
 
 @Module({
-    imports:[
+    imports: [
         MongooseModule.forFeature([
             {
                 name: OnlineClass.name,
@@ -17,9 +19,9 @@ import { Branch, BranchSchema } from "src/core/schemas/branch.schema";
                 name: Branch.name,
                 schema: BranchSchema
             },
-        ])
+        ]),
     ],
-    providers:[OnlineClassService, OnlineClassRepository],
-    controllers:[OnlineClassController]
+    providers: [OnlineClassService, OnlineClassRepository, HMSRepository, HmsAxiosService, HmsAxiosConfig],
+    controllers: [OnlineClassController]
 })
-export class OnlineClassModule{}
+export class OnlineClassModule { }
