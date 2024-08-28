@@ -6,6 +6,7 @@ import { HMSCreateRoomDto, OnlineClassDto, RoomInfoDto, UpdateOnlineClassDto } f
 import { OnlineClassRepository } from './repository/online-class.respository';
 import { OnlineClass } from 'src/core/schemas/online-class.schema';
 import { HMSRepository } from './repository/online-class-create-hmsroom.repository';
+import { Teacher } from 'src/core/schemas/teacher.schema';
 
 @Injectable()
 export class OnlineClassService {

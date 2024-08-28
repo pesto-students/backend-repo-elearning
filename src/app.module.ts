@@ -14,6 +14,7 @@ import { StudentModule } from './students/student.module';
 import { SchemaService } from './schema/schema.service';
 import { SchemaController } from './schema/schema.controller';
 import { SchemaModule } from './schema/schema.module';
+import { GeminiModule } from './gemini/gemini.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { SchemaModule } from './schema/schema.module';
     ClassModule,
     OnlineClassModule,
     StudentModule,
-    SchemaModule
+    SchemaModule,
+    GeminiModule
   ],
   controllers: [AppController, SchemaController],
   providers: [AppService, SchemaService],

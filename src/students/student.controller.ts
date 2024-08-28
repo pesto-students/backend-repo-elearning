@@ -18,18 +18,5 @@ export class StudentController {
         return await this.studentService.CreateStudent(studentDto);
     }
 
-    @Post('fetch')
-    @ApiOperation({ summary: 'Fetch students based on conditions' })
-    @ApiResponse({ status: 200, description: 'Returns the list of students.' })
-    async fetchStudent(@Body() condition: DbQueryConditionDto) {
-        return await this.studentService.fetchStudent(condition);
-    }
-
-    @Put(':id')
-    @ApiOperation({ summary: 'Update a student' })
-    @ApiResponse({ status: 200, description: 'The student has been successfully updated.' })
-    @ApiResponse({ status: 404, description: 'Student not found.' })
-    async updateStudent(@Param('id') id: string, @Body() studentDto: StudentDto) {
-        return await this.studentService.updateStudent(id, studentDto);
-    }
+  
 }

@@ -11,15 +11,5 @@ export class StudentService {
         return await this.studentRepository.create(studentDto);
     }
 
-    async fetchStudent(condition: DbQueryConditionDto) {
-        return await this.studentRepository.find(condition);
-    }
-
-    async updateStudent(id: string, studentDto: StudentDto) {
-        const updatedStudent = await this.studentRepository.update(id, studentDto);
-        if (!updatedStudent) {
-            throw new NotFoundException(`Student with ID "${id}" not found`);
-        }
-        return updatedStudent;
-    }
+  
 }
