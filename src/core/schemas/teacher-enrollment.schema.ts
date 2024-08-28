@@ -4,15 +4,18 @@ import { BaseSchema, BaseSchemaOptions } from './base.schema';
 import { Student } from './student.schema';
 import { StudentRoutes } from 'src/students/student.routes';
 import { Class } from './class.schema';
+import { Branch } from './branch.schema';
+import { Teacher } from './teacher.schema';
+import { TeacherRoutes } from 'src/teachers/teacher.routes';
 
 @BaseSchemaOptions()
-export class Enrollment extends BaseSchema {
+export class TeacherEnrollment extends BaseSchema {
 
-  @Prop({ type: Types.ObjectId, ref: 'Branch', required: true })
-  branchId: Types.ObjectId;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Branch', required: true })
+  branchId: Branch;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true, formControl: { name: 'autosuggest', label: "Select Student", required: true, apiDetails: { endpoint: StudentRoutes.FETCH_STUDENT, onMount: true } } })
-  studentId: Student;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true, formControl: { name: 'autosuggest', label: "Select Teacher", required: true, apiDetails: { endpoint: TeacherRoutes.FETCH_TEACHER, onMount: true } } })
+  studentId: Teacher;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class', required: true,
     formControl: { name: 'autosuggest', label: 'Select Class', required: true }
@@ -23,4 +26,4 @@ export class Enrollment extends BaseSchema {
   enrollmentDate: Date;
 }
 
-export const EnrollmentSchema = SchemaFactory.createForClass(Enrollment);
+export const TeacherEnrollmentSchema = SchemaFactory.createForClass(TeacherEnrollment);
