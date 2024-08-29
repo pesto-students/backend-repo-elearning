@@ -18,4 +18,15 @@ export class HMSRepository {
             throw new HttpException('Failed to create 100ms room', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    async getRecordingsByRoomId({ roomId = '' }: { roomId: '' }): Promise<any> {
+        try {
+            const hms = this.hmsAxiosService.getHmsInstance()
+            const response = await hms.get('/recordings?room_id=' + roomId);
+            return response.data as any;
+        } catch (error) {
+            console.log(error)
+            throw new HttpException('Failed to create 100ms room', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

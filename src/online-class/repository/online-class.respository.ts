@@ -27,7 +27,7 @@ export class OnlineClassRepository {
 
   async fetchOnlineClassWithDetails(condition: GetOnlineClassQueryDto): Promise<any> {
     try {
-      const query = {};
+      let query = {};
 
       if (condition.branchId) {
         query['branchId'] = new Types.ObjectId(condition.branchId);
@@ -36,8 +36,9 @@ export class OnlineClassRepository {
       if (condition._id) {
         query['_id'] = new Types.ObjectId(condition._id);
       }
+
       const result: OnlineClassWithDetails[] = await this.onlineClassModel.aggregate([
-        { $match: { ...query } },
+        { $match: { ...query, "hmsRoomInfo.enabled": true } },
         {
           $lookup: {
             from: 'branches',
@@ -57,6 +58,15 @@ export class OnlineClassRepository {
         },
         { $unwind: { path: '$class', preserveNullAndEmptyArrays: true } },
         {
+          $lookup: {
+            from: 'teachers',
+            localField: 'teacherId',
+            foreignField: '_id',
+            as: 'teacher'
+          }
+        },
+        { $unwind: { path: '$teacher', preserveNullAndEmptyArrays: true } },
+        {
           $project: {
             _id: 1,
             title: 1,
@@ -65,6 +75,20 @@ export class OnlineClassRepository {
               _id: '$branch._id',
               name: '$branch.name'
             },
+            hmsRoomInfo: 1,
+            scheduledDate: 1,
+            startTime: 1,
+            endTime: 1,
+            createdAt: 1,
+            class: {
+              _id: '$class._id',
+              className: '$class.className'
+            },
+            teacher: {
+              _id: '$teacher._id',
+              firstName: '$teacher.firstName',
+              lastName: '$teacher.lastName'
+            }
           }
         }
       ]).exec();
