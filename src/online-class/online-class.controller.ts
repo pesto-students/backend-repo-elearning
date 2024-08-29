@@ -22,4 +22,9 @@ export class OnlineClassController {
     async updateOnlineClass(@Body() updateOnlineClassDto: UpdateOnlineClassDto) {
         return await this.onlineClassService.updateOnlineClass(updateOnlineClassDto);
     }
+
+    @Post('recordings')
+    async getRecordingsByRoomId(@Body() { roomId = '' }: { roomId: '' }) {
+        return await this.onlineClassService.getRecordingsByRoomId({ roomId })
+    }
 }
