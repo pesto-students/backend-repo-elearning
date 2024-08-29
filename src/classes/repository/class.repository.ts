@@ -5,16 +5,17 @@ import { Class } from "src/core/schemas/class.schema";
 import { ClassDto } from "../dto/class.dto";
 import { GetClassQueryDto } from "../dto/get-class-query.dto";
 import { ClassWithDetails } from "src/core/interface/class.interface";
+import { DEFAULT_BRANCH_ID } from "src/core/utils/string.utils";
 
 @Injectable()
-export class ClassRepository{
+export class ClassRepository {
     constructor(
         @InjectModel(Class.name) private classModel: Model<Class>,
-    ){}
+    ) { }
 
     async create(classDto: ClassDto): Promise<boolean> {
         try {
-            const createClass = new this.classModel(classDto);
+            const createClass = new this.classModel({ ...classDto, ...DEFAULT_BRANCH_ID });
             const res = await createClass.save();
             return res ? true : false;
         } catch (error) {
@@ -26,16 +27,16 @@ export class ClassRepository{
     }
 
     async fetchBranchWithDetails(condition: GetClassQueryDto): Promise<any> {
-        try { 
+        try {
             const query = {};
 
-                if (condition.branchId) {
+            if (condition.branchId) {
                 query['branchId'] = new Types.ObjectId(condition.branchId);
-                }
+            }
 
-                if (condition._id) {
+            if (condition._id) {
                 query['_id'] = new Types.ObjectId(condition._id);
-                }
+            }
             const result: ClassWithDetails[] = await this.classModel.aggregate([
                 { $match: { ...query } },
                 {
@@ -46,11 +47,11 @@ export class ClassRepository{
                         as: 'branch'
                     }
                 },
-                { $unwind: { path: '$branch', preserveNullAndEmptyArrays: true } }, 
+                { $unwind: { path: '$branch', preserveNullAndEmptyArrays: true } },
                 {
                     $project: {
                         _id: 1,
-                        className: 1, 
+                        className: 1,
                         branch: {
                             _id: '$branch._id',
                             name: '$branch.name'

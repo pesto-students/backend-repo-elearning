@@ -1,6 +1,6 @@
-import { Body, Controller, Post } from "@nestjs/common"; 
+import { Body, Controller, Post, Put } from "@nestjs/common";
 import { OnlineClassService } from "./online-class.service";
-import { OnlineClassDto } from "./dto/online-class.dto";
+import { OnlineClassDto, UpdateOnlineClassDto } from "./dto/online-class.dto";
 import { GetOnlineClassQueryDto } from "./dto/get-online-class-query.dto";
 
 @Controller('onlineClass')
@@ -18,4 +18,8 @@ export class OnlineClassController {
         return await this.onlineClassService.fetchOnlineClass(condition);
     }
 
+    @Post('update')
+    async updateOnlineClass(@Body() updateOnlineClassDto: UpdateOnlineClassDto) {
+        return await this.onlineClassService.updateOnlineClass(updateOnlineClassDto);
+    }
 }

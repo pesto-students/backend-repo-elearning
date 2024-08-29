@@ -10,14 +10,14 @@ import { BranchModule } from './branch/branch.module';
 import { TeacherModule } from './teachers/teacher.module';
 import { ClassModule } from './classes/class.module';
 import { OnlineClassModule } from './online-class/online-class.module';
-import { StudentModule } from './students/student.module'; 
+import { StudentModule } from './students/student.module';
 import { SchemaService } from './schema/schema.service';
 import { SchemaController } from './schema/schema.controller';
 import { SchemaModule } from './schema/schema.module';
- 
+
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     ...mongoDbProvider,
     AuthModule,
     OrganizationModule,
