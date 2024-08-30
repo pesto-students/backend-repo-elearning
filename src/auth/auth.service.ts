@@ -34,7 +34,7 @@ export class AuthService {
         if(user && passwordMatched){
             return {
                 userId: user._id.toString(),
-                username: user.username
+                username: user.username,
             }
         }
         return null;

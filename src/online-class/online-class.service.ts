@@ -24,7 +24,7 @@ export class OnlineClassService {
         }
     }
 
-    async fetchOnlineClass(condition: GetOnlineClassQueryDto): Promise<Teacher[]> {
+    async fetchOnlineClass(condition: GetOnlineClassQueryDto) {
         return await this.onlineClassRepository.fetchOnlineClassWithDetails(condition);
     }
 
