@@ -41,6 +41,7 @@ export class OnlineClass extends BaseSchema {
       app_id: { type: String, required: true },
       customer: { type: String, required: true },
       customer_id: { type: String, required: true },
+      name: { type: String, required: true },
       description: { type: String },
       enabled: { type: Boolean, required: true },
       created_at: { type: Date, required: true },
@@ -52,6 +53,7 @@ export class OnlineClass extends BaseSchema {
     app_id: string;
     customer: string;
     customer_id: string;
+    name: string;
     description: string;
     enabled: boolean;
     created_at: Date;

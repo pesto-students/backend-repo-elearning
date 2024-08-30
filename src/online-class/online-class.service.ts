@@ -20,11 +20,12 @@ export class OnlineClassService {
             const roomInfo: RoomInfoDto = await this.hmsRepository.createHMSRoom({ name: onlineClassDto.title, description: onlineClassDto.description });
             return await this.onlineClassRepository.createOnlineClass(onlineClassDto, roomInfo)
         } catch (error) {
+            console.log(error)
             throw new HttpException('Failed to create online class', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    async fetchOnlineClass(condition: GetOnlineClassQueryDto) {
+    async fetchOnlineClass(condition: GetOnlineClassQueryDto): Promise<OnlineClass[]> {
         return await this.onlineClassRepository.fetchOnlineClassWithDetails(condition);
     }
 
@@ -42,7 +43,18 @@ export class OnlineClassService {
 
             return updatedClass;
         } catch (error) {
+            console.log(error)
             throw new HttpException('Failed to update online class', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    async getRecordingsByRoomId({ roomId = '' }: { roomId: '' }) {
+        try {
+            const response = await this.hmsRepository.getRecordingsByRoomId({ roomId })
+            return response
+        } catch (error) {
+            console.log(error)
+            throw new HttpException('Failed to get recordings of the class', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
