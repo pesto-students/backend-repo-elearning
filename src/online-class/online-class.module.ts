@@ -22,6 +22,7 @@ import { HmsAxiosConfig, HmsAxiosService } from "src/config/hms-axios.config";
         ]),
     ],
     providers: [OnlineClassService, OnlineClassRepository, HMSRepository, HmsAxiosService, HmsAxiosConfig],
-    controllers: [OnlineClassController]
+    controllers: [OnlineClassController],
+    exports: [OnlineClassService]
 })
 export class OnlineClassModule { }

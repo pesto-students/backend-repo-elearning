@@ -116,4 +116,8 @@ export class BranchRepository {
             throw new Error('Error fetching branch with details');
         }
     }
+
+    async count(): Promise<number> {
+        return this.branchModel.countDocuments().exec();
+    }
 }

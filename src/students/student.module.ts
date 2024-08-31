@@ -30,6 +30,7 @@ import { AuthModule } from "src/auth/auth.module";
     ],
     providers:[StudentService, StudentRepository],
     controllers:[StudentController],
+    exports:[StudentService]
 })
 
 export class StudentModule{}
