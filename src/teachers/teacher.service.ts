@@ -55,4 +55,4 @@ export class TeacherService {
     async updateTeacher(updateTeacherDto: UpdateTeacherDto): Promise<Teacher> {
         return await this.teacherRepository.update(updateTeacherDto);
     }
-}
+} 
