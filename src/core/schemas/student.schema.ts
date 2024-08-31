@@ -47,7 +47,7 @@ export class Student extends BaseSchema {
 
     @Prop({ 
         type: Date, 
-        required: true,
+        required: false,
         formControl: { name: 'date', label: 'Enrollment Date', required: true }
     })
     enrollmentDate: Date;

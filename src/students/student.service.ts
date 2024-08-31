@@ -14,7 +14,7 @@ export class StudentService {
         private userService: UserService,
     ) { }
 
-    async CreateStudent(studentDto: StudentDto, request): Promise<any>{
+    async CreateStudent(studentDto: StudentDto, request): Promise<any> {
         const password: string = AuthUtils.generateSecurePassword(8);
         const hasPassword: string = await AuthUtils.createPasswordHash(password);
         studentDto = {
@@ -23,24 +23,28 @@ export class StudentService {
             organizationId: request.userSession.organizationId,
             password: hasPassword
         }
-        const res: boolean =  await this.studentRepository.create(studentDto);
+        const res: boolean = await this.studentRepository.create(studentDto);
 
-        if(res){
-            const mailObj =  {
-                name: studentDto.firstName+' '+studentDto?.lastName, 
+        if (res) {
+            const mailObj = {
+                name: studentDto.firstName + ' ' + studentDto?.lastName,
                 email: studentDto.email
             }
             const verificationLink: string = await this.authService.createVerificationLink(
-               mailObj
+                mailObj
             );
-            await this.userService.sendWelcomeEmail({...mailObj, password: password, username: studentDto.email});
-            await this.userService.sendVerificationMail(
-                {
-                    ...mailObj,
-                    verificationLink,
-                    currentYear:  new Date().getFullYear()
-                });
-            
+            try {
+                await this.userService.sendWelcomeEmail({ ...mailObj, password: password, username: studentDto.email });
+                await this.userService.sendVerificationMail(
+                    {
+                        ...mailObj,
+                        verificationLink,
+                        currentYear: new Date().getFullYear()
+                    });
+            } catch (error) {
+                console.log("error during sending mail");
+            }
+
             return true;
         }
         return false;
