@@ -54,11 +54,11 @@ export class StudentService {
         return await this.studentRepository.fetchStudentWithDetails(condition);
     }
 
-    async updateStudent(id: string, studentDto: StudentDto) {
-        const updatedStudent = null; // await this.studentRepository.update(id, studentDto);
-        if (!updatedStudent) {
-            throw new NotFoundException(`Student with ID "${id}" not found`);
-        }
-        return updatedStudent;
-    }
+    // async updateStudent(id: string, studentDto: StudentDto) {
+    //     const updatedStudent = await this.studentRepository.update(id, studentDto);
+    //     if (!updatedStudent) {
+    //         throw new NotFoundException(`Student with ID "${id}" not found`);
+    //     }
+    //     return updatedStudent;
+    // }
 }
