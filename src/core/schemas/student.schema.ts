@@ -6,67 +6,71 @@ import { City } from './city.schema';
 import { Country } from './country.schema';
 import { State } from './state.schema';
 import { LocationRoutes } from 'src/location/location.routes';
+import { Class } from './class.schema';
 
 @BaseSchemaOptions()
 export class Student extends BaseSchema {
 
-    @Prop({ 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Branch', 
+    @Prop({
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
         required: true,
     })
     branchId: Branch;
 
-    @Prop({ 
-        type: String, 
+    @Prop({
+        type: String,
         required: true,
         formControl: { name: 'input', label: 'First Name', required: true }
     })
     firstName: string;
 
-    @Prop({ 
-        type: String, 
+    @Prop({
+        type: String,
         required: true,
         formControl: { name: 'input', label: 'Last Name', required: true }
     })
     lastName: string;
 
-    @Prop({ 
-        type: Date, 
+    @Prop({
+        type: Date,
         required: true,
-        formControl: { name: 'date', label: 'Date of Birth', required: true }
+        formControl: { name: 'datePicker', label: 'Date of Birth', required: true }
     })
     dateOfBirth: Date;
 
-    @Prop({ 
-        type: String, 
+    @Prop({
+        type: String,
         required: true,
         formControl: { name: 'select', label: 'Gender', required: true, options: ['Male', 'Female', 'Other'] }
     })
     gender: string;
 
-    @Prop({ 
-        type: Date, 
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class', required: true, formControl: { name: 'autosuggest', label: 'Class', apiDetails: { endpoint: '/api/class/fetch', method: 'POST', body: {}, resultKey: 'className', onMount: true } } })
+    classId: Class;
+
+    @Prop({
+        type: Date,
         required: true,
         formControl: { name: 'date', label: 'Enrollment Date', required: true }
     })
     enrollmentDate: Date;
 
-    @Prop({ 
-        type: String, 
+    @Prop({
+        type: String,
         required: true,
         formControl: { name: 'input', label: 'Email', required: true }
     })
     email: string;
 
-    @Prop({ 
+    @Prop({
         type: String,
         formControl: { name: 'input', label: 'Phone' }
     })
     phone: string;
 
-    @Prop({ 
-        type: String, 
+    @Prop({
+        type: String,
         required: true,
         formControl: { name: 'textarea', label: 'Address', required: true }
     })
@@ -81,8 +85,8 @@ export class Student extends BaseSchema {
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true, formControl: { name: 'autosuggest', label: 'City', apiDetails: { endpoint: LocationRoutes.FETCH_CITY, method: 'POST', body: { keyword: '' } } } })
     cityId: City;
 
-    @Prop({ 
-        type: String, 
+    @Prop({
+        type: String,
         required: true,
         formControl: { name: 'input', label: 'Pincode', required: true }
     })
