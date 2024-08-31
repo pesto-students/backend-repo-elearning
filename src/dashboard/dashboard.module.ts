@@ -14,7 +14,7 @@ import { BranchModule } from 'src/branch/branch.module';
     OnlineClassModule,
     ClassModule,
     BranchModule
-  ],
+  ], 
   providers: [DashboardService],
   controllers: [DashboardController]
 })
