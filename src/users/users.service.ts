@@ -14,20 +14,7 @@ export class UserService {
     constructor(private userRepository: UserRepository,
       private emailService: EmailService
     ){}
-
-    private readonly users = [
-        {
-          userId: 1,
-          username: 'john',
-          password: 'changeme',
-        },
-        {
-          userId: 2,
-          username: 'maria',
-          password: 'guess',
-        },
-      ];
-    
+ 
       async findUserByEmail(username: string): Promise<Auth> {
         return await this.userRepository.findOne({ username });
       }

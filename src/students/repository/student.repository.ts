@@ -32,8 +32,7 @@ export class StudentRepository{
             branchId: createStudet[0].branchId.toString(),
           }
     
-          // await this.authModel.create([authData], { session });
-          await this.userRepository.createAuth(authData, session);
+          await this.userRepository.createAuth([authData], {session});
     
           await session.commitTransaction();
           return true;

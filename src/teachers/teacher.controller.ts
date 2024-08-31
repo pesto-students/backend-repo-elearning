@@ -3,8 +3,9 @@ import { CreateTeacherDto, GetTeacherQueryDto, UpdateTeacherDto } from "./dto/te
 import { TeacherService } from "./teacher.service";
 import { PassportJwtAuthGuard } from "src/auth/guards/passport-jwt.guard";
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-
+ 
 @ApiTags('Teachers')
+@UseGuards(PassportJwtAuthGuard)
 @Controller('teacher')
 export class TeacherController {
 
@@ -16,7 +17,6 @@ export class TeacherController {
     @ApiResponse({ status: 400, description: 'Bad Request.' })
     @ApiBody({ type: CreateTeacherDto })
     async AddTeacher(@Body() teacherDto: CreateTeacherDto, @Request() request) {
-        console.log("Request: ", request.user);
         return await this.teacherService.CreateTeacher(teacherDto);
     }
 
@@ -24,7 +24,7 @@ export class TeacherController {
     @ApiOperation({ summary: 'Fetch teachers' })
     @ApiResponse({ status: 200, description: 'Returns the list of teachers.' })
     @ApiBody({ type: GetTeacherQueryDto })
-    async fetchTeacher(@Body() condition: GetTeacherQueryDto) {
+    async fetchTeacher(@Body() condition: GetTeacherQueryDto, @Request() request) {
         return await this.teacherService.fetchTeacher(condition);
     }
 
