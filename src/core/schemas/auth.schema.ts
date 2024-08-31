@@ -14,6 +14,9 @@ export class Auth extends BaseSchema {
   username: string;
 
   @Prop({ type: String, required: true })
+  name: string;
+
+  @Prop({ type: String, required: true })
   password: string;
 
   @Prop({ type: Date })

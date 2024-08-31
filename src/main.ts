@@ -5,6 +5,7 @@ import { Environment } from './core/enums/environment.enum';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'node:path';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { RequestInterceptor } from './core/interceptor/req.interceptor';
 
 async function bootstrap() {
 
@@ -41,9 +42,10 @@ async function bootstrap() {
   //     threshold: 1000,
   //   }), // node module
   // );
-
+  const requestInterceptor = app.get(RequestInterceptor);
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(app.get(Reflector)),
+    requestInterceptor,
   );
 
   app.useGlobalPipes(new ValidationPipe());
