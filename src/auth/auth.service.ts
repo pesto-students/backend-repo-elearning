@@ -6,6 +6,7 @@ import { EncryptionUtils } from 'src/core/utils/encryption.utils';
 import { DateUtils } from 'src/core/utils/date.utils';
 import { AuthInputDto, AuthResultDto, SignInDataDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
+import { UserTypeEnum } from 'src/core/enums/user-type.enum';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +35,10 @@ export class AuthService {
         if(user && passwordMatched){
             return {
                 userId: user._id.toString(),
-                username: user.username
+                username: user.username,
+                userType: UserTypeEnum[user.userType],
+                name: user.name,
+                isVerified: user.isVerified,
             }
         }
         return null;
@@ -53,9 +57,12 @@ export class AuthService {
     }
 
     async signIn(user: SignInDataDto): Promise<AuthResultDto>{
-        const tokenPayload = {
+         const tokenPayload = {
             sub: user.userId,
-            username: user.username
+            username: user.username,
+            userType: UserTypeEnum[user.userType],
+            name: user.name,
+            isVerified: user.isVerified,
         }
 
         const accessToken = await this.jwtService.signAsync(tokenPayload);
@@ -63,7 +70,10 @@ export class AuthService {
         return {
             accessToken,
             username: user.username,
-            userId: user.userId
+            userId: user.userId,
+            userType: UserTypeEnum[user.userType],
+            name: user.name,
+            isVerified: user.isVerified,
         };
     }
 }

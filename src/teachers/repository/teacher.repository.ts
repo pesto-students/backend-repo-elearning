@@ -4,22 +4,49 @@ import { Model, Types } from "mongoose";
 import { Teacher } from "src/core/schemas/teacher.schema";
 import { CreateTeacherDto, GetTeacherQueryDto, UpdateTeacherDto } from "../dto/teacher.dto";
 import { TeacherWithDetails } from "src/core/interface/teacher.interface";
-import { DEFAULT_BRANCH_ID } from '../../core/utils/string.utils';
+import { UserTypeEnum } from "src/core/enums/user-type.enum";
+import { UserService } from "src/users/users.service";
 
 @Injectable()
 export class TeacherRepository {
-  constructor(@InjectModel(Teacher.name) private teacherModel: Model<Teacher>) { }
+  constructor(
+    @InjectModel(Teacher.name) private teacherModel: Model<Teacher>,
+    private userService: UserService
+  ) { }
 
-  async create(teacherDto: CreateTeacherDto): Promise<boolean> {
+  async create(teacherData: CreateTeacherDto): Promise<boolean> {
+    const session = await this.teacherModel.db.startSession();
+    session.startTransaction();
+
     try {
-      const createTeacher = new this.teacherModel({ ...teacherDto, ...DEFAULT_BRANCH_ID });
-      const res = await createTeacher.save();
-      return res ? true : false;
+      const { password, organizationId, ...teacherObj } = teacherData;
+      const teacher = await this.teacherModel.create([teacherObj], { session });
+
+      const authData = {
+        userId: teacher[0]._id.toString(),
+        username: teacher[0].email,
+        name: `${teacher[0].firstName} ${teacher[0].lastName}`,
+        password: password,
+        isVerified: false,
+        userType: UserTypeEnum.TEACHER,
+        branchId: teacherData.branchId,
+        organizationId: teacherData.organizationId
+      }
+
+      await this.userService.createAuth(authData, session);
+
+      await session.commitTransaction();
+
+      return true;
     } catch (error) {
+      await session.abortTransaction();
+
       if (error.code === 11000) { // MongoDB duplicate key error code
-        throw new ConflictException('Teacher already exists');
+        throw new ConflictException('Teacher ID already exists');
       }
       throw error;
+    } finally {
+      session.endSession();
     }
   }
 

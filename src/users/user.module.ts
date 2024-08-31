@@ -6,6 +6,7 @@ import { UserController } from "./users.controller";
 import { UserRepository } from "./repository/user.repository";
 import { EmailModule } from "src/mail/email.module";
 import { Auth, AuthSchema } from "src/core/schemas/auth.schema";
+import { RequestInterceptor } from "src/core/interceptor/req.interceptor";
 
 @Module({
     imports: [
@@ -22,7 +23,7 @@ import { Auth, AuthSchema } from "src/core/schemas/auth.schema";
         EmailModule
     ],
     controllers:[UserController],
-    providers: [UserService, UserRepository],
+    providers: [UserService, UserRepository, RequestInterceptor],
     exports: [UserService]
 })
 

@@ -5,8 +5,13 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class CreateTeacherDto {
   @ApiProperty({ description: 'Branch ID of the teacher' })
   @IsMongoId()
-  @IsNotEmpty()
+  @IsOptional()
   branchId: Types.ObjectId;
+
+  @ApiProperty({ description: 'Organization ID of the teacher' })
+  @IsMongoId()
+  @IsOptional()
+  organizationId: Types.ObjectId;
 
   @ApiProperty({ description: 'First name of the teacher' })
   @IsString()
@@ -52,6 +57,11 @@ export class CreateTeacherDto {
   @IsString()
   @IsNotEmpty()
   pincode: string;
+
+  @ApiProperty({ description: 'password of the teacher\'s' })
+  @IsString()
+  @IsOptional()
+  password: string;
 }
 
 export class UpdateTeacherDto {

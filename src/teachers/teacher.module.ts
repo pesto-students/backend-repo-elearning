@@ -7,6 +7,8 @@ import { Country, CountrySchema } from "src/core/schemas/country.schema";
 import { State, StateSchema } from "src/core/schemas/state.schema";
 import { TeacherService } from "./teacher.service";
 import { TeacherRepository } from "./repository/teacher.repository";
+import { AuthModule } from "src/auth/auth.module";
+import { UserModule } from "src/users/user.module";
 
 @Module({
     imports: [
@@ -27,7 +29,9 @@ import { TeacherRepository } from "./repository/teacher.repository";
                 name: City.name,
                 schema: CitySchema
             },
-        ])
+        ]),
+        AuthModule,
+        UserModule
     ],
     providers: [TeacherService, TeacherRepository],
     controllers: [TeacherController],
