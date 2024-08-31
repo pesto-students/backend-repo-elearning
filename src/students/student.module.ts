@@ -28,7 +28,7 @@ import { AuthModule } from "src/auth/auth.module";
         UserModule,
         AuthModule
     ],
-    providers:[StudentService, StudentRepository, UserRepository],
+    providers:[StudentService, StudentRepository],
     controllers:[StudentController],
 })
 
