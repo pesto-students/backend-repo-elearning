@@ -15,7 +15,7 @@ export class TeacherEnrollment extends BaseSchema {
   branchId: Branch;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true, formControl: { name: 'autosuggest', label: "Select Teacher", required: true, apiDetails: { endpoint: TeacherRoutes.FETCH_TEACHER, onMount: true } } })
-  studentId: Teacher;
+  teacherId: Teacher;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class', required: true,
     formControl: { name: 'autosuggest', label: 'Select Class', required: true }
