@@ -37,6 +37,10 @@ export class OnlineClassRepository {
         query['_id'] = new Types.ObjectId(condition._id);
       }
 
+      if (condition.hmsRoomId) {
+        query['hmsRoomInfo.id'] = condition.hmsRoomId;
+      }
+
       const result: OnlineClassWithDetails[] = await this.onlineClassModel.aggregate([
         { $match: { ...query, "hmsRoomInfo.enabled": true } },
         {

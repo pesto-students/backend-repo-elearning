@@ -6,6 +6,7 @@ import { Country } from "./country.schema";
 import { State } from "./state.schema";
 import { City } from "./city.schema";
 import { LocationRoutes } from "src/location/location.routes";
+import { Class } from "./class.schema";
 
 @BaseSchemaOptions()
 export class Teacher extends BaseSchema {
@@ -18,6 +19,9 @@ export class Teacher extends BaseSchema {
 
     @Prop({ type: String, formControl: { name: 'input', type: 'text', label: 'Last Name' } })
     lastName?: string;
+
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class', required: true, formControl: { name: 'autosuggest', label: 'Class', apiDetails: { endpoint: '/api/class/fetch', method: 'POST', body: {}, resultKey: 'className', onMount: true } } })
+    classId: Class;
 
     @Prop({ type: String, required: true, formControl: { name: 'input', type: 'email', label: 'Email' } })
     email: string;
