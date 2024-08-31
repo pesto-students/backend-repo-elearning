@@ -6,33 +6,33 @@ import { Student } from "src/core/schemas/student.schema";
 import { DbQueryConditionDto } from "../dto/db-query-condition.dto";
 import { StudentDto } from "../dto/student.dto";
 import { UserTypeEnum } from "src/core/enums/user-type.enum";
-import { AuthUtils } from "src/core/utils/auth.utils";
-import { UserRepository } from "src/users/repository/user.repository";
+import { UserService } from "src/users/users.service";
 
 @Injectable()
 export class StudentRepository{
     constructor(
         @InjectModel(Student.name) private studentModel: Model<Student>,
-        private userRepository: UserRepository
+        private userService: UserService
     ){}
 
-    async create(studentDto: StudentDto): Promise<boolean> {
+    async create(studentData: StudentDto): Promise<boolean> {
       const session = await this.studentModel.db.startSession();
     session.startTransaction();
-        try {
-          const hasPassword: string = await AuthUtils.createPasswordHash('student');
-
-          const createStudet = await this.studentModel.create([studentDto], { session });
+        try { 
+          const { password, organizationId, ...studentObj } = studentData;
+          const createStudet = await this.studentModel.create([studentObj], { session });
           const authData = {
             userId: createStudet[0]._id.toString(),
             username: createStudet[0].email,
-            password: hasPassword,
+            name: `${studentData.firstName} ${studentData.lastName}`,
+            password: password,
             isVerified: false,
             userType: UserTypeEnum.STUDENT,
             branchId: createStudet[0].branchId.toString(),
+            organizationId
           }
     
-          await this.userRepository.createAuth([authData], {session});
+          await this.userService.createAuth(authData, session);
     
           await session.commitTransaction();
           return true;

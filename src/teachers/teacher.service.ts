@@ -14,7 +14,7 @@ export class TeacherService {
         private userService: UserService,
     ) { }
 
-    async CreateTeacher(teacherDto: CreateTeacherDto, request) {
+    async CreateTeacher(teacherDto: CreateTeacherDto, request): Promise<any>{
         const password: string = AuthUtils.generateSecurePassword(8);
         const hasPassword: string = await AuthUtils.createPasswordHash(password);
         
@@ -42,8 +42,10 @@ export class TeacherService {
                     verificationLink,
                     currentYear:  new Date().getFullYear()
                 });
-
+            return true;
         }
+
+        return false;
     }
 
     async fetchTeacher(condition: GetTeacherQueryDto): Promise<Teacher[]> {
@@ -53,4 +55,4 @@ export class TeacherService {
     async updateTeacher(updateTeacherDto: UpdateTeacherDto): Promise<Teacher> {
         return await this.teacherRepository.update(updateTeacherDto);
     }
-}
+} 
