@@ -17,7 +17,7 @@ export class TeacherController {
     @ApiResponse({ status: 400, description: 'Bad Request.' })
     @ApiBody({ type: CreateTeacherDto })
     async AddTeacher(@Body() teacherDto: CreateTeacherDto, @Request() request) {
-        return await this.teacherService.CreateTeacher(teacherDto);
+        return await this.teacherService.CreateTeacher(teacherDto, request);
     }
 
     @Post('fetch')
