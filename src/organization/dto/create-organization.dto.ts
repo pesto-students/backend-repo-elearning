@@ -60,7 +60,7 @@ export class GetOrganizationQueryDto {
 
   @IsOptional()
   @IsMongoId()
-  _id?: string;
+  _id?: Types.ObjectId;
 
   @IsOptional()
   @IsMongoId()

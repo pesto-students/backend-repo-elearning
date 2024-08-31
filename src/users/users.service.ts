@@ -5,6 +5,8 @@ import { EmailProvider } from "src/mail/enum/email-providers.enum";
 import { EmailTemplateEnum } from "src/mail/enum/email-template.enum";
 import { EmailService } from "src/mail/email.service";
 import { Auth } from "src/core/schemas/auth.schema";
+import { IsUserExistDto } from "./dto/user.dto";
+import { UserTypeEnum } from "src/core/enums/user-type.enum";
 export type User = any;
 
 @Injectable()
@@ -68,6 +70,11 @@ export class UserService {
       templateName,
       context
     );
+  }
+
+  async isUserExist(userData: IsUserExistDto): Promise<boolean>{
+    const res: Auth = await this.userRepository.findOne(userData);
+    return res?._id ? true : false;
   }
 
 }

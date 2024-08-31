@@ -17,11 +17,10 @@ export class OrganizationRepository {
     @InjectModel(Organization.name) private organizationModel: Model<Organization>,
     @InjectModel(OrganizationType.name) private organizationTypeModel: Model<OrganizationType>,
     @InjectModel(Branch.name) private branchModel: Model<Branch>,
-    // @InjectModel(Auth.name) private authModel: Model<Auth>,
     private userRepository: UserRepository
   ) { }
 
-  async create(createOrganizationDto: CreateOrganizationDto): Promise<boolean>{
+  async create(createOrganizationDto: CreateOrganizationDto): Promise<string>{
     
     const session = await this.organizationModel.db.startSession();
     session.startTransaction();
@@ -59,7 +58,7 @@ export class OrganizationRepository {
 
       await session.commitTransaction();
 
-      return true;
+      return organization[0]._id.toString();
 
     } catch (error) {
       await session.abortTransaction();

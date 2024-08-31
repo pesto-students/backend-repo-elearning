@@ -35,6 +35,7 @@ import { Organization, OrganizationSchema } from 'src/core/schemas/organization.
     ])
   ],
   controllers: [BranchController],
-  providers: [BranchService, BranchRepository]
+  providers: [BranchService, BranchRepository],
+  exports: [BranchService]
 })
 export class BranchModule {}

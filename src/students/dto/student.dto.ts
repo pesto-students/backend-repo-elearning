@@ -19,6 +19,7 @@ export class StudentDto {
 
   @IsNotEmpty()
   @IsString()
+  @IsOptional()
   lastName: string;
 
   @IsNotEmpty()
@@ -31,14 +32,14 @@ export class StudentDto {
 
   @IsNotEmpty()
   @IsDateString()
+  @IsOptional()
   enrollmentDate: Date;
 
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
-  @IsOptional()
-  @IsPhoneNumber(null)  // Validate based on the phone number format in your locale
+  @IsOptional()  // Validate based on the phone number format in your locale
   phone: string;
 
   @IsNotEmpty()

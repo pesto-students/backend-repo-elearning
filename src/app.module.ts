@@ -15,6 +15,7 @@ import { SchemaService } from './schema/schema.service';
 import { SchemaController } from './schema/schema.controller';
 import { SchemaModule } from './schema/schema.module';
 import { GeminiModule } from './gemini/gemini.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { GeminiModule } from './gemini/gemini.module';
     OnlineClassModule,
     StudentModule,
     SchemaModule,
-    GeminiModule
+    GeminiModule,
+    DashboardModule
   ],
   controllers: [AppController, SchemaController],
   providers: [AppService, SchemaService],
