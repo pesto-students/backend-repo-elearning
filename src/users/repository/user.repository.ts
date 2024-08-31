@@ -3,7 +3,6 @@ import { InjectModel } from "@nestjs/mongoose";
 import { FilterQuery, Model, UpdateQuery } from "mongoose";
 import { Auth } from "src/core/schemas/auth.schema";
 import { UserType } from "src/core/schemas/user-type.schema";
-import { User } from "../users.service";
 import { transformId } from "src/core/utils/mongo-res.utils";
 
 @Injectable()
@@ -50,7 +49,7 @@ export class UserRepository{
         if(session){
             return await this.authModel.create([authData], { session });
         }
-
+        return await this.authModel.create(authData);
     }
 
 }

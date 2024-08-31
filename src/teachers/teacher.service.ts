@@ -5,6 +5,10 @@ import { Teacher } from "src/core/schemas/teacher.schema";
 import { AuthUtils } from "src/core/utils/auth.utils";
 import { AuthService } from "src/auth/auth.service";
 import { UserService } from "src/users/users.service";
+import { Types } from "mongoose";
+import { ApiResponseDto } from "src/core/dto/api-response.dto";
+import { IsUserExistDto } from "src/users/dto/user.dto";
+import { UserTypeEnum } from "src/core/enums/user-type.enum";
 
 @Injectable()
 export class TeacherService {
@@ -14,7 +18,20 @@ export class TeacherService {
         private userService: UserService,
     ) { }
 
-    async CreateTeacher(teacherDto: CreateTeacherDto, request): Promise<any>{
+    async CreateTeacher(teacherDto: CreateTeacherDto, request): Promise<ApiResponseDto>{
+
+        const userExistData: IsUserExistDto = {
+            username: teacherDto.email,
+            userType: UserTypeEnum.STUDENT,
+            branchId: request.userSession.branchId,
+            organizationId: request.userSession.organizationId, 
+        };
+
+        const isUserExist: boolean = await this.userService.isUserExist(userExistData);
+        if(isUserExist){
+            return new ApiResponseDto(false, 'Teacher already exist');
+        }
+        
         const password: string = AuthUtils.generateSecurePassword(8);
         const hasPassword: string = await AuthUtils.createPasswordHash(password);
         
@@ -25,9 +42,9 @@ export class TeacherService {
             password: hasPassword
         }
 
-        const res: boolean = await this.teacherRepository.create(teacherDto);
+        const res: string = await this.teacherRepository.create(teacherDto);
 
-        if(res){
+        if(Types.ObjectId.isValid(res)){
             const mailObj =  {
                 name: teacherDto.firstName+' '+teacherDto?.lastName, 
                 email: teacherDto.email
@@ -35,17 +52,23 @@ export class TeacherService {
             const verificationLink: string = await this.authService.createVerificationLink(
                mailObj
             );
-            await this.userService.sendWelcomeEmail({...mailObj, password: password, username: teacherDto.email});
-            await this.userService.sendVerificationMail(
+            try {
+                await this.userService.sendWelcomeEmail({...mailObj, password: password, username: teacherDto.email});
+                await this.userService.sendVerificationMail(
                 {
                     ...mailObj,
                     verificationLink,
                     currentYear:  new Date().getFullYear()
                 });
-            return true;
+            } catch (error) {
+                console.log("error occured during sending mail");
+            }
+
+            const teacher = await this.fetchTeacher({_id: new Types.ObjectId(res)});
+            return new ApiResponseDto(true, 'Teacher created succesfully', teacher);
         }
 
-        return false;
+        return new ApiResponseDto(false, 'Teacher not created, please try again.');
     }
 
     async fetchTeacher(condition: GetTeacherQueryDto): Promise<Teacher[]> {

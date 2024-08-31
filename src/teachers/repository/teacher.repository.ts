@@ -14,7 +14,7 @@ export class TeacherRepository {
     private userService: UserService
   ) { }
 
-  async create(teacherData: CreateTeacherDto): Promise<boolean> {
+  async create(teacherData: CreateTeacherDto): Promise<string> {
     const session = await this.teacherModel.db.startSession();
     session.startTransaction();
 
@@ -37,7 +37,7 @@ export class TeacherRepository {
 
       await session.commitTransaction();
 
-      return true;
+      return teacher[0]._id.toString();
     } catch (error) {
       await session.abortTransaction();
 

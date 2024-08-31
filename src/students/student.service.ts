@@ -5,6 +5,11 @@ import { StudentRepository } from './repository/student.repository';
 import { AuthUtils } from 'src/core/utils/auth.utils';
 import { AuthService } from 'src/auth/auth.service';
 import { UserService } from 'src/users/users.service';
+import { IsUserExistDto } from 'src/users/dto/user.dto';
+import { UserTypeEnum } from 'src/core/enums/user-type.enum';
+import { ApiResponseDto } from 'src/core/dto/api-response.dto';
+import { Student } from 'src/core/schemas/student.schema';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class StudentService {
@@ -14,7 +19,20 @@ export class StudentService {
         private userService: UserService,
     ) { }
 
-    async CreateStudent(studentDto: StudentDto, request): Promise<any> {
+    async CreateStudent(studentDto: StudentDto, request): Promise<ApiResponseDto> {
+
+        const userExistData: IsUserExistDto = {
+            username: studentDto.email,
+            userType: UserTypeEnum.STUDENT,
+            branchId: request.userSession.branchId,
+            organizationId: request.userSession.organizationId, 
+        };
+
+        const isUserExist: boolean = await this.userService.isUserExist(userExistData);
+        if(isUserExist){
+            return new ApiResponseDto(false, 'Student already exist');
+        }
+
         const password: string = AuthUtils.generateSecurePassword(8);
         const hasPassword: string = await AuthUtils.createPasswordHash(password);
         studentDto = {
@@ -23,9 +41,9 @@ export class StudentService {
             organizationId: request.userSession.organizationId,
             password: hasPassword
         }
-        const res: boolean = await this.studentRepository.create(studentDto);
+        const res: string = await this.studentRepository.create(studentDto);
 
-        if (res) {
+        if (Types.ObjectId.isValid(res)) {
             const mailObj = {
                 name: studentDto.firstName + ' ' + studentDto?.lastName,
                 email: studentDto.email
@@ -45,9 +63,10 @@ export class StudentService {
                 console.log("error during sending mail");
             }
 
-            return true;
+            const studentData = await this.fetchStudent({_id: new Types.ObjectId(res)});
+            return new ApiResponseDto(true, 'Student created succesfully', studentData);
         }
-        return false;
+        return new ApiResponseDto(false, 'Student not created, please try again.');
     }
 
     async fetchStudent(condition: DbQueryConditionDto) {

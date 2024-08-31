@@ -15,7 +15,7 @@ export class StudentRepository{
         private userService: UserService
     ){}
 
-    async create(studentData: StudentDto): Promise<boolean> {
+    async create(studentData: StudentDto): Promise<string> {
       const session = await this.studentModel.db.startSession();
     session.startTransaction();
         try { 
@@ -35,7 +35,7 @@ export class StudentRepository{
           await this.userService.createAuth(authData, session);
     
           await session.commitTransaction();
-          return true;
+          return createStudet[0]._id.toString();
         } catch (error) {
           await session.abortTransaction();
           if (error.code === 11000) { // MongoDB duplicate key error code
