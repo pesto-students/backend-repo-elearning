@@ -11,72 +11,63 @@ export type User = any;
 
 export class UserService {
 
-    constructor(private userRepository: UserRepository,
-      private emailService: EmailService
-    ){}
+  constructor(private userRepository: UserRepository,
+    private emailService: EmailService
+  ) { }
 
-    private readonly users = [
-        {
-          userId: 1,
-          username: 'john',
-          password: 'changeme',
-        },
-        {
-          userId: 2,
-          username: 'maria',
-          password: 'guess',
-        },
-      ];
-    
-      async findUserByEmail(username: string): Promise<Auth> {
-        return await this.userRepository.findOne({ username });
-      }
-    
-      async findUserById(id: string) {
-        return this.userRepository.findOneById(id);
-      }
+  async createAuth(data, session) {
+    return await this.userRepository.createAuth(data, session);
+  }
 
-      async createUserType(userTypeDto){
-        return this.userRepository.createUserType(userTypeDto);
-      }
+  async findUserByEmail(username: string): Promise<Auth> {
+    return await this.userRepository.findOne({ username });
+  }
 
-      async updateLastLoginAndToken(userId: string, token: string): Promise<any> {
-        const updateData = {
-          lastLogin: new Date(),
-          token: token,
-        };
-    
-        return this.userRepository.updateUser({ _id: userId }, updateData);
-      }
+  async findUserById(id: string) {
+    return this.userRepository.findOneById(id);
+  }
 
-      async sendVerificationMail(verificationData){
-        const to = verificationData?.email;
-        const subject = EmailSubjectEnum.EMAIL_VERIFICATION;
-        const templateName = EmailTemplateEnum.EMAIL_VERIFICATION;
-        const context = verificationData;
-    
-        await this.emailService.sendEmail(
-          EmailProvider.BREVO,
-          to,
-          subject,
-          templateName,
-          context
-        );
-      }
+  async createUserType(userTypeDto) {
+    return this.userRepository.createUserType(userTypeDto);
+  }
 
-      async sendWelcomeEmail(userDetails) {
-        const to = userDetails?.email;
-        const subject = EmailSubjectEnum.WELCOME;
-        const templateName = EmailTemplateEnum.ONBOARD_ORGANIZATION;
-        const context = { username: userDetails.name };
-    
-        await this.emailService.sendEmail(
-          EmailProvider.BREVO,
-          to,
-          subject,
-          templateName,
-          context
-        );
-    }
+  async updateLastLoginAndToken(userId: string, token: string): Promise<any> {
+    const updateData = {
+      lastLogin: new Date(),
+      token: token,
+    };
+
+    return this.userRepository.updateUser({ _id: userId }, updateData);
+  }
+
+  async sendVerificationMail(verificationData) {
+    const to = verificationData?.email;
+    const subject = EmailSubjectEnum.EMAIL_VERIFICATION;
+    const templateName = EmailTemplateEnum.EMAIL_VERIFICATION;
+    const context = verificationData;
+
+    await this.emailService.sendEmail(
+      EmailProvider.BREVO,
+      to,
+      subject,
+      templateName,
+      context
+    );
+  }
+
+  async sendWelcomeEmail(userDetails) {
+    const to = userDetails?.email;
+    const subject = EmailSubjectEnum.WELCOME;
+    const templateName = EmailTemplateEnum.ONBOARD_ORGANIZATION;
+    const context = { name: userDetails.name, password: userDetails.password, username: userDetails.username };
+
+    await this.emailService.sendEmail(
+      EmailProvider.BREVO,
+      to,
+      subject,
+      templateName,
+      context
+    );
+  }
 
 }

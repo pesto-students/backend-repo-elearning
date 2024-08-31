@@ -1,9 +1,17 @@
-import { IsNotEmpty, IsString, IsDateString, IsEmail, IsPhoneNumber, IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString, IsDateString, IsEmail, IsPhoneNumber, IsOptional, IsMongoId } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class StudentDto {
-  @IsNotEmpty()
+  @ApiProperty({ description: 'Branch ID of the student' })
+  @IsMongoId()
+  @IsOptional()
   branchId: Types.ObjectId;
+
+  @ApiProperty({ description: 'Organization ID of the student' })
+  @IsMongoId()
+  @IsOptional()
+  organizationId: Types.ObjectId;
 
   @IsNotEmpty()
   @IsString()
@@ -49,4 +57,9 @@ export class StudentDto {
   @IsNotEmpty()
   @IsString()
   pincode: string;
+
+  @ApiProperty({ description: 'password of the student\'s' })
+  @IsString()
+  @IsOptional()
+  password: string;
 }

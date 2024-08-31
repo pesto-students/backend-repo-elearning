@@ -1,6 +1,5 @@
-import { Body, Controller, HttpCode, HttpStatus, NotImplementedException, Post, Req, Request, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthGuard } from './guards/auth.guard';
+import { Body, Controller, HttpCode, HttpStatus, Post, Req, Request, UseGuards } from '@nestjs/common';
+import { AuthService } from './auth.service'; 
 import { PassportLocalGuard } from './guards/passport.local.guard';
 import { PassportJwtAuthGuard } from './guards/passport-jwt.guard';
 
@@ -16,11 +15,7 @@ export class AuthController {
     async login(@Request() request){
         return this.authService.signIn(request.user);
     }
-    // async login(@Body() input: AuthInputDto){
-    //     return this.authService.authenticate(input);
-    // }
 
-    // @UseGuards(AuthGuard)
     @Post('profile')
     @UseGuards(PassportJwtAuthGuard)
     async getUserInfo(@Request() request){

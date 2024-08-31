@@ -8,8 +8,6 @@ import { OrganizationType } from "src/core/schemas/organization-type.schema";
 import { transformId } from "src/core/utils/mongo-res.utils";
 import { OrganizationWithDetails } from "src/core/interface/organization.interface";
 import { Branch } from "src/core/schemas/branch.schema";
-import { Auth } from "src/core/schemas/auth.schema";
-import { BranchDto } from "src/branch/dto/branch.dto";
 import { UserTypeEnum } from "src/core/enums/user-type.enum";
 import { UserRepository } from "src/users/repository/user.repository";
 
@@ -49,6 +47,7 @@ export class OrganizationRepository {
       const authData = {
         userId: organization[0]._id.toString(),
         username: organization[0].email,
+        name: organization[0].name,
         password: password,
         isVerified: false,
         userType: UserTypeEnum.ORG_ADMIN,
@@ -56,7 +55,6 @@ export class OrganizationRepository {
         organizationId: organization[0]._id.toString()
       }
 
-      // await this.authModel.create([authData], { session });
       await this.userRepository.createAuth(authData, session);
 
       await session.commitTransaction();
