@@ -15,6 +15,7 @@ import { SchemaService } from './schema/schema.service';
 import { SchemaController } from './schema/schema.controller';
 import { SchemaModule } from './schema/schema.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { AiChatModule } from './ai-chat/ai-chat.module';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
     OnlineClassModule,
     StudentModule,
     SchemaModule,
-    DashboardModule
+    DashboardModule,
+    AiChatModule
   ],
   controllers: [AppController, SchemaController],
   providers: [AppService, SchemaService],
