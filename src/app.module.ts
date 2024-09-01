@@ -16,6 +16,7 @@ import { SchemaController } from './schema/schema.controller';
 import { SchemaModule } from './schema/schema.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AiChatModule } from './ai-chat/ai-chat.module';
+import { ParentsModule } from './parents/parents.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { AiChatModule } from './ai-chat/ai-chat.module';
     StudentModule,
     SchemaModule,
     DashboardModule,
-    AiChatModule
+    AiChatModule,
+    ParentsModule
   ],
   controllers: [AppController, SchemaController],
   providers: [AppService, SchemaService],

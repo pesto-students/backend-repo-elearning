@@ -29,6 +29,7 @@ async function bootstrap() {
       .setTitle('eLearning API Documentation')
       .setDescription('REST API for the eLearning')
       .setVersion('1.0')
+      .addBearerAuth() // Ensure Bearer Auth is added here
       .addTag('eLearning')
       .build();
     const document = SwaggerModule.createDocument(app, config);
