@@ -80,6 +80,7 @@ export class TeacherRepository {
       if (condition._id) {
         query['_id'] = new Types.ObjectId(condition._id);
       }
+
       const result: TeacherWithDetails[] = await this.teacherModel.aggregate([
         { $match: { ...query } }, // Match based on the query criteria
         {
@@ -134,6 +135,22 @@ export class TeacherRepository {
         },
         { $unwind: { path: '$country', preserveNullAndEmptyArrays: true } },
         {
+          $lookup: {
+            from: 'studentenrollments',
+            localField: 'teacherenrollments.classId',
+            foreignField: 'classId',
+            as: 'studentenrollments'
+          }
+        },
+        {
+          $lookup: {
+            from: 'students',
+            localField: 'studentenrollments.studentId',
+            foreignField: '_id',
+            as: 'students'
+          }
+        },
+        {
           $project: {
             _id: 1,
             firstName: 1,
@@ -169,6 +186,14 @@ export class TeacherRepository {
             country: {
               _id: 1,
               name: 1
+            },
+            students: {
+              _id: 1,
+              firstName: 1,
+              lastName: 1,
+              email: 1,
+              phone: 1,
+              classId: 1
             }
           }
         }

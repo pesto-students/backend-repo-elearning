@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsDateString, IsEmail, IsPhoneNumber, IsOptional, IsMongoId } from 'class-validator';
+import { IsNotEmpty, IsString, IsDateString, IsEmail, IsPhoneNumber, IsOptional, IsMongoId, IsInt, Min } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class StudentDto {
@@ -68,4 +68,14 @@ export class StudentDto {
   @IsMongoId()
   @IsOptional()
   classId: Types.ObjectId;
+}
+
+export class SearchStudentDto {
+  @IsString()
+  keyword: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  limit?: number;
 }

@@ -1,15 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { StudentDto } from './dto/student.dto';
-import { DbQueryConditionDto } from './dto/db-query-condition.dto';
-import { StudentRepository } from './repository/student.repository';
-import { AuthUtils } from 'src/core/utils/auth.utils';
-import { AuthService } from 'src/auth/auth.service';
-import { UserService } from 'src/users/users.service';
-import { IsUserExistDto } from 'src/users/dto/user.dto';
-import { UserTypeEnum } from 'src/core/enums/user-type.enum';
-import { ApiResponseDto } from 'src/core/dto/api-response.dto';
-import { Student } from 'src/core/schemas/student.schema';
+import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
+import { AuthService } from 'src/auth/auth.service';
+import { ApiResponseDto } from 'src/core/dto/api-response.dto';
+import { UserTypeEnum } from 'src/core/enums/user-type.enum';
+import { AuthUtils } from 'src/core/utils/auth.utils';
+import { IsUserExistDto } from 'src/users/dto/user.dto';
+import { UserService } from 'src/users/users.service';
+import { DbQueryConditionDto } from './dto/db-query-condition.dto';
+import { StudentDto } from './dto/student.dto';
+import { StudentRepository } from './repository/student.repository';
 
 @Injectable()
 export class StudentService {
@@ -25,11 +24,11 @@ export class StudentService {
             username: studentDto.email,
             userType: UserTypeEnum.STUDENT,
             branchId: request.userSession.branchId,
-            organizationId: request.userSession.organizationId, 
+            organizationId: request.userSession.organizationId,
         };
 
         const isUserExist: boolean = await this.userService.isUserExist(userExistData);
-        if(isUserExist){
+        if (isUserExist) {
             return new ApiResponseDto(false, 'Student already exist');
         }
 
@@ -63,7 +62,7 @@ export class StudentService {
                 console.log("error during sending mail");
             }
 
-            const studentData = await this.fetchStudent({_id: new Types.ObjectId(res)});
+            const studentData = await this.fetchStudent({ _id: new Types.ObjectId(res) });
             return new ApiResponseDto(true, 'Student created succesfully', studentData);
         }
         return new ApiResponseDto(false, 'Student not created, please try again.');
@@ -71,6 +70,10 @@ export class StudentService {
 
     async fetchStudent(condition: DbQueryConditionDto) {
         return await this.studentRepository.fetchStudentWithDetails(condition);
+    }
+
+    async searchStudent(keyword: string, limit = 10) {
+        return await this.studentRepository.searchStudentNamesLike(keyword, limit);
     }
 
     // async updateStudent(id: string, studentDto: StudentDto) {

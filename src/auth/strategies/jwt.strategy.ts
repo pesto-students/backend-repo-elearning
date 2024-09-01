@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { ExtractJwt, Strategy } from "passport-jwt"; 
-import { AuthService } from "../auth.service";
+import { ExtractJwt, Strategy } from "passport-jwt";
 import { UserTypeEnum } from "src/core/enums/user-type.enum";
 
 @Injectable()
