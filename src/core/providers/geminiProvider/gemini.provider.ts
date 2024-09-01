@@ -4,16 +4,11 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 config();
 
-const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-const fileManager = new GoogleAIFileManager(process.env.API_KEY);
-const chat = model.startChat({
-  history: [],
-  generationConfig: {
-    maxOutputTokens: 500
-  }
-})
+const fileManager = new GoogleAIFileManager(process.env.GEMINI_API_KEY);
+
 // Upload the file and specify a display name.
 
 
@@ -34,7 +29,13 @@ console.log(res);
 return res;
 }
 
-const handleChatReq = async (text: string) => {
+const handleChatReq = async (text: string, history = []) => {
+  const chat = model.startChat({
+    history,
+    generationConfig: {
+      maxOutputTokens: 500
+    }
+  })
   return await chat.sendMessage(text);
 }
 

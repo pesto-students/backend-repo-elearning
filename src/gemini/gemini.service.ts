@@ -16,8 +16,8 @@ export class GeminiService{
         return this.geminiRepository.uploadFile(filePath, displayName)
     }
     
-    async handleChat(prompt: string){
-        return this.geminiRepository.handleChat(prompt);
+    async handleChat(prompt: string, history: any){
+        return this.geminiRepository.handleChat(prompt, history);
     }
 
 

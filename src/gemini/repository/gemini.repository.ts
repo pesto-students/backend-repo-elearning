@@ -23,8 +23,8 @@ export class GeminiRepository{
         return res;
      }
 
-     async handleChat(prompt: string): Promise<GenerateContentResult>{
-        const res = await handleChatReq(prompt);
+     async handleChat(prompt: string, history: any): Promise<GenerateContentResult>{
+        const res = await handleChatReq(prompt, history);
         return res;
      }
     

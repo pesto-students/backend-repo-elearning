@@ -3,11 +3,13 @@ import { GeminiService } from "./gemini.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import {writeFileSync, openSync, unlinkSync} from "fs";
 import { File } from "buffer";
+import {v4 as uuid} from "uuid"; 
 import {join} from "path";
 
+
 const defaultMsgBody = {
-    text: '',
-    userType: 'chatbot'
+    parts: [],
+    role: 'model'
 }
 
 
@@ -96,20 +98,21 @@ export class GeminiController {
         }
     }
 
-    @Get('chat-assistance')
-    async handleChat(@Query('prompt') prompt, @Res() res){
+    @Post('chat-assistance')
+    async handleChat(@Body() body, @Res() res){
         try {
-             // const response = await this.geminiService.search(body.prompts);
-             const resp = await this.geminiService.handleChat(prompt);
+             const {msg, history} = body;
+             console.log(body);
+             const resp = await this.geminiService.handleChat(msg, history);
              const response = resp.response;
-             const msgBody = {...defaultMsgBody, text: response.text()} 
+             const msgBody = {...defaultMsgBody, parts: [{text: response.text()}] , id: uuid()} 
              res.status(HttpStatus.OK).json({
                  statusCode: HttpStatus.OK,
                  message: 'SUCCESS',
                  data: msgBody
              });
          } catch (error) {
-             return res.status(HttpStatus.BAD_REQUEST).json({
+              res.status(HttpStatus.BAD_REQUEST).json({
                  statusCode: HttpStatus.BAD_REQUEST,
                  message: 'Error occured',
                  error,
