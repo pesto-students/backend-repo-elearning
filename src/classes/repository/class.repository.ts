@@ -26,7 +26,7 @@ export class ClassRepository {
         }
     }
 
-    async fetchBranchWithDetails(condition: GetClassQueryDto): Promise<any> {
+    async fetchClassDetails(condition: GetClassQueryDto): Promise<any> {
         try {
             const query = {};
 
@@ -49,6 +49,22 @@ export class ClassRepository {
                 },
                 { $unwind: { path: '$branch', preserveNullAndEmptyArrays: true } },
                 {
+                    $lookup: {
+                        from: 'teachers',
+                        localField: '_id',
+                        foreignField: 'classId',
+                        as: 'teachers'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'students',
+                        localField: '_id',
+                        foreignField: 'classId',
+                        as: 'students'
+                    }
+                },
+                {
                     $project: {
                         _id: 1,
                         className: 1,
@@ -56,6 +72,20 @@ export class ClassRepository {
                             _id: '$branch._id',
                             name: '$branch.name'
                         },
+                        teachers: {
+                            _id: 1,
+                            firstName: 1,
+                            lastName: 1,
+                            email: 1,
+                            phone: 1
+                        },
+                        students: {
+                            _id: 1,
+                            firstName: 1,
+                            lastName: 1,
+                            email: 1,
+                            phone: 1
+                        }
                     }
                 }
             ]).exec();

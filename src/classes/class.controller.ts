@@ -19,7 +19,7 @@ export class ClassController {
     @ApiOperation({ summary: 'Fetch classes' })
     @ApiResponse({ status: 200, description: 'Classes retrieved successfully' })
     @Post('fetch')
-    async fetchBranch(@Body() condition: GetClassQueryDto) {
+    async fetchClass(@Body() condition: GetClassQueryDto) {
         return await this.classService.fetchClass(condition);
     }
 }
