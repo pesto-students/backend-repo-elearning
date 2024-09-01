@@ -62,6 +62,11 @@ export class CreateTeacherDto {
   @IsString()
   @IsOptional()
   password: string;
+
+  @ApiProperty({ description: 'Class ID of the teacher' })
+  @IsMongoId()
+  @IsOptional()
+  classId: Types.ObjectId;
 }
 
 export class UpdateTeacherDto {
