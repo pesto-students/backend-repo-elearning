@@ -63,4 +63,9 @@ export class StudentDto {
   @IsString()
   @IsOptional()
   password: string;
+
+  @ApiProperty({ description: 'Class ID of the student' })
+  @IsMongoId()
+  @IsOptional()
+  classId: Types.ObjectId;
 }
