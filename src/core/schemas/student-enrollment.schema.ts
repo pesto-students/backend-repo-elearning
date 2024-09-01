@@ -22,6 +22,9 @@ export class StudentEnrollment extends BaseSchema {
 
   @Prop({ type: Date, required: true, formControl: {name:'date', label:'Enrollment Date', required: true} })
   enrollmentDate: Date;
+
+  @Prop({ type: Date })
+  enrollmentEndDate: Date;
 }
 
 export const StudentEnrollmentSchema = SchemaFactory.createForClass(StudentEnrollment);

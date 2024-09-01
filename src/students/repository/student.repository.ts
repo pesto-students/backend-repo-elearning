@@ -7,11 +7,13 @@ import { DbQueryConditionDto } from "../dto/db-query-condition.dto";
 import { StudentDto } from "../dto/student.dto";
 import { UserTypeEnum } from "src/core/enums/user-type.enum";
 import { UserService } from "src/users/users.service";
+import { StudentEnrollment } from "src/core/schemas/student-enrollment.schema";
 
 @Injectable()
 export class StudentRepository{
     constructor(
         @InjectModel(Student.name) private studentModel: Model<Student>,
+        @InjectModel(StudentEnrollment.name) private studentEnrollmentModel: Model<StudentEnrollment>,
         private userService: UserService
     ){}
 
@@ -19,7 +21,7 @@ export class StudentRepository{
       const session = await this.studentModel.db.startSession();
     session.startTransaction();
         try { 
-          const { password, organizationId, ...studentObj } = studentData;
+          const { password, organizationId, classId, ...studentObj } = studentData;
           const createStudet = await this.studentModel.create([studentObj], { session });
           const authData = {
             userId: createStudet[0]._id.toString(),
@@ -33,7 +35,18 @@ export class StudentRepository{
           }
     
           await this.userService.createAuth(authData, session);
+
+          if(classId){
+            const studentEnrollmentData = {
+              branchId: createStudet[0].branchId.toString(),
+              studentId: createStudet[0]._id.toString(),
+              classId: classId,
+              enrollmentDate: new Date()
+            };
     
+            await this.studentEnrollmentModel.create([studentEnrollmentData], {session});
+          }
+
           await session.commitTransaction();
           return createStudet[0]._id.toString();
         } catch (error) {
@@ -58,75 +71,103 @@ export class StudentRepository{
                 if (condition._id) {
                     query['_id'] = new Types.ObjectId(condition._id);
                 }
-          const result: StudentWithDetailsInterface[] = await this.studentModel.aggregate([
-            { $match: { ...query } },
-            {
-              $lookup: {
-                from: 'branches',
-                localField: 'branchId',
-                foreignField: '_id',
-                as: 'branch'
-              }
-            },
-            { $unwind: { path: '$branch', preserveNullAndEmptyArrays: true } },
-            {
-              $lookup: {
-                from: 'cities',
-                localField: 'cityId',
-                foreignField: '_id',
-                as: 'city'
-              }
-            },
-            { $unwind: { path: '$city', preserveNullAndEmptyArrays: true } },
-            {
-              $lookup: {
-                from: 'states',
-                localField: 'stateId',
-                foreignField: '_id',
-                as: 'state'
-              }
-            },
-            { $unwind: { path: '$state', preserveNullAndEmptyArrays: true } },
-            {
-              $lookup: {
-                from: 'countries',
-                localField: 'countryId',
-                foreignField: '_id',
-                as: 'country'
-              }
-            },
-            { $unwind: { path: '$country', preserveNullAndEmptyArrays: true } },
-            {
-              $project: {
-                _id: 1,
-                firstName: 1,
-                lastName: 1,
-                dateOfBirth: 1,
-                gender: 1,
-                enrollmentDate: 1,
-                address: 1,
-                pincode: 1,
-                email: 1,
-                phone: 1,
-                branch: {
-                  _id: '$branch._id',
-                  name: '$branch.name'
-                },
-                city: {
-                  _id: '$city._id',
-                  name: '$city.name'
-                },
-                state: {
-                  _id: '$state._id',
-                  name: '$state.name'
-                },
-                country: {
-                  _id: '$country._id',
-                  name: '$country.name'
-                }
-              }
-            }
-          ]).exec();
+          
+                const result: StudentWithDetailsInterface[] = await this.studentModel.aggregate([
+                  { $match: { ...query } }, // Match based on query criteria
+                  {
+                    $lookup: {
+                      from: 'studentenrollments',
+                      localField: '_id',
+                      foreignField: 'studentId',
+                      as: 'studentenrollments'
+                    }
+                  },
+                  {
+                    $lookup: {
+                      from: 'classes',
+                      localField: 'studentenrollments.classId',
+                      foreignField: '_id',
+                      as: 'classes'
+                    }
+                  },
+                  {
+                    $lookup: {
+                      from: 'branches',
+                      localField: 'branchId',
+                      foreignField: '_id',
+                      as: 'branch'
+                    }
+                  },
+                  { $unwind: { path: '$branch', preserveNullAndEmptyArrays: true } },
+                  {
+                    $lookup: {
+                      from: 'cities',
+                      localField: 'cityId',
+                      foreignField: '_id',
+                      as: 'city'
+                    }
+                  },
+                  { $unwind: { path: '$city', preserveNullAndEmptyArrays: true } },
+                  {
+                    $lookup: {
+                      from: 'states',
+                      localField: 'stateId',
+                      foreignField: '_id',
+                      as: 'state'
+                    }
+                  },
+                  { $unwind: { path: '$state', preserveNullAndEmptyArrays: true } },
+                  {
+                    $lookup: {
+                      from: 'countries',
+                      localField: 'countryId',
+                      foreignField: '_id',
+                      as: 'country'
+                    }
+                  },
+                  { $unwind: { path: '$country', preserveNullAndEmptyArrays: true } },
+                  {
+                    $project: {
+                      _id: 1,
+                      firstName: 1,
+                      lastName: 1,
+                      dateOfBirth: 1,
+                      gender: 1,
+                      enrollmentDate: 1,
+                      address: 1,
+                      pincode: 1,
+                      email: 1,
+                      phone: 1,
+                      branch: {
+                        _id: '$branch._id',
+                        name: '$branch.name'
+                      },
+                      city: {
+                        _id: '$city._id',
+                        name: '$city.name'
+                      },
+                      state: {
+                        _id: '$state._id',
+                        name: '$state.name'
+                      },
+                      country: {
+                        _id: '$country._id',
+                        name: '$country.name'
+                      },
+                      studentenrollments: {
+                        _id: 1,
+                        classId: 1,
+                        enrollmentDate: 1,
+                        enrollmentEndDate: 1
+                      },
+                      classes: {
+                        _id: 1,
+                        className: 1,
+                        section: 1
+                      }
+                    }
+                  }
+                ]).exec();
     
           return result.length > 0 ? JSON.parse(JSON.stringify(result, null, 2)): null;
         } catch (error) {

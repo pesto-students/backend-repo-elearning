@@ -46,7 +46,7 @@ export class Student extends BaseSchema {
     })
     gender: string;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class', required: true, formControl: { name: 'autosuggest', label: 'Class', apiDetails: { endpoint: '/api/class/fetch', method: 'POST', body: {}, resultKey: 'className', onMount: true } } })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class', formControl: { name: 'autosuggest', label: 'Class', apiDetails: { endpoint: '/api/class/fetch', method: 'POST', body: {}, resultKey: 'className', onMount: true } } })
     classId: Class;
 
     @Prop({

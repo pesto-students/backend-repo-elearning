@@ -6,3 +6,9 @@ export enum RolesEnum{
     BRANCH = 'Branch',
     ADMIN = 'Admin',
 }
+
+export enum TeacherRoleEnum{
+    PRIMARY = 'primary', 
+    ASSISTANT = 'assistant', 
+    SUBSTITUTE = 'substitute'
+}
