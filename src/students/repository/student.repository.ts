@@ -1,10 +1,10 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { StudentWithDetailsInterface } from "src/core/interface/student.interface";
 import { Student } from "src/core/schemas/student.schema";
 import { DbQueryConditionDto } from "../dto/db-query-condition.dto";
-import { StudentDto } from "../dto/student.dto";
+import { StudentDto, UpdateStudentDto } from "../dto/student.dto";
 import { UserTypeEnum } from "src/core/enums/user-type.enum";
 import { UserService } from "src/users/users.service";
 import { StudentEnrollment } from "src/core/schemas/student-enrollment.schema";
@@ -273,5 +273,30 @@ export class StudentRepository {
     ]).exec();
 
     return result;
+  }
+  async update(updateTeacherDto: UpdateStudentDto): Promise<Student> {
+    try {
+      const { _id, ...updateData } = updateTeacherDto;
+      console.log(_id);
+      const updatedStudent = await this.studentModel.findByIdAndUpdate(
+        _id,
+        updateData,
+        { new: true, runValidators: true }
+      );
+      if (!updatedStudent) {
+        throw new NotFoundException('Student not found');
+      }
+      return transformId(updatedStudent);
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new ConflictException('Email or phone number already exists');
+      }
+      throw error;
+    }
+  }
+  async delete(id: string){
+    console.log(id);
+    const data = this.studentModel.findByIdAndDelete(id).exec();
+    return data;
   }
 }

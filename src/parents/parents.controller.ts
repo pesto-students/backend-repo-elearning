@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'; // Added import
-import { ParentDto, DbQueryConditionDto } from './dto/parents.dto'; // Updated import
+import { ParentDto } from './dto/parents.dto'; // Updated import
 import { ParentsService } from './parents.service';
 
 @ApiTags('Parents') // Added Swagger tag
@@ -20,7 +20,7 @@ export class ParentsController {
   @ApiOperation({ summary: 'Find parents based on condition' })
   @ApiResponse({ status: 200, description: 'Return parents based on condition.' })
   @ApiResponse({ status: 404, description: 'Parent not found.' })
-  find(@Body() condition: DbQueryConditionDto) {
+  find(@Body() condition) {
     return this.parentsService.fetchParent(condition);
   }
 
@@ -32,11 +32,11 @@ export class ParentsController {
     return this.parentsService.updateParent(updateData.id, updateData.parentDto);
   }
 
-  @Post('delete')
-  @ApiOperation({ summary: 'Delete a parent by ID' })
-  @ApiResponse({ status: 200, description: 'The parent has been successfully deleted.' })
-  @ApiResponse({ status: 404, description: 'Parent not found.' })
-  remove(@Body() deleteData: { id: string }) {
-    return this.parentsService.removeParent(deleteData.id);
-  }
+  // @Post('delete')
+  // @ApiOperation({ summary: 'Delete a parent by ID' })
+  // @ApiResponse({ status: 200, description: 'The parent has been successfully deleted.' })
+  // @ApiResponse({ status: 404, description: 'Parent not found.' })
+  // remove(@Body() deleteData: { id: string }) {
+  //   return this.parentsService.removeParent(deleteData.id);
+  // }
 }
