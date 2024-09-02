@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { Parent } from "src/core/schemas/parent.schema";
-import { ParentDto, DbQueryConditionDto } from "../dto/parents.dto";
+import { ParentDto } from "../dto/parents.dto";
 
 @Injectable()
 export class ParentsRepository {
@@ -28,7 +28,7 @@ export class ParentsRepository {
         }
     }
 
-    async fetchParentWithDetails(condition: DbQueryConditionDto): Promise<any> {
+    async fetchParentWithDetails(condition): Promise<any> {
         try {
             const query = {};
 
@@ -56,7 +56,7 @@ export class ParentsRepository {
         return await this.parentModel.findByIdAndUpdate(id, parentDto, { new: true }).exec();
     }
 
-    async remove(id: string) {
-        return await this.parentModel.findByIdAndRemove(id).exec();
-    }
+    // async remove(id: string) {
+    //     return await this.parentModel.findByIdAndRemove(id).exec();
+    // }
 }
