@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ParentsRepository } from './repository/parents.repository';
 import { ApiResponseDto } from 'src/core/dto/api-response.dto';
 import { Types } from 'mongoose';
-import { ParentDto, DbQueryConditionDto } from './dto/parents.dto';
+import { ParentDto } from './dto/parents.dto';
 
 @Injectable()
 export class ParentsService {
@@ -21,7 +21,7 @@ export class ParentsService {
     return new ApiResponseDto(false, 'Parent not created, please try again.');
   }
 
-  async fetchParent(condition: DbQueryConditionDto) {
+  async fetchParent(condition) {
     return await this.parentsRepository.fetchParentWithDetails(condition);
   }
 
@@ -33,11 +33,11 @@ export class ParentsService {
     return updatedParent;
   }
 
-  async removeParent(id: string) {
-    const deletedParent = await this.parentsRepository.remove(id);
-    if (!deletedParent) {
-      throw new NotFoundException(`Parent with ID "${id}" not found`);
-    }
-    return deletedParent;
-  }
+  // async removeParent(id: string) {
+  //   const deletedParent = await this.parentsRepository.remove(id);
+  //   if (!deletedParent) {
+  //     throw new NotFoundException(`Parent with ID "${id}" not found`);
+  //   }
+  //   return deletedParent;
+  // }
 }

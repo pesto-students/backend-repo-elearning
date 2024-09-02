@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, Put, Param, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Put, Param, Request, UseGuards, Delete, Query } from "@nestjs/common";
 import { StudentService } from "./student.service";
-import { SearchStudentDto, StudentDto } from "./dto/student.dto";
+import { SearchStudentDto, StudentDto, UpdateStudentDto } from "./dto/student.dto";
 import { DbQueryConditionDto } from "./dto/db-query-condition.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from "@nestjs/swagger";
 import { PassportJwtAuthGuard } from "src/auth/guards/passport-jwt.guard";
@@ -28,6 +28,15 @@ export class StudentController {
         return await this.studentService.fetchStudent(condition);
     }
 
+    @Post('update')
+    @ApiOperation({ summary: 'Edit student' })
+    @ApiResponse({ status: 201, description: 'The student has been successfully created.' })
+    @ApiResponse({ status: 400, description: 'Bad Request.' })
+    async updateStudent(@Body() studentDto: UpdateStudentDto, @Request() request) {
+        return  await this.studentService.updateStudent(studentDto);
+      
+    }
+
     // @Put(':id')
     // @ApiOperation({ summary: 'Update a student' })
     // @ApiResponse({ status: 200, description: 'The student has been successfully updated.' })
@@ -52,5 +61,13 @@ export class StudentController {
     })
     async searchStudent(@Body() condition: SearchStudentDto) {
         return this.studentService.searchStudent(condition.keyword, condition?.limit);
-    }
+    };
+  @Delete('delete')
+  @ApiOperation({ summary: 'Delete a student by ID' })
+  @ApiResponse({ status: 200, description: 'The student has been successfully deleted.' })
+  @ApiResponse({ status: 404, description: 'student not found.' })
+  remove(@Query('id') id ) {
+    return this.studentService.removeStudent(id);
+  }
+ 
 }

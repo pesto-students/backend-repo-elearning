@@ -14,6 +14,7 @@ import { StudentModule } from './students/student.module';
 import { SchemaService } from './schema/schema.service';
 import { SchemaController } from './schema/schema.controller';
 import { SchemaModule } from './schema/schema.module';
+import { GeminiModule } from './gemini/gemini.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AiChatModule } from './ai-chat/ai-chat.module';
 import { ParentsModule } from './parents/parents.module';
@@ -31,6 +32,7 @@ import { ParentsModule } from './parents/parents.module';
     OnlineClassModule,
     StudentModule,
     SchemaModule,
+    GeminiModule,
     DashboardModule,
     AiChatModule,
     ParentsModule
