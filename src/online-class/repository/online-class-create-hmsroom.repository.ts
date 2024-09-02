@@ -26,7 +26,7 @@ export class HMSRepository {
             return response.data as any;
         } catch (error) {
             console.log(error)
-            throw new HttpException('Failed to create 100ms room', HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException('Failed to get 100ms room', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

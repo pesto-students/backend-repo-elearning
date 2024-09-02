@@ -9,6 +9,7 @@ import { TeacherService } from "./teacher.service";
 import { TeacherRepository } from "./repository/teacher.repository";
 import { AuthModule } from "src/auth/auth.module";
 import { UserModule } from "src/users/user.module";
+import { TeacherEnrollment, TeacherEnrollmentSchema } from "src/core/schemas/teacher-enrollment.schema";
 
 @Module({
     imports: [
@@ -29,6 +30,10 @@ import { UserModule } from "src/users/user.module";
                 name: City.name,
                 schema: CitySchema
             },
+            {
+                name: TeacherEnrollment.name,
+                schema: TeacherEnrollmentSchema
+            }
         ]),
         AuthModule,
         UserModule

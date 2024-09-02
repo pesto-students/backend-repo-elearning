@@ -1,7 +1,6 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Types } from "mongoose";
+import { Prop, SchemaFactory } from "@nestjs/mongoose";
+import mongoose from "mongoose";
 import { BaseSchema, BaseSchemaOptions } from './base.schema';
-import { Branch } from "./branch.schema";
 import { Country } from "./country.schema";
 import { State } from "./state.schema";
 import { City } from "./city.schema";
@@ -20,7 +19,7 @@ export class Teacher extends BaseSchema {
     @Prop({ type: String, formControl: { name: 'input', type: 'text', label: 'Last Name' } })
     lastName?: string;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class', required: true, formControl: { name: 'autosuggest', label: 'Class', apiDetails: { endpoint: '/api/class/fetch', method: 'POST', body: {}, resultKey: 'className', onMount: true } } })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class', formControl: { name: 'autosuggest', label: 'Class', apiDetails: { endpoint: '/api/class/fetch', method: 'POST', body: {}, resultKey: 'className', onMount: true } } })
     classId: Class;
 
     @Prop({ type: String, required: true, formControl: { name: 'input', type: 'email', label: 'Email' } })

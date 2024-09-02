@@ -1,10 +1,12 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { ClassService } from "./class.service";
 import { ClassDto } from "./dto/class.dto";
 import { GetClassQueryDto } from "./dto/get-class-query.dto";
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { PassportJwtAuthGuard } from "src/auth/guards/passport-jwt.guard";
 
 @ApiTags('Class')
+@UseGuards(PassportJwtAuthGuard)
 @Controller('class')
 export class ClassController {
     constructor(private classService: ClassService) { }
@@ -13,7 +15,7 @@ export class ClassController {
     @ApiResponse({ status: 201, description: 'Class created successfully' })
     @Post('create')
     async createClass(@Body() classDto: ClassDto) {
-        return this.classService.create(classDto);
+        return await this.classService.create(classDto);
     }
 
     @ApiOperation({ summary: 'Fetch classes' })

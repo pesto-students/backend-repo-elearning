@@ -6,11 +6,15 @@ import { CreateTeacherDto, GetTeacherQueryDto, UpdateTeacherDto } from "../dto/t
 import { TeacherWithDetails } from "src/core/interface/teacher.interface";
 import { UserTypeEnum } from "src/core/enums/user-type.enum";
 import { UserService } from "src/users/users.service";
+import { TeacherEnrollment } from "src/core/schemas/teacher-enrollment.schema";
+import { TeacherRoleEnum } from "src/core/enums/roles.enum";
+import { DbStatusEnum } from "src/core/enums/status.enum";
 
 @Injectable()
 export class TeacherRepository {
   constructor(
     @InjectModel(Teacher.name) private teacherModel: Model<Teacher>,
+    @InjectModel(TeacherEnrollment.name) private teacherEnrollmentModel: Model<TeacherEnrollment>,
     private userService: UserService
   ) { }
 
@@ -19,7 +23,7 @@ export class TeacherRepository {
     session.startTransaction();
 
     try {
-      const { password, organizationId, ...teacherObj } = teacherData;
+      const { password, organizationId, classId, ...teacherObj } = teacherData;
       const teacher = await this.teacherModel.create([teacherObj], { session });
 
       const authData = {
@@ -35,10 +39,25 @@ export class TeacherRepository {
 
       await this.userService.createAuth(authData, session);
 
+      if(classId){
+        const teacherEnrollmentData = {
+          branchId: teacherData.branchId,
+          teacherId: teacher[0]._id.toString(),
+          classId: classId,
+          status: DbStatusEnum.ACTIVE,
+          role: TeacherRoleEnum.PRIMARY,
+          enrollmentDate: new Date()
+        };
+
+        await this.teacherEnrollmentModel.create([teacherEnrollmentData], {session});
+      }
+
       await session.commitTransaction();
 
       return teacher[0]._id.toString();
+
     } catch (error) {
+
       await session.abortTransaction();
 
       if (error.code === 11000) { // MongoDB duplicate key error code
@@ -61,17 +80,33 @@ export class TeacherRepository {
       if (condition._id) {
         query['_id'] = new Types.ObjectId(condition._id);
       }
+
       const result: TeacherWithDetails[] = await this.teacherModel.aggregate([
-        { $match: { ...query } },
+        { $match: { ...query } }, // Match based on the query criteria
+        {
+          $lookup: {
+            from: 'teacherenrollments',
+            localField: '_id',
+            foreignField: 'teacherId',
+            as: 'teacherenrollments'
+          }
+        },
         {
           $lookup: {
             from: 'branches',
-            localField: 'branchId',
+            localField: 'teacherenrollments.branchId',
             foreignField: '_id',
-            as: 'branch'
+            as: 'branches'
           }
         },
-        { $unwind: { path: '$branch', preserveNullAndEmptyArrays: true } },
+        {
+          $lookup: {
+            from: 'classes',
+            localField: 'teacherenrollments.classId',
+            foreignField: '_id',
+            as: 'classes'
+          }
+        },
         {
           $lookup: {
             from: 'cities',
@@ -100,6 +135,22 @@ export class TeacherRepository {
         },
         { $unwind: { path: '$country', preserveNullAndEmptyArrays: true } },
         {
+          $lookup: {
+            from: 'studentenrollments',
+            localField: 'teacherenrollments.classId',
+            foreignField: 'classId',
+            as: 'studentenrollments'
+          }
+        },
+        {
+          $lookup: {
+            from: 'students',
+            localField: 'studentenrollments.studentId',
+            foreignField: '_id',
+            as: 'students'
+          }
+        },
+        {
           $project: {
             _id: 1,
             firstName: 1,
@@ -108,21 +159,41 @@ export class TeacherRepository {
             pincode: 1,
             email: 1,
             phone: 1,
-            branch: {
-              _id: '$branch._id',
-              name: '$branch.name'
+            teacherenrollments: {
+              _id: 1,
+              enrollmentDate: 1,
+              enrollmentEndDate: 1,
+              branchId: 1,
+              classId: 1
+            },
+            branches: {
+              _id: 1,
+              name: 1
+            },
+            classes: {
+              _id: 1,
+              className: 1,
+              section: 1
             },
             city: {
-              _id: '$city._id',
-              name: '$city.name'
+              _id: 1,
+              name: 1
             },
             state: {
-              _id: '$state._id',
-              name: '$state.name'
+              _id: 1,
+              name: 1
             },
             country: {
-              _id: '$country._id',
-              name: '$country.name'
+              _id: 1,
+              name: 1
+            },
+            students: {
+              _id: 1,
+              firstName: 1,
+              lastName: 1,
+              email: 1,
+              phone: 1,
+              classId: 1
             }
           }
         }
