@@ -33,6 +33,14 @@ export class ParentDto {
     @IsNotEmpty()
     @IsString()
     pincode: string;
+}
 
+export class DbQueryConditionDto {
+    @IsOptional()
+    @IsMongoId()
+    _id?: Types.ObjectId;
 
+    constructor(partial: Promise<DbQueryConditionDto>) {
+        Object.assign(this, partial);
+    }
 }
