@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsDateString, IsEmail, IsPhoneNumber, IsOptional, IsMongoId, IsInt, Min } from 'class-validator';
 import { Types } from 'mongoose';
 
@@ -78,4 +78,61 @@ export class SearchStudentDto {
   @IsInt()
   @Min(1)
   limit?: number;
+}
+
+export class UpdateStudentDto {
+  @ApiProperty({ description: 'ID of the student to update' })
+  @IsNotEmpty()
+  @IsMongoId()
+  _id: Types.ObjectId;
+
+  @ApiPropertyOptional({ description: 'Branch ID of the student' })
+  @IsOptional()
+  @IsMongoId()
+  branchId?: Types.ObjectId;
+
+  @ApiPropertyOptional({ description: 'First name of the student' })
+  @IsOptional()
+  @IsString()
+  firstName?: string;
+
+  @ApiPropertyOptional({ description: 'Last name of the student' })
+  @IsOptional()
+  @IsString()
+  lastName?: string;
+
+  @ApiPropertyOptional({ description: 'Email of the student' })
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @ApiPropertyOptional({ description: 'Phone number of the student' })
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @ApiPropertyOptional({ description: 'Address of the student' })
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @ApiPropertyOptional({ description: 'Country ID of the student' })
+  @IsOptional()
+  @IsMongoId()
+  countryId?: Types.ObjectId;
+
+  @ApiPropertyOptional({ description: 'State ID of the student' })
+  @IsOptional()
+  @IsMongoId()
+  stateId?: Types.ObjectId;
+
+  @ApiPropertyOptional({ description: 'City ID of the student' })
+  @IsOptional()
+  @IsMongoId()
+  cityId?: Types.ObjectId;
+
+  @ApiPropertyOptional({ description: 'Pincode of the student\'s address' })
+  @IsOptional()
+  @IsString()
+  pincode?: string;
 }

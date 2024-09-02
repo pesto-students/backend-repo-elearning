@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
 import { ApiResponseDto } from 'src/core/dto/api-response.dto';
@@ -7,8 +7,9 @@ import { AuthUtils } from 'src/core/utils/auth.utils';
 import { IsUserExistDto } from 'src/users/dto/user.dto';
 import { UserService } from 'src/users/users.service';
 import { DbQueryConditionDto } from './dto/db-query-condition.dto';
-import { StudentDto } from './dto/student.dto';
+import { StudentDto, UpdateStudentDto } from './dto/student.dto';
 import { StudentRepository } from './repository/student.repository';
+import { transformId } from 'src/core/utils/mongo-res.utils';
 
 @Injectable()
 export class StudentService {
@@ -76,11 +77,15 @@ export class StudentService {
         return await this.studentRepository.searchStudentNamesLike(keyword, limit);
     }
 
-    // async updateStudent(id: string, studentDto: StudentDto) {
-    //     const updatedStudent = await this.studentRepository.update(id, studentDto);
-    //     if (!updatedStudent) {
-    //         throw new NotFoundException(`Student with ID "${id}" not found`);
-    //     }
-    //     return updatedStudent;
-    // }
+    async updateStudent(studentDto: UpdateStudentDto) {
+        const updatedStudent = await this.studentRepository.update( studentDto);
+        if (!updatedStudent) {
+            throw new NotFoundException(`Student not found`);
+        }
+        return updatedStudent;
+    }
+    async removeStudent(id: string){
+        const response = await this.studentRepository.delete( id);
+        return response
+    }
 }
