@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { BaseSchema, BaseSchemaOptions } from './base.schema';
+import { BaseSchema, BaseSchemaOptions } from '../base.schema';
 
 @BaseSchemaOptions()
 export class Subscription extends BaseSchema {
@@ -13,9 +13,6 @@ export class Subscription extends BaseSchema {
 
   @Prop({ type: Types.ObjectId, ref: 'Module', required: true })
   moduleId: Types.ObjectId;
-
-  @Prop({ type: Types.ObjectId, ref: 'Plan', required: true })
-  planId: Types.ObjectId;
 
   @Prop({ type: Date, required: true })
   subscriptionDate: Date;

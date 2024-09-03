@@ -9,6 +9,7 @@ import { UserType, userTypeSchema } from "src/core/schemas/user-type.schema";
 import { Auth, AuthSchema } from "src/core/schemas/auth.schema";
 import { AuthModule } from "src/auth/auth.module";
 import { StudentEnrollment, StudentEnrollmentSchema } from "src/core/schemas/student-enrollment.schema";
+import { ModuleManagementModule } from "src/module-management/module-management.module";
 
 @Module({
     imports:[
@@ -31,7 +32,8 @@ import { StudentEnrollment, StudentEnrollmentSchema } from "src/core/schemas/stu
             }
         ]),
         UserModule,
-        AuthModule
+        AuthModule,
+        ModuleManagementModule
     ],
     providers:[StudentService, StudentRepository],
     controllers:[StudentController],
