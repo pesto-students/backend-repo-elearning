@@ -12,9 +12,8 @@ export class AiChatRepository {
     async create(chatdata): Promise<string> {
 
         const createChat = await this.chatHistoryModel.create(chatdata);
-
-        if (Types.ObjectId.isValid(createChat[0]._id.toString())) {
-            return createChat[0]._id.toString();
+        if (Types.ObjectId.isValid(createChat._id.toString())) {
+            return createChat._id.toString();
         }
 
         return null;

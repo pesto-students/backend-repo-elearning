@@ -1,5 +1,5 @@
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { BaseSchema, BaseSchemaOptions } from './base.schema';
 
 @BaseSchemaOptions()
@@ -17,8 +17,8 @@ export class ChatHistory extends BaseSchema {
   @Prop({type: String})
   title: string;
 
-  @Prop({ type: String })
-  data: string;
+  @Prop({ type: mongoose.Schema.Types.Mixed, required: true })
+  data: Record<string, any>;
 }
 
 export const chatHistorySchema = SchemaFactory.createForClass(ChatHistory);
