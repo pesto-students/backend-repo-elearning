@@ -18,6 +18,8 @@ import { GeminiModule } from './gemini/gemini.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AiChatModule } from './ai-chat/ai-chat.module';
 import { ParentsModule } from './parents/parents.module';
+import { ModulesModule } from './modules/modules.module';
+import { ModuleManagementModule } from './module-management/module-management.module';
 
 @Module({
   imports: [
@@ -35,7 +37,9 @@ import { ParentsModule } from './parents/parents.module';
     GeminiModule,
     DashboardModule,
     AiChatModule,
-    ParentsModule
+    ParentsModule,
+    ModulesModule,
+    ModuleManagementModule
   ],
   controllers: [AppController, SchemaController],
   providers: [AppService, SchemaService],
