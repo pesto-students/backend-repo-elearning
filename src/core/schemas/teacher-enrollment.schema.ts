@@ -17,9 +17,10 @@ export class TeacherEnrollment extends BaseSchema {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true, formControl: { name: 'autosuggest', label: "Select Teacher", required: true, apiDetails: { endpoint: TeacherRoutes.FETCH_TEACHER, onMount: true } } })
   teacherId: Teacher;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class', required: true,
-    formControl: { name: 'autosuggest', label: 'Select Class', required: true }
-   })
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId, ref: 'Class', required: false,
+    formControl: { name: 'autosuggest', label: 'Select Class', required: false }
+  })
   classId: Class;
 
   @Prop({ type: String, required: true, default: DbStatusEnum.ACTIVE })
@@ -28,7 +29,7 @@ export class TeacherEnrollment extends BaseSchema {
   @Prop({ type: String, required: true, default: TeacherRoleEnum.PRIMARY })
   role: string;
 
-  @Prop({ type: Date, required: true, formControl: {name:'date', label:'Enrollment Date', required: true} })
+  @Prop({ type: Date, required: true, formControl: { name: 'date', label: 'Enrollment Date', required: true } })
   enrollmentDate: Date;
 
   @Prop({ type: Date })

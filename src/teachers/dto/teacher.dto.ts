@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEmail, IsMongoId, IsNotEmpty } from 'class-validator';
+import { IsString, IsOptional, IsEmail, IsMongoId, IsNotEmpty, IsArray } from 'class-validator';
 import { Types } from 'mongoose';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -63,10 +63,11 @@ export class CreateTeacherDto {
   @IsOptional()
   password: string;
 
-  @ApiProperty({ description: 'Class ID of the teacher' })
-  @IsMongoId()
+  @ApiProperty({ description: 'Class IDs of the teacher assigned to' })
+  @IsArray()
+  @IsMongoId({ each: true })
   @IsOptional()
-  classId: Types.ObjectId;
+  classId: Types.ObjectId[];
 }
 
 export class UpdateTeacherDto {
@@ -140,4 +141,33 @@ export class GetTeacherQueryDto {
   constructor(partial: Promise<GetTeacherQueryDto>) {
     Object.assign(this, partial);
   }
+}
+
+export class UpdateTeacherEnrollmentsDto {
+  @ApiProperty({ description: 'Array of Teacher IDs', type: [String] })
+  @IsArray()
+  @IsMongoId({ each: true })
+  @IsNotEmpty()
+  teacherIds: Types.ObjectId[];
+
+  @ApiProperty({ description: 'Array of Class IDs', type: [String] })
+  @IsArray()
+  @IsMongoId({ each: true })
+  @IsNotEmpty()
+  classIds: Types.ObjectId[];
+}
+
+export class FetchTeacherClassesDto {
+  @ApiProperty({ description: 'ID of the teacher' })
+  @IsNotEmpty()
+  @IsMongoId()
+  teacherId: Types.ObjectId;
+}
+
+export class DeleteTeachersDto {
+  @ApiProperty({ description: 'Array of Teacher IDs to delete', type: [String] })
+  @IsArray()
+  @IsMongoId({ each: true })
+  @IsNotEmpty()
+  teacherIds: Types.ObjectId[];
 }

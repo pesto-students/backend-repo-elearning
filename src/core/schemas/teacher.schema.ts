@@ -19,8 +19,22 @@ export class Teacher extends BaseSchema {
     @Prop({ type: String, formControl: { name: 'input', type: 'text', label: 'Last Name' } })
     lastName?: string;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class', formControl: { name: 'autosuggest', label: 'Class', apiDetails: { endpoint: '/api/class/fetch', method: 'POST', body: {}, resultKey: 'className', onMount: true } } })
-    classId: Class;
+    @Prop({
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Class' }],
+        required: false,
+        formControl: {
+            name: 'multiSelectWithAutoSuggest',
+            label: 'Class',
+            apiDetails: {
+                endpoint: '/api/class/fetch',
+                method: 'POST',
+                body: {},
+                resultKey: 'className',
+                onMount: true
+            },
+        }
+    })
+    classId?: Class[];
 
     @Prop({ type: String, required: true, formControl: { name: 'input', type: 'email', label: 'Email' } })
     email: string;
