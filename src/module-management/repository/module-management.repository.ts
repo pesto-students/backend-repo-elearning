@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Modules } from "src/core/schemas/modules/modules.schema";
 import { OrganizationModuleSettings } from "src/core/schemas/modules/organization-module-settings.schema";
+import { transformId } from "src/core/utils/mongo-res.utils";
 
 @Injectable()
 export class ModuleManagementRepository {
@@ -52,9 +53,11 @@ export class ModuleManagementRepository {
         const subscribedModuleIds = subscribedModules.map((module) => module.moduleId.toString());
 
         // Combine the data: map all modules and add a 'isSubscribed' flag
-        return allModules.map((module) => ({
+        const allModule = allModules.map((module) => ({
             ...module.toObject(),
             isSubscribed: subscribedModuleIds.includes(module._id.toString()), // Check if the module is subscribed
         }));
+
+        return transformId(allModule);
     }
 }
