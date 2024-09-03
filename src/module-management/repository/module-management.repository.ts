@@ -55,7 +55,7 @@ export class ModuleManagementRepository {
         // Combine the data: map all modules and add a 'isSubscribed' flag
         const allModule = allModules.map((module) => ({
             ...module.toObject(),
-            isSubscribed: subscribedModuleIds.includes(module._id.toString()), // Check if the module is subscribed
+            isSubscribed: subscribedModuleIds.includes(module._id.toString()),
         }));
 
         return transformId(allModule);
