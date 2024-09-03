@@ -4,6 +4,7 @@ import { ModuleManagementRepository } from "./repository/module-management.repos
 import { MongooseModule } from "@nestjs/mongoose";
 import { OrganizationModuleSettings, organizationModuleSettingsSchema } from "src/core/schemas/modules/organization-module-settings.schema";
 import { ModuleManagementController } from "./module-management.controller";
+import { Modules, ModulesSchema } from "src/core/schemas/modules/modules.schema";
 
 @Module({
     imports:[
@@ -11,6 +12,10 @@ import { ModuleManagementController } from "./module-management.controller";
             {
                 name: OrganizationModuleSettings.name,
                 schema: organizationModuleSettingsSchema
+            },
+            {
+                name: Modules.name,
+                schema: ModulesSchema
             }
         ]),
     ],

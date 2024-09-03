@@ -43,5 +43,11 @@ export class ModuleManagementService{
 
     async isModuleEnabled(organizationId: string, moduleId: string, branchId: string): Promise<boolean> {
         return this.moduleManagementRepository.isModuleEnabled(organizationId, moduleId, branchId);
-      }
+    }
+
+    async getModulesWithSubscription(request){
+        const branchId: string = request.userSession.branchId;
+        const organizationId: string = request.userSession.organizationId;
+        return await this.moduleManagementRepository.getModulesWithSubscription(organizationId, branchId);
+    }
 }

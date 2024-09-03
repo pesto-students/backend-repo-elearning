@@ -21,6 +21,22 @@ export class AiChatRepository {
 
     }
 
+    async upsertEntity(
+        branchId: string,
+        userAuthId: string,
+        title: string,
+        data: Record<string, any>
+      ): Promise<ChatHistory> {
+        const filter = { branchId, userAuthId };
+        const update = { title, data };
+        // Perform the upsert operation
+        return this.chatHistoryModel.findOneAndUpdate(
+          filter,
+          update,
+          { new: true, upsert: true }
+        ).exec();
+      }
+
     async fetch(branchId: Types.ObjectId, userAuthId: Types.ObjectId) {
         const chatHistories = await this.chatHistoryModel.find({
             branchId: branchId,

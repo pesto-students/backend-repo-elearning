@@ -19,4 +19,12 @@ export class ModuleManagementController{
     async unSubscribeModule(@Body() unsubscriptionData, @Request() request){
         this.moduleManagementService.unSubscribeModule(unsubscriptionData, request);
     }
+
+    @Post('modules')
+    async getModulesWithSubscription(
+      @Body('organizationId') body, @Request() request
+    ): Promise<{ modules: any[] }> {
+      const modules = await this.moduleManagementService.getModulesWithSubscription(request);
+      return { modules };
+    }
 }
