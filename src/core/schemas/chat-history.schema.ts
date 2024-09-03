@@ -1,15 +1,17 @@
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Types } from 'mongoose';
 import { BaseSchema, BaseSchemaOptions } from './base.schema';
+import { Branch } from './branch.schema';
+import { Auth } from './auth.schema';
 
 @BaseSchemaOptions()
 export class ChatHistory extends BaseSchema {
 
   @Prop({ type: Types.ObjectId, ref: 'Branch', required: true })
-  branchId: Types.ObjectId;
+  branchId: Branch;
 
   @Prop({ type: Types.ObjectId, ref: 'Auth', required: true })
-  userAuthId: Types.ObjectId;
+  userAuthId: Auth;
 
   @Prop({ type: String })
   chatId: string;

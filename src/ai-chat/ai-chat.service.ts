@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { AiChatRepository } from "./repository/ai-chat.repository";
 import { Types } from "mongoose";
 import { ApiResponseDto } from "src/core/dto/api-response.dto";
+import { ChatHistory } from "src/core/schemas/chat-history.schema";
 
 @Injectable()
 export class AiChatService{
@@ -16,11 +17,13 @@ export class AiChatService{
             branchId: request.userSession.branchId,
             userAuthId: request.userSession.userId
         };
+        
+        const {branchId, userAuthId, data, title} = chatData;
 
-        const res: string = await this.aiChatRepository.create(chatData);
+        const res: ChatHistory = await this.aiChatRepository.upsertEntity(branchId, userAuthId, null, data);
 
-        if(Types.ObjectId.isValid(res)){
-            return new ApiResponseDto(true, 'Chat created succesfully', chatData);
+        if(res._id){
+            return new ApiResponseDto(true, 'Chat created succesfully', res);
         }
         return new ApiResponseDto(false, 'Please try again');
     }

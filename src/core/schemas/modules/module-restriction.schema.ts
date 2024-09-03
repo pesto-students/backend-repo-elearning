@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { BaseSchema, BaseSchemaOptions } from './base.schema';
+import { BaseSchema, BaseSchemaOptions } from '../base.schema';
 
 @BaseSchemaOptions()
 export class ModuleRestriction extends BaseSchema {
