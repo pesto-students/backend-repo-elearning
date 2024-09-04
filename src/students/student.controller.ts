@@ -9,7 +9,7 @@ import { ModuleAccessGuard } from "src/core/guard/module-access.guard";
 @ApiTags('Students')
 @ApiBearerAuth() // This will allow passing the bearer token in the auth headers
 @UseGuards(PassportJwtAuthGuard)
-@UseGuards(ModuleAccessGuard)
+// @UseGuards(ModuleAccessGuard)
 @Controller('student')
 export class StudentController {
 
@@ -35,8 +35,8 @@ export class StudentController {
     @ApiResponse({ status: 201, description: 'The student has been successfully created.' })
     @ApiResponse({ status: 400, description: 'Bad Request.' })
     async updateStudent(@Body() studentDto: UpdateStudentDto, @Request() request) {
-        return  await this.studentService.updateStudent(studentDto);
-      
+        return await this.studentService.updateStudent(studentDto);
+
     }
 
     // @Put(':id')
@@ -64,12 +64,12 @@ export class StudentController {
     async searchStudent(@Body() condition: SearchStudentDto) {
         return this.studentService.searchStudent(condition.keyword, condition?.limit);
     };
-  @Delete('delete')
-  @ApiOperation({ summary: 'Delete a student by ID' })
-  @ApiResponse({ status: 200, description: 'The student has been successfully deleted.' })
-  @ApiResponse({ status: 404, description: 'student not found.' })
-  remove(@Query('id') id ) {
-    return this.studentService.removeStudent(id);
-  }
- 
+    @Delete('delete')
+    @ApiOperation({ summary: 'Delete a student by ID' })
+    @ApiResponse({ status: 200, description: 'The student has been successfully deleted.' })
+    @ApiResponse({ status: 404, description: 'student not found.' })
+    remove(@Query('id') id) {
+        return this.studentService.removeStudent(id);
+    }
+
 }

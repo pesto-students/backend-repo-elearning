@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { Parent } from "src/core/schemas/parent.schema";
 import { ParentDto } from "../dto/parents.dto";
+import { transformId } from "src/core/utils/mongo-res.utils";
 
 @Injectable()
 export class ParentsRepository {
@@ -41,11 +42,89 @@ export class ParentsRepository {
             }
 
             const result = await this.parentModel.aggregate([
-                { $match: { ...query } },
-                // Add necessary lookups and projections here
+                { $match: query },
+                {
+                    $lookup: {
+                        from: 'students',
+                        let: { studentIds: { $map: { input: '$studentId', in: { $toObjectId: '$$this' } } } },
+                        pipeline: [
+                            { $match: { $expr: { $in: ['$_id', '$$studentIds'] } } },
+                            {
+                                $project: {
+                                    _id: { $toString: '$_id' },
+                                    firstName: 1,
+                                    lastName: 1,
+                                    dateOfBirth: 1,
+                                    gender: 1,
+                                    email: 1,
+                                    phone: 1,
+                                    address: 1,
+                                    pincode: 1,
+                                    branchId: { $toString: '$branchId' },
+                                    countryId: { $toString: '$countryId' },
+                                    stateId: { $toString: '$stateId' },
+                                    cityId: { $toString: '$cityId' },
+                                    enrollmentDate: 1
+                                }
+                            }
+                        ],
+                        as: 'students'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'countries',
+                        let: { countryId: { $toObjectId: '$countryId' } },
+                        pipeline: [
+                            { $match: { $expr: { $eq: ['$_id', '$$countryId'] } } },
+                            { $project: { _id: { $toString: '$_id' }, name: 1 } }
+                        ],
+                        as: 'country'
+                    }
+                },
+                { $unwind: { path: '$country', preserveNullAndEmptyArrays: true } },
+                {
+                    $lookup: {
+                        from: 'states',
+                        let: { stateId: { $toObjectId: '$stateId' } },
+                        pipeline: [
+                            { $match: { $expr: { $eq: ['$_id', '$$stateId'] } } },
+                            { $project: { _id: { $toString: '$_id' }, name: 1 } }
+                        ],
+                        as: 'state'
+                    }
+                },
+                { $unwind: { path: '$state', preserveNullAndEmptyArrays: true } },
+                {
+                    $lookup: {
+                        from: 'cities',
+                        let: { cityId: { $toObjectId: '$cityId' } },
+                        pipeline: [
+                            { $match: { $expr: { $eq: ['$_id', '$$cityId'] } } },
+                            { $project: { _id: { $toString: '$_id' }, name: 1 } }
+                        ],
+                        as: 'city'
+                    }
+                },
+                { $unwind: { path: '$city', preserveNullAndEmptyArrays: true } },
+                {
+                    $project: {
+                        _id: { $toString: '$_id' },
+                        fatherName: 1,
+                        motherName: 1,
+                        email: 1,
+                        phone: 1,
+                        address: 1,
+                        pincode: 1,
+                        students: 1,
+                        country: '$country',
+                        state: '$state',
+                        city: '$city'
+                    }
+                }
             ]).exec();
 
-            return result.length > 0 ? JSON.parse(JSON.stringify(result, null, 2)) : null;
+            return result;
         } catch (error) {
             console.error('Error fetching parent with details:', error);
             throw new Error('Error fetching parent with details');
