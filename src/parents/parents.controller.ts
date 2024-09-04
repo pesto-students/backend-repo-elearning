@@ -1,10 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Request } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'; // Added import
-import { ParentDto } from './dto/parents.dto'; // Updated import
+import { DbQueryConditionDto, ParentDto } from './dto/parents.dto'; // Updated import
 import { ParentsService } from './parents.service';
 
-@ApiTags('Parents') // Added Swagger tag
-@Controller('parents')
+@ApiTags('Parent') // Added Swagger tag
+@Controller('parent')
 export class ParentsController {
   constructor(private readonly parentsService: ParentsService) { }
 
@@ -12,15 +12,15 @@ export class ParentsController {
   @ApiOperation({ summary: 'Create a new parent' })
   @ApiResponse({ status: 201, description: 'The parent has been successfully created.' })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  create(@Body() parentDto: ParentDto) {
-    return this.parentsService.createParent(parentDto);
+  create(@Body() parentDto: ParentDto, @Request() request) {
+    return this.parentsService.createParent(parentDto, request);
   }
 
   @Post('fetch')
   @ApiOperation({ summary: 'Find parents based on condition' })
   @ApiResponse({ status: 200, description: 'Return parents based on condition.' })
   @ApiResponse({ status: 404, description: 'Parent not found.' })
-  find(@Body() condition) {
+  find(@Body() condition: DbQueryConditionDto) {
     return this.parentsService.fetchParent(condition);
   }
 

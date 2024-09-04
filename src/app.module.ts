@@ -20,10 +20,31 @@ import { AiChatModule } from './ai-chat/ai-chat.module';
 import { ParentsModule } from './parents/parents.module';
 import { ModulesModule } from './modules/modules.module';
 import { ModuleManagementModule } from './module-management/module-management.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    MongooseModule.forRootAsync({
+      useFactory: () => ({
+        uri: process.env.MONGODB_URI,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000,
+        connectionFactory: (connection) => {
+          connection.on('connected', () => {
+            console.log('MongoDB connected successfully');
+          });
+          connection.on('error', (err) => {
+            console.error('MongoDB connection error:', err);
+          });
+          connection.on('disconnected', () => {
+            console.log('MongoDB disconnected');
+          });
+          return connection;
+        },
+      }),
+    }),
     ...mongoDbProvider,
     AuthModule,
     OrganizationModule,

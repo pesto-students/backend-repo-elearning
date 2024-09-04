@@ -104,4 +104,14 @@ export class TeacherService {
             return new ApiResponseDto(false, 'Failed to fetch teacher classes');
         }
     }
+
+    async deleteTeachers(teacherIds: Types.ObjectId[]): Promise<ApiResponseDto> {
+        try {
+            const result = await this.teacherRepository.deleteTeachers(teacherIds);
+            return new ApiResponseDto(true, 'Teachers deleted successfully', result);
+        } catch (error) {
+            console.error('Error deleting teachers:', error);
+            return new ApiResponseDto(false, 'Failed to delete teachers');
+        }
+    }
 }
