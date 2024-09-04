@@ -28,8 +28,8 @@ export class ParentsController {
   @ApiOperation({ summary: 'Update a parent by ID' })
   @ApiResponse({ status: 200, description: 'The parent has been successfully updated.' })
   @ApiResponse({ status: 404, description: 'Parent not found.' })
-  update(@Body() updateData: { id: string, parentDto: ParentDto }) {
-    return this.parentsService.updateParent(updateData.id, updateData.parentDto);
+  update(@Body() updateData: { _id: string, parentDto: ParentDto }) {
+    return this.parentsService.updateParent(updateData._id, updateData.parentDto);
   }
 
   // @Post('delete')
