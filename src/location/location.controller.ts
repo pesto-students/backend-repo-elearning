@@ -1,9 +1,9 @@
-import { Body, Controller, Get, Post, Res } from "@nestjs/common";
+import { Body, Controller, Post } from "@nestjs/common";
 import { LocationService } from "./location.service";
-import { LocationActionDto } from "./dto/action/location-action.dto";
 import { FetchStateDto } from "./dto/state.dto";
 import { FetchCityDto } from "./dto/city.dto";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
+
 @ApiTags('Location')
 @Controller('location')
 export class LocationController {

@@ -4,10 +4,12 @@ import { SearchStudentDto, StudentDto, UpdateStudentDto } from "./dto/student.dt
 import { DbQueryConditionDto } from "./dto/db-query-condition.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from "@nestjs/swagger";
 import { PassportJwtAuthGuard } from "src/auth/guards/passport-jwt.guard";
+import { ModuleAccessGuard } from "src/core/guard/module-access.guard";
 
 @ApiTags('Students')
 @ApiBearerAuth() // This will allow passing the bearer token in the auth headers
 @UseGuards(PassportJwtAuthGuard)
+@UseGuards(ModuleAccessGuard)
 @Controller('student')
 export class StudentController {
 
