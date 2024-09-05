@@ -50,7 +50,7 @@ export class ParentsService {
       };
       const verificationLink: string = await this.authService.createVerificationLink(mailObj);
       try {
-        await this.userService.sendWelcomeEmail({ ...mailObj, password: password, username: parentDto.email });
+        await this.userService.sendWelcomeEmail({ ...mailObj, username: parentDto.email });
         await this.userService.sendVerificationMail({
           ...mailObj,
           verificationLink,
