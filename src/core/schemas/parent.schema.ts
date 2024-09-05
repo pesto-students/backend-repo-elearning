@@ -12,7 +12,7 @@ export class Parent extends Document {
         ref: 'Student',
         required: true,
         formControl: {
-            name: 'autosuggest',
+            name: 'multiSelectWithAutoSuggest',
             label: 'Student Full Name',
             apiDetails: {
                 endpoint: StudentRoutes.SEARCH_STUDENT,
@@ -82,38 +82,6 @@ export class Parent extends Document {
     })
     address: string;
 
-    @ApiProperty({ type: String, description: 'Country ID' })
-    @Prop({
-        type: Types.ObjectId,
-        ref: 'Country',
-        required: true,
-        formControl: {
-            name: 'autosuggest',
-            label: 'Country',
-            apiDetails: {
-                endpoint: LocationRoutes.FETCH_COUNTRY,
-                onMount: true
-            }
-        }
-    })
-    countryId: Types.ObjectId;
-
-    @ApiProperty({ type: String, description: 'State ID' })
-    @Prop({
-        type: Types.ObjectId,
-        ref: 'State',
-        required: true,
-        formControl: {
-            name: 'autosuggest',
-            label: 'State',
-            apiDetails: {
-                endpoint: LocationRoutes.FETCH_STATE,
-                onMount: true
-            }
-        }
-    })
-    stateId: Types.ObjectId;
-
     @ApiProperty({ type: String, description: 'City ID' })
     @Prop({
         type: Types.ObjectId,
@@ -142,6 +110,38 @@ export class Parent extends Document {
         }
     })
     pincode: string;
+
+    @ApiProperty({ type: String, description: 'State ID' })
+    @Prop({
+        type: Types.ObjectId,
+        ref: 'State',
+        required: true,
+        formControl: {
+            name: 'autosuggest',
+            label: 'State',
+            apiDetails: {
+                endpoint: LocationRoutes.FETCH_STATE,
+                onMount: true
+            }
+        }
+    })
+    stateId: Types.ObjectId;
+
+    @ApiProperty({ type: String, description: 'Country ID' })
+    @Prop({
+        type: Types.ObjectId,
+        ref: 'Country',
+        required: true,
+        formControl: {
+            name: 'autosuggest',
+            label: 'Country',
+            apiDetails: {
+                endpoint: LocationRoutes.FETCH_COUNTRY,
+                onMount: true
+            }
+        }
+    })
+    countryId: Types.ObjectId;
 }
 
 export const ParentSchema = SchemaFactory.createForClass(Parent);

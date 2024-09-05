@@ -23,8 +23,8 @@ export class TeacherRepository {
     session.startTransaction();
 
     try {
-      const { password, organizationId, classId, ...teacherObj } = teacherData;
-      const teacher = await this.teacherModel.create([teacherObj], { session });
+      const { password, organizationId, classId, ...restTeacherObj } = teacherData;
+      const teacher = await this.teacherModel.create([restTeacherObj], { session });
 
       const authData = {
         userId: teacher[0]._id.toString(),
@@ -39,17 +39,19 @@ export class TeacherRepository {
 
       await this.userService.createAuth(authData, session);
 
-      if(classId){
-        const teacherEnrollmentData = {
-          branchId: teacherData.branchId,
-          teacherId: teacher[0]._id.toString(),
-          classId: classId,
-          status: DbStatusEnum.ACTIVE,
-          role: TeacherRoleEnum.PRIMARY,
-          enrollmentDate: new Date()
-        };
+      if (classId) {
+        for (const id of classId) {
+          const teacherEnrollmentData = {
+            branchId: teacherData.branchId,
+            teacherId: teacher[0]._id.toString(),
+            classId: id,
+            status: DbStatusEnum.ACTIVE,
+            role: TeacherRoleEnum.PRIMARY,
+            enrollmentDate: new Date()
+          };
 
-        await this.teacherEnrollmentModel.create([teacherEnrollmentData], {session});
+          await this.teacherEnrollmentModel.create([teacherEnrollmentData], { session });
+        }
       }
 
       await session.commitTransaction();
@@ -223,6 +225,112 @@ export class TeacherRepository {
         throw new ConflictException('Email or phone number already exists');
       }
       throw error;
+    }
+  }
+
+  async updateEnrollments(teacherIds: Types.ObjectId[], classIds: Types.ObjectId[]): Promise<void> {
+    const session = await this.teacherModel.db.startSession();
+    session.startTransaction();
+
+    try {
+      const teachers = await this.teacherModel.find({ _id: { $in: teacherIds } }).select('branchId');
+      if (teachers.length !== teacherIds.length) {
+        throw new NotFoundException('One or more teachers not found');
+      }
+
+      // Remove existing enrollments for the specified teachers
+      await this.teacherEnrollmentModel.deleteMany({
+        teacherId: { $in: teacherIds }
+      }, { session });
+
+      // Prepare bulk insert operation
+      const bulkOps = teachers.flatMap(teacher =>
+        classIds.map(classId => ({
+          insertOne: {
+            document: {
+              branchId: teacher.branchId,
+              teacherId: teacher._id,
+              classId: classId,
+              status: DbStatusEnum.ACTIVE,
+              role: TeacherRoleEnum.PRIMARY,
+              enrollmentDate: new Date()
+            }
+          }
+        }))
+      );
+
+      // Execute bulk insert
+      if (bulkOps.length > 0) {
+        await this.teacherEnrollmentModel.bulkWrite(bulkOps, { session });
+      }
+
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
+    }
+  }
+
+  async fetchTeacherClasses(teacherId: Types.ObjectId): Promise<any[]> {
+    try {
+      const result = await this.teacherEnrollmentModel.aggregate([
+        {
+          $match: { teacherId: new Types.ObjectId(teacherId) }
+        },
+        {
+          $lookup: {
+            from: 'classes',
+            localField: 'classId',
+            foreignField: '_id',
+            as: 'class'
+          }
+        },
+        { $unwind: '$class' },
+        {
+          $project: {
+            _id: '$class._id',
+            className: '$class.className',
+            section: '$class.section',
+            enrollmentDate: 1,
+            enrollmentEndDate: 1,
+            status: 1,
+            role: 1
+          }
+        }
+      ]).exec();
+
+      return result;
+    } catch (error) {
+      console.error('Error fetching teacher classes:', error);
+      throw new Error('Error fetching teacher classes');
+    }
+  }
+
+  async deleteTeachers(teacherIds: Types.ObjectId[]): Promise<{ deletedCount: number }> {
+    const session = await this.teacherModel.db.startSession();
+    session.startTransaction();
+
+    try {
+      const deleteTeachersResult = await this.teacherModel.deleteMany(
+        { _id: { $in: teacherIds } },
+        { session }
+      );
+
+      await this.teacherEnrollmentModel.deleteMany(
+        { teacherId: { $in: teacherIds } },
+        { session }
+      );
+
+      await session.commitTransaction();
+      return { deletedCount: deleteTeachersResult.deletedCount };
+    } catch (error) {
+      await session.abortTransaction();
+      console.error('Error deleting teachers:', error);
+      throw new Error('Failed to delete teachers');
+    } finally {
+      session.endSession();
     }
   }
 }

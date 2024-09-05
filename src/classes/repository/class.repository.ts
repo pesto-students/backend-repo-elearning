@@ -37,6 +37,7 @@ export class ClassRepository {
             if (condition._id) {
                 query['_id'] = new Types.ObjectId(condition._id);
             }
+
             const result: ClassWithDetails[] = await this.classModel.aggregate([
                 { $match: { ...query } },
                 {
@@ -50,17 +51,33 @@ export class ClassRepository {
                 { $unwind: { path: '$branch', preserveNullAndEmptyArrays: true } },
                 {
                     $lookup: {
-                        from: 'teachers',
+                        from: 'teacherenrollments',
                         localField: '_id',
                         foreignField: 'classId',
+                        as: 'teacherEnrollments'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'teachers',
+                        localField: 'teacherEnrollments.teacherId',
+                        foreignField: '_id',
                         as: 'teachers'
                     }
                 },
                 {
                     $lookup: {
-                        from: 'students',
+                        from: 'studentenrollments',
                         localField: '_id',
                         foreignField: 'classId',
+                        as: 'studentEnrollments'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'students',
+                        localField: 'studentEnrollments.studentId',
+                        foreignField: '_id',
                         as: 'students'
                     }
                 },
@@ -73,18 +90,54 @@ export class ClassRepository {
                             name: '$branch.name'
                         },
                         teachers: {
-                            _id: 1,
-                            firstName: 1,
-                            lastName: 1,
-                            email: 1,
-                            phone: 1
+                            $map: {
+                                input: '$teachers',
+                                as: 'teacher',
+                                in: {
+                                    _id: '$$teacher._id',
+                                    firstName: '$$teacher.firstName',
+                                    lastName: '$$teacher.lastName',
+                                    email: '$$teacher.email',
+                                    phone: '$$teacher.phone',
+                                    enrollment: {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: '$teacherEnrollments',
+                                                    as: 'enrollment',
+                                                    cond: { $eq: ['$$enrollment.teacherId', '$$teacher._id'] }
+                                                }
+                                            },
+                                            0
+                                        ]
+                                    }
+                                }
+                            }
                         },
                         students: {
-                            _id: 1,
-                            firstName: 1,
-                            lastName: 1,
-                            email: 1,
-                            phone: 1
+                            $map: {
+                                input: '$students',
+                                as: 'student',
+                                in: {
+                                    _id: '$$student._id',
+                                    firstName: '$$student.firstName',
+                                    lastName: '$$student.lastName',
+                                    email: '$$student.email',
+                                    phone: '$$student.phone',
+                                    enrollment: {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: '$studentEnrollments',
+                                                    as: 'enrollment',
+                                                    cond: { $eq: ['$$enrollment.studentId', '$$student._id'] }
+                                                }
+                                            },
+                                            0
+                                        ]
+                                    }
+                                }
+                            }
                         }
                     }
                 }

@@ -73,7 +73,7 @@ export class StudentRepository {
       }
 
       const result: StudentWithDetailsInterface[] = await this.studentModel.aggregate([
-        { $match: { ...query } }, // Match based on query criteria
+        { $match: { ...query } },
         {
           $lookup: {
             from: 'studentenrollments',
@@ -88,6 +88,30 @@ export class StudentRepository {
             localField: 'studentenrollments.classId',
             foreignField: '_id',
             as: 'classes'
+          }
+        },
+        {
+          $lookup: {
+            from: 'teacherenrollments',
+            localField: 'studentenrollments.classId',
+            foreignField: 'classId',
+            as: 'teacherenrollments'
+          }
+        },
+        {
+          $lookup: {
+            from: 'teachers',
+            localField: 'teacherenrollments.teacherId',
+            foreignField: '_id',
+            as: 'teachers'
+          }
+        },
+        {
+          $lookup: {
+            from: 'parents',
+            localField: '_id',
+            foreignField: 'studentId',
+            as: 'parents'
           }
         },
         {
@@ -127,15 +151,6 @@ export class StudentRepository {
         },
         { $unwind: { path: '$country', preserveNullAndEmptyArrays: true } },
         {
-          $lookup: {
-            from: 'parents',
-            localField: '_id',
-            foreignField: 'studentId',
-            as: 'parents'
-          }
-        },
-        { $unwind: { path: '$parents', preserveNullAndEmptyArrays: true } },
-        {
           $project: {
             _id: 1,
             firstName: 1,
@@ -163,28 +178,56 @@ export class StudentRepository {
               _id: '$country._id',
               name: '$country.name'
             },
-            studentenrollments: {
-              _id: 1,
-              classId: 1,
-              enrollmentDate: 1,
-              enrollmentEndDate: 1
-            },
             classes: {
-              _id: 1,
-              className: 1,
-              section: 1
+              $map: {
+                input: '$classes',
+                as: 'class',
+                in: {
+                  _id: '$$class._id',
+                  className: '$$class.className',
+                  section: '$$class.section',
+                  enrollmentDate: {
+                    $arrayElemAt: [
+                      '$studentenrollments.enrollmentDate',
+                      { $indexOfArray: ['$studentenrollments.classId', '$$class._id'] }
+                    ]
+                  },
+                  enrollmentEndDate: {
+                    $arrayElemAt: [
+                      '$studentenrollments.enrollmentEndDate',
+                      { $indexOfArray: ['$studentenrollments.classId', '$$class._id'] }
+                    ]
+                  }
+                }
+              }
+            },
+            teachers: {
+              $map: {
+                input: '$teachers',
+                as: 'teacher',
+                in: {
+                  _id: '$$teacher._id',
+                  firstName: '$$teacher.firstName',
+                  lastName: '$$teacher.lastName',
+                  email: '$$teacher.email',
+                  phone: '$$teacher.phone'
+                }
+              }
             },
             parents: {
-              _id: 1,
-              firstName: 1,
-              lastName: 1,
-              email: 1,
-              phone: 1,
-              address: 1,
-              pincode: 1,
-              countryId: 1,
-              stateId: 1,
-              cityId: 1
+              $map: {
+                input: '$parents',
+                as: 'parent',
+                in: {
+                  _id: '$$parent._id',
+                  fatherName: '$$parent.fatherName',
+                  motherName: '$$parent.motherName',
+                  email: '$$parent.email',
+                  phone: '$$parent.phone',
+                  address: '$$parent.address',
+                  pincode: '$$parent.pincode'
+                }
+              }
             }
           }
         }
@@ -257,7 +300,22 @@ export class StudentRepository {
           _id: 1,
           firstName: 1,
           lastName: 1,
-          fullName: { $concat: ['$firstName', ' ', '$lastName'] },
+          fullName: {
+            $concat: [
+              '$firstName',
+              ' ',
+              '$lastName',
+              ' (id: ',
+              {
+                $substr: [
+                  { $toString: '$_id' },
+                  { $subtract: [{ $strLenCP: { $toString: '$_id' } }, 4] },
+                  4
+                ]
+              },
+              ')'
+            ]
+          },
           branch: { _id: 1, name: 1 },
           class: { _id: 1, className: 1 },
           country: { _id: 1, name: 1 },
@@ -272,8 +330,9 @@ export class StudentRepository {
       { $limit: limit }
     ]).exec();
 
-    return result;
+    return JSON.parse(JSON.stringify(result));
   }
+
   async update(updateTeacherDto: UpdateStudentDto): Promise<Student> {
     try {
       const { _id, ...updateData } = updateTeacherDto;
@@ -294,7 +353,7 @@ export class StudentRepository {
       throw error;
     }
   }
-  async delete(id: string){
+  async delete(id: string) {
     console.log(id);
     const data = this.studentModel.findByIdAndDelete(id).exec();
     return data;
