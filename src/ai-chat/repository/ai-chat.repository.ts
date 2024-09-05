@@ -36,12 +36,11 @@ export class AiChatRepository {
         ).exec();
       }
 
-    async fetch(branchId: Types.ObjectId, userAuthId: Types.ObjectId) {
+    async fetch(branchId: Types.ObjectId, userAuthId: string) {
         const chatHistories = await this.chatHistoryModel.find({
             branchId: branchId,
             userAuthId: userAuthId
         }).exec();
-
-        return chatHistories;
+        return chatHistories[0].data;
     }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Request, UseGuards } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { PassportJwtAuthGuard } from "src/auth/guards/passport-jwt.guard";
 import { AiChatService } from "./ai-chat.service";
@@ -17,5 +17,12 @@ export class AiChatController{
     @ApiResponse({ status: 400, description: 'Bad Request.' })
     async create(@Body() chatData, @Request() request){
         return await this.aiChatService.create(chatData,request);
+    }
+    
+    @Get('fetch')
+    @ApiResponse({ status: 201, description: 'The chat has been successfully created.' })
+    @ApiResponse({ status: 400, description: 'Bad Request.' })
+    async fetch( @Request() request){
+        return await this.aiChatService.getChatHistory(request);
     }
 }
