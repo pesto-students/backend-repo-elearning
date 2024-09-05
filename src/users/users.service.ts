@@ -72,6 +72,21 @@ export class UserService {
     );
   }
 
+  async sendOnlineClassScheduleEmail(userDetails) {
+    const to = userDetails?.email;
+    const subject = EmailSubjectEnum.ONLINE_CLASS_SCHEDULE;
+    const templateName = EmailTemplateEnum.ONLINE_CLASS_SCHEDULE;
+    const context = { name: userDetails.name,  };
+
+    await this.emailService.sendEmail(
+      EmailProvider.BREVO,
+      to,
+      subject,
+      templateName,
+      context
+    );
+  }
+
   async isUserExist(userData: IsUserExistDto): Promise<boolean>{
     const res: Auth = await this.userRepository.findOne(userData);
     return res?._id ? true : false;

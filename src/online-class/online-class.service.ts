@@ -7,19 +7,39 @@ import { OnlineClassRepository } from './repository/online-class.respository';
 import { OnlineClass } from 'src/core/schemas/online-class.schema';
 import { HMSRepository } from './repository/online-class-create-hmsroom.repository';
 import { Teacher } from 'src/core/schemas/teacher.schema';
+import { UserService } from 'src/users/users.service';
 
 @Injectable()
 export class OnlineClassService {
     constructor(
         @InjectModel(OnlineClass.name) private onlineClassModel: Model<OnlineClass>,
         private onlineClassRepository: OnlineClassRepository,
-        private hmsRepository: HMSRepository
+        private hmsRepository: HMSRepository,
+        private userService: UserService,
     ) { }
 
     async createOnlineClass(onlineClassDto: OnlineClassDto): Promise<Boolean> {
         try {
             const roomInfo: RoomInfoDto = await this.hmsRepository.createHMSRoom({ name: onlineClassDto.title, description: onlineClassDto.description });
-            return await this.onlineClassRepository.createOnlineClass(onlineClassDto, roomInfo)
+            const createOnlineClass:boolean = await this.onlineClassRepository.createOnlineClass(onlineClassDto, roomInfo);
+
+            if(createOnlineClass){
+                try{
+                    // TODO: send email
+                    // await this.userService.sendOnlineClassScheduleEmail(
+                    //     {
+                    //         name: organizationData.name,
+                    //         email: organizationData.email,
+                    //         title: onlineClassDto.title, 
+                    //         description: onlineClassDto.description
+                    //     });
+                 
+                }catch(error){
+                    console.log("error occured during sending mail");
+                }
+            }
+
+            return createOnlineClass;
         } catch (error) {
             console.log(error)
             throw new HttpException('Failed to create online class', HttpStatus.INTERNAL_SERVER_ERROR);

@@ -7,6 +7,7 @@ import { OnlineClass, OnlineClassSchema } from "src/core/schemas/online-class.sc
 import { Branch, BranchSchema } from "src/core/schemas/branch.schema";
 import { HMSRepository } from "./repository/online-class-create-hmsroom.repository";
 import { HmsAxiosConfig, HmsAxiosService } from "src/config/hms-axios.config";
+import { UserModule } from "src/users/user.module";
 
 @Module({
     imports: [
@@ -20,6 +21,7 @@ import { HmsAxiosConfig, HmsAxiosService } from "src/config/hms-axios.config";
                 schema: BranchSchema
             },
         ]),
+        UserModule
     ],
     providers: [OnlineClassService, OnlineClassRepository, HMSRepository, HmsAxiosService, HmsAxiosConfig],
     controllers: [OnlineClassController],
