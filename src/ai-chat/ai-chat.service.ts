@@ -29,9 +29,8 @@ export class AiChatService{
     }
 
     async getChatHistory(request){
-        const userId = new Types.ObjectId(request.userSession.userId);
+        const userId = request.userSession.userId;
         const branchId = new Types.ObjectId(request.userSession.branchId);
-
         const res = await this.aiChatRepository.fetch(branchId, userId);
         
         if(res){
