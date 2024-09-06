@@ -6,6 +6,7 @@ import { State } from "./state.schema";
 import { City } from "./city.schema";
 import { OrganizationType } from "./organization-type.schema";
 import { LocationRoutes } from "src/location/location.routes";
+import { OrganizationRoute } from "src/organization/routes/organization-route";
 
 @BaseSchemaOptions()
 export class Organization extends BaseSchema {
@@ -15,11 +16,11 @@ export class Organization extends BaseSchema {
 
     @Prop({ type: String, required: true, unique: true, formControl: { name: 'input', label: "Organization Registration Number" } })
     organizationId: string;
-
+   
     @Prop({
         type: mongoose.Schema.Types.ObjectId, ref: 'OrganizationType', required: true, formControl: {
-            name: 'select', label: "Organization Type",
-            data: ['School', 'College', 'Coaching', 'Individual']
+            name: 'autosuggest', label: "Organization Type",
+            apiDetails: { endpoint: OrganizationRoute.FETCH_ORGANIZATION_TYPE, onMount: true }
         }
     })
     organizationTypeId: OrganizationType;
@@ -39,7 +40,11 @@ export class Organization extends BaseSchema {
     @Prop({ type: String, required: true, formControl: { name: "input", maxLength: 6, label: "Pincode" } })
     pincode: string;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true, formControl: { name: 'autosuggest', label: 'Country', apiDetails: { endpoint: LocationRoutes.FETCH_COUNTRY, onMount: true } } })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true, 
+        formControl: { 
+            name: 'autosuggest', 
+            label: 'Country', 
+            apiDetails: { endpoint: LocationRoutes.FETCH_COUNTRY, onMount: true } } })
     countryId: Country;
 
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'State', required: true, formControl: { name: 'autosuggest', label: 'State', apiDetails: { endpoint: LocationRoutes.FETCH_STATE, onMount: true } } })
