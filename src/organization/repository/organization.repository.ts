@@ -20,7 +20,7 @@ export class OrganizationRepository {
     private userRepository: UserRepository
   ) { }
 
-  async create(createOrganizationDto: CreateOrganizationDto): Promise<string>{
+  async create(createOrganizationDto): Promise<string>{
     
     const session = await this.organizationModel.db.startSession();
     session.startTransaction();

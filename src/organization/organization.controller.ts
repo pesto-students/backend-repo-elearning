@@ -2,32 +2,23 @@ import { Body, Controller, HttpStatus, Post, Res, Get, Param } from "@nestjs/com
 import { OrganizationService } from "./organization.service";
 import { CreateOrganizationDto } from "./dto/create-organization.dto";
 import { UpdateOrganizationDto } from "./dto/update-organization.dto";
+import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
 @Controller('organization')
 export class OrganizationController {
-    constructor(private readonly organizationService: OrganizationService){}
+  constructor(private readonly organizationService: OrganizationService) { }
 
-    @Post('create')
-    async create(@Body() createOrganizationDto: CreateOrganizationDto, @Res() res: Response){
-        try {
-          console.log('createOrganizationDto',createOrganizationDto);
-            const newOrganization = await this.organizationService.create(createOrganizationDto);
-            console.log('newOrganization: ', newOrganization);
-            return newOrganization;
-            // return res.status(HttpStatus.OK).json({
-            //     statusCode: HttpStatus.BAD_REQUEST,
-            //     message: '',
-            //     data: newOrganization
-            // });
-        } catch (error) {
-            // return res.status(HttpStatus.BAD_REQUEST).json({
-            //     statusCode: HttpStatus.BAD_REQUEST,
-            //     message: 'Error creating organization',
-            //     error: error.message,
-            //   });
-        }
-    }
+  @Post('create')
+  async create(@Body() createOrganizationDto, @Res() res: Response) {
+    return await this.organizationService.create(createOrganizationDto);
+  }
 
+  @ApiOperation({ summary: 'Fetch organization type' })
+  @ApiResponse({ status: 200, description: 'organization type retrieved successfully' })
+  @Post('organizationType/fetch')
+  async fetchOrganizationType(@Body() body) {
+    return await this.organizationService.fetchOrganizationType();
+  }
 
   // @Get()
   // async findAll(@Res() res: Response) {

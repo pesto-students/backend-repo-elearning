@@ -17,7 +17,7 @@ export class DashboardController {
   @ApiOperation({ summary: 'Get dashboard counts' })
   @ApiResponse({ status: 200, description: 'Returns the counts for various entities', type: DashboardCountsDto })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getDashboardCounts(@Body() body: any): Promise<DashboardCountsDto> {
+  async getDashboardCounts(@Body() body: any){
     return await this.dashboardService.getDashboardCounts(body);
   }
 }

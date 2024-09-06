@@ -17,7 +17,8 @@ export class OrganizationService {
         private readonly authService: AuthService
     ) { }
 
-    async create(organizationData: CreateOrganizationDto): Promise<ApiResponseDto>{
+    async create(organizationData): Promise<ApiResponseDto>{
+        console.log("organizationData", organizationData);
         const condition: GetOrganizationQueryDto = {
             organizationId: organizationData?.organizationId
         };
