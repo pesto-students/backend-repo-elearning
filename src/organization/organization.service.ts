@@ -18,7 +18,20 @@ export class OrganizationService {
     ) { }
 
     async create(organizationData): Promise<ApiResponseDto>{
-        console.log("organizationData", organizationData);
+
+        const organizationObj = {
+            organizationId: organizationData?.organizationId,
+            organizationTypeId: organizationData?.organizationTypeId?.id,
+            countryId: organizationData?.countryId?.id,
+            stateId: organizationData?.stateId?.id,
+            cityId: organizationData?.cityId?.id,
+            name: organizationData?.name,
+            address: organizationData?.address,
+            pincode: organizationData?.pincode,
+            email: organizationData?.email,
+            phone: organizationData?.phone,
+            password: organizationData?.password
+        }
         const condition: GetOrganizationQueryDto = {
             organizationId: organizationData?.organizationId
         };
@@ -28,18 +41,18 @@ export class OrganizationService {
             return new ApiResponseDto(false,"Organization already exist with Organization ID");
         }
 
-        const hasPassword: string = await AuthUtils.createPasswordHash(organizationData?.password);
-        organizationData.password = hasPassword;
+        const hasPassword: string = await AuthUtils.createPasswordHash(organizationObj?.password);
+        organizationObj.password = hasPassword;
         
-        const res: string = await this.organizationRepository.create(organizationData);
+        const res: string = await this.organizationRepository.create(organizationObj);
         if(Types.ObjectId.isValid(res)){
-            const verificationLink: string = await this.authService.createVerificationLink({name: organizationData.name, email: organizationData.email})
+            const verificationLink: string = await this.authService.createVerificationLink({name: organizationObj.name, email: organizationObj.email})
             try{
-                await this.userService.sendWelcomeEmail({name: organizationData.name, email: organizationData.email});
+                await this.userService.sendWelcomeEmail({name: organizationObj.name, email: organizationObj.email, password: organizationData?.password, username: organizationObj.email});
             await this.userService.sendVerificationMail(
                 {
-                    name: organizationData.name, 
-                    email: organizationData.email, 
+                    name: organizationObj.name, 
+                    email: organizationObj.email, 
                     verificationLink,
                     currentYear:  new Date().getFullYear()
                 });

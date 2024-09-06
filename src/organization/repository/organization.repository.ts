@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Organization } from "src/core/schemas/organization.schema";
-import { CreateOrganizationDto, GetOrganizationQueryDto } from "../dto/create-organization.dto";
+import { GetOrganizationQueryDto } from "../dto/create-organization.dto";
 import { UpdateOrganizationDto } from "../dto/update-organization.dto";
 import { OrganizationType } from "src/core/schemas/organization-type.schema";
 import { transformId } from "src/core/utils/mongo-res.utils";
@@ -28,7 +28,7 @@ export class OrganizationRepository {
     try {
       const {password, ...organizationData} = createOrganizationDto;
       const organization = await this.organizationModel.create([organizationData], { session });
-   
+
       const branchData = {
         organizationId: organization[0]._id.toString(),
         name: organizationData.name,
