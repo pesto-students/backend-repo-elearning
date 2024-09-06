@@ -1,47 +1,24 @@
 import { Types } from "mongoose";
+import { ApiProperty } from '@nestjs/swagger';
 
-export class commonCountConditionDto{
+export class commonCountConditionDto {
     branchId: Types.ObjectId;
     organizationId: Types.ObjectId;
 }
 
+export class DashboardCountsDto {
+    @ApiProperty({ description: 'Number of teachers' })
+    teacherCount: number;
 
-export class DashboardCountDto{
-    student: {
-        title: string;
-        count: number;
-    };
-    teacher: {
-        title: string;
-        count: number;
-    };
-    parent: {
-        title: string;
-        count: number;
-    };
-    onlineClass: {
-        title: string;
-        count: number;
-    };
-    doubt: {
-        title: string;
-        count: number;
-    };
-    questionPaper: {
-        title: string;
-        count: number;
-    };
-    enableModule: {
-        title: string;
-        count: number;
-    };
-    branch: {
-        title: string;
-        count: number;
-    };
-    
+    @ApiProperty({ description: 'Number of students' })
+    studentCount: number;
 
-    constructor(partial: Partial<DashboardCountDto>) {
-        Object.assign(this, partial);
-    }
+    @ApiProperty({ description: 'Number of classes' })
+    classCount: number;
+
+    @ApiProperty({ description: 'Number of parents' })
+    parentCount: number;
+
+    @ApiProperty({ description: 'Number of online classes' })
+    onlineClassCount: number;
 }
