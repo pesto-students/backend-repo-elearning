@@ -1,10 +1,9 @@
 import { Body, Controller, Get, Post, Put, Param, Request, UseGuards, Delete, Query } from "@nestjs/common";
 import { StudentService } from "./student.service";
-import { SearchStudentDto, StudentDto, UpdateStudentDto } from "./dto/student.dto";
+import { SearchStudentDto, StudentDto, UpdateStudentDto, UpdateStudentEnrollmentsDto } from "./dto/student.dto";
 import { DbQueryConditionDto } from "./dto/db-query-condition.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from "@nestjs/swagger";
 import { PassportJwtAuthGuard } from "src/auth/guards/passport-jwt.guard";
-import { ModuleAccessGuard } from "src/core/guard/module-access.guard";
 
 @ApiTags('Students')
 @ApiBearerAuth() // This will allow passing the bearer token in the auth headers
@@ -39,13 +38,14 @@ export class StudentController {
 
     }
 
-    // @Put(':id')
-    // @ApiOperation({ summary: 'Update a student' })
-    // @ApiResponse({ status: 200, description: 'The student has been successfully updated.' })
-    // @ApiResponse({ status: 404, description: 'Student not found.' })
-    // async updateStudent(@Param('id') id: string, @Body() studentDto: StudentDto) {
-    //     return await this.studentService.updateStudent(id, studentDto);
-    // }
+    @Post('update-enrollments')
+    @ApiOperation({ summary: 'Update Student enrollments' })
+    @ApiResponse({ status: 200, description: 'Student enrollments updated successfully.' })
+    @ApiResponse({ status: 400, description: 'Bad Request.' })
+    @ApiBody({ type: UpdateStudentEnrollmentsDto })
+    async updateStudentEnrollments(@Body() updateEnrollmentsDto: UpdateStudentEnrollmentsDto) {
+        return await this.studentService.updateStudentEnrollment(updateEnrollmentsDto);
+    }
 
     @Post('search')
     @ApiBody({

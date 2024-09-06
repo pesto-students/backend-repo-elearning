@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsDateString, IsEmail, IsPhoneNumber, IsOptional, IsMongoId, IsInt, Min } from 'class-validator';
+import { IsNotEmpty, IsString, IsDateString, IsEmail, IsPhoneNumber, IsOptional, IsMongoId, IsInt, Min, IsArray } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class StudentDto {
@@ -80,6 +80,22 @@ export class SearchStudentDto {
   limit?: number;
 }
 
+
+export class UpdateStudentEnrollmentsDto {
+  @ApiProperty({ description: 'Array of Students IDs', type: [String] })
+  @IsArray()
+  @IsMongoId({ each: true })
+  @IsNotEmpty()
+  studentIds: Types.ObjectId[];
+
+  @ApiProperty({ description: 'Array of Class IDs', type: [String] })
+  @IsArray()
+  @IsMongoId({ each: true })
+  @IsNotEmpty()
+  classIds: Types.ObjectId[];
+}
+
+
 export class UpdateStudentDto {
   @ApiProperty({ description: 'ID of the student to update' })
   @IsNotEmpty()
@@ -136,3 +152,4 @@ export class UpdateStudentDto {
   @IsString()
   pincode?: string;
 }
+
