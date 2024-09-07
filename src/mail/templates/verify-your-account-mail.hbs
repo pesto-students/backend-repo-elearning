@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Verify Your Email Address</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container {
+      width: 80%;
+      margin: 0 auto;
+    }
+    .header {
+      background: #f4f4f4;
+      padding: 20px;
+      text-align: center;
+    }
+    .footer {
+      background: #f4f4f4;
+      padding: 10px;
+      text-align: center;
+      font-size: 0.8em;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Verify Your Email Address</h1>
+    </div>
+    <div class="content">
+      <p>Hello, {{ name }}</p>
+      <p>Thank you for registering with us. To complete your registration, please verify your email address by clicking the link below:</p>
+      <a href="{{verificationLink}}">Verify Email Address</a>
+      <p>Please note that this verification link will expire in {{expireTime}}.</p>
+      <p>If you did not create an account, please ignore this email.</p>
+    </div>
+    <div class="footer">
+      <p>&copy; {{currentYear}} E-Learning Platform. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
