@@ -7,7 +7,7 @@ import { AuthUtils } from 'src/core/utils/auth.utils';
 import { IsUserExistDto } from 'src/users/dto/user.dto';
 import { UserService } from 'src/users/users.service';
 import { DbQueryConditionDto } from './dto/db-query-condition.dto';
-import { StudentDto, UpdateStudentDto } from './dto/student.dto';
+import { StudentDto, UpdateStudentDto, UpdateStudentEnrollmentsDto } from './dto/student.dto';
 import { StudentRepository } from './repository/student.repository';
 import { transformId } from 'src/core/utils/mongo-res.utils';
 
@@ -76,6 +76,21 @@ export class StudentService {
     async searchStudent(keyword: string, limit = 10) {
         return await this.studentRepository.searchStudentNamesLike(keyword, limit);
     }
+     async updateStudentEnrollment(updateEnrollmentsDto: UpdateStudentEnrollmentsDto){
+        try {
+            await this.studentRepository.updateEnrollments(
+                updateEnrollmentsDto.studentIds,
+                updateEnrollmentsDto.classIds
+            );
+            return new ApiResponseDto(true, 'Student enrollments updated successfully');
+        } catch (error) {
+            console.error('Error updating Student enrollments:', error);
+            if (error instanceof NotFoundException) {
+                return new ApiResponseDto(false, error.message);
+            }
+            return new ApiResponseDto(false, 'Failed to update Student enrollments');
+        }
+     }
 
     async updateStudent(studentDto: UpdateStudentDto) {
         const updatedStudent = await this.studentRepository.update( studentDto);

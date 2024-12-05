@@ -9,10 +9,12 @@ import { UserTypeEnum } from "src/core/enums/user-type.enum";
 import { UserService } from "src/users/users.service";
 import { StudentEnrollment } from "src/core/schemas/student-enrollment.schema";
 import { transformId } from "src/core/utils/mongo-res.utils";
+import { DbStatusEnum } from "src/core/enums/status.enum";
 @Injectable()
 export class StudentRepository {
   constructor(
     @InjectModel(Student.name) private studentModel: Model<Student>,
+
     @InjectModel(StudentEnrollment.name) private studentEnrollmentModel: Model<StudentEnrollment>,
     private userService: UserService
   ) { }
@@ -333,9 +335,9 @@ export class StudentRepository {
     return JSON.parse(JSON.stringify(result));
   }
 
-  async update(updateTeacherDto: UpdateStudentDto): Promise<Student> {
+  async update(updateStudentDto: UpdateStudentDto): Promise<Student> {
     try {
-      const { _id, ...updateData } = updateTeacherDto;
+      const { _id, ...updateData } = updateStudentDto;
       console.log(_id);
       const updatedStudent = await this.studentModel.findByIdAndUpdate(
         _id,
@@ -357,5 +359,48 @@ export class StudentRepository {
     console.log(id);
     const data = this.studentModel.findByIdAndDelete(id).exec();
     return data;
+  }
+  async updateEnrollments(studentIds: Types.ObjectId[], classIds: Types.ObjectId[]): Promise<void> {
+    const session = await this.studentModel.db.startSession();
+    session.startTransaction();
+
+    try {
+      const students = await this.studentModel.find({ _id: { $in: studentIds } }).select('branchId');
+      if (students.length !== studentIds.length) {
+        throw new NotFoundException('One or more Students not found');
+      }
+
+      // Remove existing enrollments for the specified teachers
+      await this.studentEnrollmentModel.deleteMany({
+        studentId: { $in: studentIds }
+      }, { session });
+
+      // Prepare bulk insert operation
+      const bulkOps = students.flatMap(student =>
+        classIds.map(classId => ({
+          insertOne: {
+            document: {
+              branchId: student.branchId,
+              studentId: student._id,
+              classId: classId,
+              status: DbStatusEnum.ACTIVE,
+              enrollmentDate: new Date()
+            }
+          }
+        }))
+      );
+
+      // Execute bulk insert
+      if (bulkOps.length > 0) {
+        await this.studentEnrollmentModel.bulkWrite(bulkOps, { session });
+      }
+
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
+    }
   }
 }
